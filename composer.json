@@ -1,0 +1,33 @@
+{
+    "name": "gof/gof",
+    "type": "library",
+    "description": "",
+    "authors": [
+        {
+            "name": "Cesar Dreyf",
+            "email": "dreyfcesar@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gof\\": "."
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master"
+        }
+    }
+}
+
