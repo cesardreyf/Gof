@@ -39,9 +39,9 @@ class EnrutadorTest extends TestCase
     }
 
     /**
-     *  @dataProvider data_indicesImplicitos
      *  @dataProvider data_objetivosMultiples
      *  @dataProvider data_objetivosInexistentes
+     *  @dataProvider data_paginasPrincipalesImplicitas
      */
     public function test_enrutadorConMultiplesDatas(string $nombreDeLaClase, array $objetivos): void
     {
