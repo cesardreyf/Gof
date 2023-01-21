@@ -38,37 +38,40 @@ class EnrutadorTest extends TestCase
         $this->assertStringContainsStringIgnoringCase($this->paginaPrincipal, $enrutador->nombreClase(), 'Si la lista de objetivos está vacía el nombre de la clase debería ser igual a la página principal');
     }
 
-    public function test_enrutadorConObjetivosMultiples(): void
+    /**
+     *  @dataProvider data_indicesImplicitos
+     *  @dataProvider data_objetivosMultiples
+     *  @dataProvider data_objetivosInexistentes
+     */
+    public function test_enrutadorConMultiplesDatas(string $nombreDeLaClase, array $objetivos): void
     {
-        $paginasObjetivos = new ListaDeTextos(['perfil', 'usuario']);
+        $paginasObjetivos = new ListaDeTextos($objetivos);
         $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
-        $this->assertStringContainsStringIgnoringCase('perfil\usuario', $enrutador->nombreClase());
-
-        $paginasObjetivos = new ListaDeTextos(['perfil', 'editar', 'nombre']);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
-        $this->assertStringContainsStringIgnoringCase('perfil\editar\nombre', $enrutador->nombreClase());
+        $this->assertStringContainsStringIgnoringCase($nombreDeLaClase, $enrutador->nombreClase());
     }
 
-    public function test_enrutadorConIndiceImplicito(): void
+    public function data_objetivosMultiples(): array
     {
-        $paginasObjetivos = new ListaDeTextos(['perfil']);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
-        $this->assertStringContainsStringIgnoringCase('perfil\\' . $this->paginaPrincipal, $enrutador->nombreClase());
-
-        $paginasObjetivos = new ListaDeTextos(['pagina_con_index']);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
-        $this->assertStringContainsStringIgnoringCase('pagina_con_index\\' . $this->paginaPrincipal, $enrutador->nombreClase());
+        return [
+            ['perfil\usuario',       ['perfil', 'usuario']],
+            ['perfil\editar\nombre', ['perfil', 'editar', 'nombre']]
+        ];
     }
 
-    public function test_enrutadorConObjetivoInexistente(): void
+    public function data_paginasPrincipalesImplicitas(): array
     {
-        $paginasObjetivos = new ListaDeTextos(['objetivo_inexistente_en_paginas_disponibles']);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
-        $this->assertStringContainsStringIgnoringCase($this->paginaInexistente, $enrutador->nombreClase(), 'Si el objetivo no se encuentra en la lista de disponibles el nombre del controlador debe ser $paginaInexistente');
+        return [
+            ["perfil\\{$this->paginaPrincipal}", ['perfil']],
+            ["pagina_con_index\\$this->paginaPrincipal", ['pagina_con_index']]
+        ];
+    }
 
-        $paginasObjetivos = new ListaDeTextos(['perfil', 'perfil_existe_pero_esta_subpagina_no']);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
-        $this->assertStringContainsStringIgnoringCase($this->paginaInexistente, $enrutador->nombreClase(), 'Si el objetivo no se encuentra en la lista de disponibles el nombre del controlador debe ser $paginaInexistente');
+    public function data_objetivosInexistentes(): array
+    {
+        return [
+            ["{$this->paginaInexistente}", ['objetivo_inexistente_en_paginas_disponibles']],
+            ["{$this->paginaInexistente}", ['perfil', 'perfil_existe_pero_esta_subpagina_no']]
+        ];
     }
 
 }
