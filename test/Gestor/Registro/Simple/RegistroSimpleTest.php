@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Gof\Contrato\Registro\Registro;
 use Gof\Gestor\Registro\Simple\RegistroSimple;
 use Gof\Interfaz\Mensajes\Guardable;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,12 @@ class RegistroSimpleTest extends TestCase
     public function setUp(): void
     {
         $this->gestorDeGuardado = $this->getMockBuilder(Guardable::class)->setMethods(['guardar'])->getMock();
+    }
+
+    public function test_implementarContrato(): void
+    {
+        $registro = new RegistroSimple($this->gestorDeGuardado);
+        $this->assertInstanceOf(Registro::class, $registro);
     }
 
     public function test_guardarCerosRegistros(): void

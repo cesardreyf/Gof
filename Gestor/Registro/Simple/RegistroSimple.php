@@ -2,9 +2,10 @@
 
 namespace Gof\Gestor\Registro\Simple;
 
+use Gof\Contrato\Registro\Registro;
 use Gof\Interfaz\Mensajes\Guardable;
 
-class RegistroSimple
+class RegistroSimple implements Registro
 {
     /**
      *  @var int Flag que indica limpiar el pila de mensajes cada vez que se llame a la función volcar
