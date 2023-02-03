@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Gof\Datos\Archivo\Archivo;
-use Gof\Interfaz\Archivo\Archivo as IArchivo;
+use Gof\Datos\Archivos\Archivo;
+use Gof\Interfaz\Archivos\Archivo as IArchivo;
 use PHPUnit\Framework\TestCase;
 
 class ArchivoTest extends TestCase

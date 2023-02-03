@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Gof\Datos\Archivo\Archivo;
+use Gof\Datos\Archivos\Archivo;
 use Gof\Gestor\Mensajes\Guardar\GuardarEnArchivo;
 use PHPUnit\Framework\TestCase;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Datos\Archivo;
+namespace Gof\Datos\Archivos;
 
 use Exception;
-use Gof\Interfaz\Archivo\Archivo as IArchivo;
+use Gof\Interfaz\Archivos\Carpeta as ICarpeta;
 
-class Archivo implements IArchivo
+class Carpeta implements ICarpeta
 {
     private $ruta;
 

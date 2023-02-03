@@ -1,8 +1,8 @@
 <?php
 
-namespace Gof\Interfaz\Archivo;
+namespace Gof\Interfaz\Archivos;
 
-interface Archivo
+interface Ruta
 {
     /**
      *  Ruta completa del archivo

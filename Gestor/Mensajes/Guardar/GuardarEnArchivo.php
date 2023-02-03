@@ -2,7 +2,7 @@
 
 namespace Gof\Gestor\Mensajes\Guardar;
 
-use Gof\Interfaz\Archivo\Archivo;
+use Gof\Interfaz\Archivos\Archivo;
 use Gof\Interfaz\Mensajes\Guardable;
 
 class GuardarEnArchivo implements Guardable
