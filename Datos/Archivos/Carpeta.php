@@ -10,32 +10,29 @@ class Carpeta implements ICarpeta
     private $ruta;
 
     /**
-     *  Crea una instancia de la clase Archivo
+     *  Crea una instancia de la clase Carpeta
      *
-     *  Esta clase sirve para garantizar que el archivo que contiene existe y es legible.
+     *  Esta clase sirve para garantizar que la carpeta que contiene existe y es legible.
      *
-     *  @param string $rutaDelArchivo Ruta donde se encuentra el archivo
+     *  @param string $rutaDeLaCarpeta Ruta donde se encuentra la carpeta
      *
-     *  @throws Exception Si no existe el archivo
+     *  @throws Exception Si no existe la carpeta
      *  @throws Exception Si no es legible
      */
-    public function __construct(string $rutaDelArchivo)
+    public function __construct(string $rutaDeLaCarpeta)
     {
-        $this->ruta = $rutaDelArchivo;
+        $this->ruta = rtrim($rutaDeLaCarpeta, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
-        // TAREA
-        //  Cambiar las excepciones genéricas por alguna más relativa
-
-        if( file_exists($rutaDelArchivo) === false ) {
-            throw new Exception("No existe ningún archivo en '{$rutaDelArchivo}'");
+        if( file_exists($rutaDeLaCarpeta) === false ) {
+            throw new Exception("No existe ningún archivo en '{$rutaDeLaCarpeta}'");
         }
 
-        if( is_readable($rutaDelArchivo) === false ) {
-            throw new Exception("No se puede leer el archivo '{$rutaDelArchivo}'");
+        if( is_readable($rutaDeLaCarpeta) === false ) {
+            throw new Exception("No se puede leer el archivo '{$rutaDeLaCarpeta}'");
         }
 
-        if( is_file($rutaDelArchivo) === false ) {
-            throw new Exception("La ruta indicada no apunta a un archivo. Ruta: {$rutaDelArchivo}");
+        if( is_dir($rutaDeLaCarpeta) === false ) {
+            throw new Exception("La ruta indicada no apunta a una carpeta. Ruta: {$rutaDeLaCarpeta}");
         }
     }
 
