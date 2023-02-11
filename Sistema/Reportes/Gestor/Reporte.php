@@ -60,7 +60,7 @@ class Reporte implements Reportero
         }
 
         if( $this->imprimir() === true ) {
-            echo $mensaje;
+            echo "<pre>{$mensaje}</pre>";
         }
 
         return true;
