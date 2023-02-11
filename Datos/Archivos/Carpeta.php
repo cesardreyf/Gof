@@ -24,7 +24,7 @@ class Carpeta implements ICarpeta
         $this->ruta = rtrim($rutaDeLaCarpeta, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         if( file_exists($rutaDeLaCarpeta) === false ) {
-            throw new Exception("No existe ningún archivo en '{$rutaDeLaCarpeta}'");
+            throw new Exception("No existe ninguna carpeta en '{$rutaDeLaCarpeta}'");
         }
 
         if( is_readable($rutaDeLaCarpeta) === false ) {
