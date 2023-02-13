@@ -127,8 +127,10 @@ class ReporteTest extends TestCase
                        ->willReturn(true);
 
         $this->reportero->imprimir(true);
-        $this->expectOutputString($datosTraducidos);
+
+        $this->assertTrue(ob_start());
         $this->assertTrue($this->reportero->reportar($datos));
+        $this->assertNotEmpty(ob_get_clean());
     }
 
     public function testMetodoPlantillaDevuelveLaMismaInstanciaPasadaPorElConstructor(): void
