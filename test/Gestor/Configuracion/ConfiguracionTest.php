@@ -63,13 +63,13 @@ class ConfiguracionTest extends TestCase
         $bitsActivados = 1 | 16 | 32;
         $configuracion = new Configuracion($bitsActivados);
 
-        $this->assertTrue($configuracion->activadas(1));
-        $this->assertTrue($configuracion->activadas(16));
-        $this->assertTrue($configuracion->activadas(32));
+        $this->assertTrue($configuracion->activados(1));
+        $this->assertTrue($configuracion->activados(16));
+        $this->assertTrue($configuracion->activados(32));
 
-        $this->assertFalse($configuracion->activadas(2));
-        $this->assertFalse($configuracion->activadas(4));
-        $this->assertFalse($configuracion->activadas(8));
+        $this->assertFalse($configuracion->activados(2));
+        $this->assertFalse($configuracion->activados(4));
+        $this->assertFalse($configuracion->activados(8));
     }
 
     public function testBitsDesactivados(): void
@@ -77,13 +77,13 @@ class ConfiguracionTest extends TestCase
         $bitsActivados = 1 | 4 | 16;
         $configuracion = new Configuracion($bitsActivados);
 
-        $this->assertTrue($configuracion->desactivadas(2));
-        $this->assertTrue($configuracion->desactivadas(8));
-        $this->assertTrue($configuracion->desactivadas(32));
+        $this->assertTrue($configuracion->desactivados(2));
+        $this->assertTrue($configuracion->desactivados(8));
+        $this->assertTrue($configuracion->desactivados(32));
 
-        $this->assertFalse($configuracion->desactivadas(1));
-        $this->assertFalse($configuracion->desactivadas(4));
-        $this->assertFalse($configuracion->desactivadas(16));
+        $this->assertFalse($configuracion->desactivados(1));
+        $this->assertFalse($configuracion->desactivados(4));
+        $this->assertFalse($configuracion->desactivados(16));
     }
 
     public function testDefinirElValorInterno(): void
@@ -137,8 +137,8 @@ class ConfiguracionTest extends TestCase
         $bitN4Activo = 0b1000;
 
         $configuracion = new Configuracion($bitsActivos);
-        $this->assertTrue($configuracion->activadas($bitN1Activo, $bitN3Activo));
-        $this->assertFalse($configuracion->activadas($bitN2Activo, $bitN4Activo));
+        $this->assertTrue($configuracion->activados($bitN1Activo, $bitN3Activo));
+        $this->assertFalse($configuracion->activados($bitN2Activo, $bitN4Activo));
     }
 
     public function testDesactivadasConVariosArgumentos(): void
@@ -151,8 +151,8 @@ class ConfiguracionTest extends TestCase
         $bitN4Inactivo = 0b1000;
 
         $configuracion = new Configuracion($bitsActivos);
-        $this->assertTrue($configuracion->desactivadas($bitN2Inactivo, $bitN4Inactivo));
-        $this->assertFalse($configuracion->desactivadas($bitN1Inactivo, $bitN3Inactivo));
+        $this->assertTrue($configuracion->desactivados($bitN2Inactivo, $bitN4Inactivo));
+        $this->assertFalse($configuracion->desactivados($bitN1Inactivo, $bitN3Inactivo));
     }
 
 }

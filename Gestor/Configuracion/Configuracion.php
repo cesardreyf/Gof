@@ -34,7 +34,7 @@ class Configuracion implements IConfiguracion
         return $this->marcas &= ~$bits;
     }
 
-    public function activadas(int $bits, int ...$otros): bool
+    public function activados(int $bits, int ...$otros): bool
     {
         foreach( $otros as $masBits ) {
             $bits |= $masBits;
@@ -43,7 +43,7 @@ class Configuracion implements IConfiguracion
         return ($this->marcas & $bits) === $bits;
     }
 
-    public function desactivadas(int $bits, int ...$otros): bool
+    public function desactivados(int $bits, int ...$otros): bool
     {
         foreach( $otros as $masBits ) {
             $bits |= $masBits;
