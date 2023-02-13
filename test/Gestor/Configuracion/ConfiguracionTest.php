@@ -100,4 +100,59 @@ class ConfiguracionTest extends TestCase
         $this->assertNotSame($valores, $configuracion->obtener());
     }
 
+    public function testActivarConVariosArgumentos(): void
+    {
+        $configuracion = new Configuracion();
+
+        $activarBitN1 = 0b001;
+        $activarBitN2 = 0b010;
+        $activarBitN3 = 0b100;
+        $todosActivos = 0b111;
+
+        $configuracion->activar($activarBitN1, $activarBitN2, $activarBitN3);
+        $this->assertSame($todosActivos, $configuracion->obtener());
+    }
+
+    public function testDesactivarConVariosArgumentos(): void
+    {
+        $desactivarBitN1 = 0b001;
+        $desactivarBitN2 = 0b010;
+        $desactivarBitN3 = 0b100;
+
+        $configuracionInicial = 0b111;
+        $configuracionAlFinal = 0b000;
+
+        $configuracion = new Configuracion($configuracionInicial);
+        $configuracion->desactivar($desactivarBitN1, $desactivarBitN2, $desactivarBitN3);
+        $this->assertSame($configuracionAlFinal, $configuracion->obtener());
+    }
+
+    public function testActivadasConVariosArgumentos(): void
+    {
+        $bitsActivos = 0b0101;
+
+        $bitN1Activo = 0b0001;
+        $bitN2Activo = 0b0010;
+        $bitN3Activo = 0b0100;
+        $bitN4Activo = 0b1000;
+
+        $configuracion = new Configuracion($bitsActivos);
+        $this->assertTrue($configuracion->activadas($bitN1Activo, $bitN3Activo));
+        $this->assertFalse($configuracion->activadas($bitN2Activo, $bitN4Activo));
+    }
+
+    public function testDesactivadasConVariosArgumentos(): void
+    {
+        $bitsActivos = 0b0101;
+
+        $bitN1Inactivo = 0b0001;
+        $bitN2Inactivo = 0b0010;
+        $bitN3Inactivo = 0b0100;
+        $bitN4Inactivo = 0b1000;
+
+        $configuracion = new Configuracion($bitsActivos);
+        $this->assertTrue($configuracion->desactivadas($bitN2Inactivo, $bitN4Inactivo));
+        $this->assertFalse($configuracion->desactivadas($bitN1Inactivo, $bitN3Inactivo));
+    }
+
 }

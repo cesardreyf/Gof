@@ -16,23 +16,39 @@ class Configuracion implements IConfiguracion
         $this->marcas = $estadoInicial;
     }
 
-    public function activar(int $bits): int
+    public function activar(int $bits, int ...$otros): int
     {
+        foreach( $otros as $masBits ) {
+            $bits |= $masBits;
+        }
+
         return $this->marcas |= $bits;
     }
 
-    public function desactivar(int $bits): int
+    public function desactivar(int $bits, int ...$otros): int
     {
+        foreach( $otros as $masBits ) {
+            $bits |= $masBits;
+        }
+
         return $this->marcas &= ~$bits;
     }
 
-    public function activadas(int $bits): bool
+    public function activadas(int $bits, int ...$otros): bool
     {
+        foreach( $otros as $masBits ) {
+            $bits |= $masBits;
+        }
+
         return ($this->marcas & $bits) === $bits;
     }
 
-    public function desactivadas(int $bits): bool
+    public function desactivadas(int $bits, int ...$otros): bool
     {
+        foreach( $otros as $masBits ) {
+            $bits |= $masBits;
+        }
+
         return ($this->marcas & $bits) === 0;
     }
 
