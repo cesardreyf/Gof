@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Gof\Contrato\Configuracion\Configuracion;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Excepcion\CadenaInvalidaParaCargar;
 use Gof\Gestor\Autoload\Excepcion\EspacioDeNombreInexistente;
@@ -52,12 +53,9 @@ class AutoloadTest extends TestCase
 
     public function testConfiguracion(): void
     {
+        $this->assertInstanceOf(Configuracion::class, $this->autoload->configuracion());
         $configuracionPorDefecto = Autoload::LANZAR_EXCEPCIONES | Autoload::REEMPLAZAR_ESPACIOS_DE_NOMBRE | Autoload::DESREGISTRAR_AUTOLOAD_AL_DESTRUIRSE;
-        $this->assertSame($configuracionPorDefecto, $this->autoload->configuracion());
-
-        $cambioDeConfiguracion = 123456;
-        $this->autoload->configuracion($cambioDeConfiguracion);
-        $this->assertSame($cambioDeConfiguracion, $this->autoload->configuracion());
+        $this->assertSame($configuracionPorDefecto, $this->autoload->configuracion()->obtener());
     }
 
     /**
@@ -83,7 +81,7 @@ class AutoloadTest extends TestCase
         $this->assertSame(Autoload::ERROR_EN_EL_FILTRO, $this->autoload->error());
         $this->assertEmpty($this->autoload->espaciosDeNombres());
 
-        $this->autoload->configuracion($this->autoload->configuracion() | Autoload::MODO_ESTRICTO);
+        $this->autoload->configuracion()->activar(Autoload::MODO_ESTRICTO, Autoload::LANZAR_EXCEPCIONES);
         $this->expectException(EspacioDeNombreInvalido::class);
         $this->autoload->reservar($espacioDeNombre, $carpeta);
     }
@@ -98,7 +96,7 @@ class AutoloadTest extends TestCase
         $this->autoload->reservar($espacioDeNombre, $carpeta);
         $this->assertCount(1, $this->autoload->espaciosDeNombres()); // Se reemplazan el último por el primero
 
-        $this->autoload->configuracion($this->autoload->configuracion() & ~Autoload::REEMPLAZAR_ESPACIOS_DE_NOMBRE);
+        $this->autoload->configuracion()->desactivar(Autoload::REEMPLAZAR_ESPACIOS_DE_NOMBRE);
         $this->assertFalse($this->autoload->reservar($espacioDeNombre, $carpeta));
         $this->assertSame(Autoload::ERROR_NAMESPACE_RESERVADO, $this->autoload->error());
     }
@@ -136,7 +134,7 @@ class AutoloadTest extends TestCase
         $this->assertFalse($this->autoload->cargar($nombre));
         $this->assertSame($errorEsperado, $this->autoload->error());
 
-        $this->autoload->configuracion($this->autoload->configuracion() | Autoload::MODO_ESTRICTO);
+        $this->autoload->configuracion()->activar(Autoload::MODO_ESTRICTO, Autoload::LANZAR_EXCEPCIONES);
         $this->autoload->cargar($nombre);
     }
 
@@ -197,10 +195,11 @@ class AutoloadTest extends TestCase
     {
         $funcionesRegistradas = spl_autoload_functions();
         $this->assertTrue($this->autoload->registrar());
+        $this->assertTrue($this->autoload->configuracion()->activados(Autoload::DESREGISTRAR_AUTOLOAD_AL_DESTRUIRSE));
         $cantidadFuncionesAntesDe = count(spl_autoload_functions());
 
         // Destruye el objeto
-        delete $this->autoload;
+        $this->autoload = null;
 
         // La configuración por defecto está activo DESREGISTRAR_AUTOLOAD_AL_DESTRUIRSE
         $cantidadDeFuncionesDespuesDeDestruirseElObjeto = count(spl_autoload_functions());

@@ -9,6 +9,7 @@ use Gof\Gestor\Autoload\Excepcion\ObjetoExistente;
 use Gof\Gestor\Autoload\Excepcion\ObjetoInexistente;
 use Gof\Gestor\Autoload\Interfaz\Cargador;
 use Gof\Gestor\Autoload\Interfaz\Filtro;
+use Gof\Gestor\Configuracion\Configuracion;
 use Gof\Interfaz\Archivos\Carpeta;
 
 class Autoload
@@ -98,7 +99,7 @@ class Autoload
     /**
      *  @var int Máscara de bit con la configuración del gestor
      */
-    private $config;
+    private $configuracion;
 
     /**
      *  @var Filtro Filtro que se aplicarán para las cadenas de Espacios de Nombres y Clases
@@ -126,7 +127,7 @@ class Autoload
         $this->filtro($filtro);
         $this->cargador($cargador);
         $this->espaciosDeNombres = array();
-        $this->configuracion($configuracion);
+        $this->configuracion = new Configuracion($configuracion);
     }
 
     /**
@@ -134,7 +135,7 @@ class Autoload
      */
     public function __destruct()
     {
-        if( $this->config & self::DESREGISTRAR_AUTOLOAD_AL_DESTRUIRSE ) {
+        if( $this->configuracion->activados(self::DESREGISTRAR_AUTOLOAD_AL_DESTRUIRSE) ) {
             $this->desregistrar();
         }
     }
@@ -173,9 +174,7 @@ class Autoload
     public function cargar(string $nombre): bool
     {
         if( $this->filtro->clase($nombre) === false ) {
-            $cagarExcepcion = self::MODO_ESTRICTO | self::LANZAR_EXCEPCIONES;
-
-            if( ($this->config & $cagarExcepcion) === $cagarExcepcion ) {
+            if( $this->configuracion->activados(self::MODO_ESTRICTO, self::LANZAR_EXCEPCIONES) ) {
                 throw new CadenaInvalidaParaCargar($nombre);
             }
 
@@ -184,9 +183,7 @@ class Autoload
         }
 
         if( $this->objetoExiste($nombre) ) {
-            $defecarExcepcion = self::MODO_ESTRICTO | self::LANZAR_EXCEPCIONES;
-
-            if( ($this->config & $defecarExcepcion) === $defecarExcepcion ) {
+            if( $this->configuracion->activados(self::MODO_ESTRICTO, self::LANZAR_EXCEPCIONES) ) {
                 throw new ObjetoExistente($nombre);
             }
 
@@ -199,9 +196,7 @@ class Autoload
         $this->obtenerEspacioDeNombreYNombreDelArchivo($nombre, $espacioDeNombreDeLaClase, $nombreDelArchivo);
 
         if( isset($this->espaciosDeNombres[$espacioDeNombreDeLaClase]) === false ) {
-            $diarreaVocal = self::MODO_ESTRICTO | self::LANZAR_EXCEPCIONES;
-
-            if( ($this->config & $diarreaVocal) === $diarreaVocal ) {
+            if( $this->configuracion->activados(self::MODO_ESTRICTO, self::LANZAR_EXCEPCIONES) ) {
                 throw new EspacioDeNombreInexistente($espacioDeNombreDeLaClase, $nombre);
             }
 
@@ -218,7 +213,7 @@ class Autoload
         }
 
         if( $this->objetoExiste($nombre) === false ) {
-            if( $this->config & self::LANZAR_EXCEPCIONES ) {
+            if( $this->configuracion->activados(self::LANZAR_EXCEPCIONES) ) {
                 throw new ObjetoInexistente($rutaDelArchivo, $nombre);
             }
 
@@ -240,7 +235,7 @@ class Autoload
     public function instanciar(string $nombreDeLaClase, ...$argumentos): ?object
     {
         if( class_exists($nombreDeLaClase, false) === false ) {
-            if( ($this->config & self::CARGAR_AL_INSTANCIAR) === 0 ) {
+            if( $this->configuracion->desactivados(self::CARGAR_AL_INSTANCIAR) ) {
                 return null;
             }
 
@@ -257,13 +252,13 @@ class Autoload
      */
     public function registrar(): bool
     {
-        if( $this->config & self::AUTOLOAD_REGISTRADO ) {
+        if( $this->configuracion->activados(self::AUTOLOAD_REGISTRADO) ) {
             $this->agregarError(self::ERROR_AUTOLOAD_REGISTRADO);
             return false;
         }
 
         if( spl_autoload_register([$this, 'cargar']) === true ) {
-            $this->config |= self::AUTOLOAD_REGISTRADO;
+            $this->configuracion->activar(self::AUTOLOAD_REGISTRADO);
             return true;
         }
 
@@ -278,9 +273,9 @@ class Autoload
      */
     public function desregistrar(): bool
     {
-        if( $this->config & self::AUTOLOAD_REGISTRADO ) {
+        if( $this->configuracion->activados(self::AUTOLOAD_REGISTRADO) ) {
             if( spl_autoload_unregister([$this, 'cargar']) === true ) {
-                $this->config &= ~self::AUTOLOAD_REGISTRADO;
+                $this->configuracion->desactivar(self::AUTOLOAD_REGISTRADO);
                 return true;
             }
         }
@@ -305,9 +300,7 @@ class Autoload
     public function reservar(string $espacioDeNombre, Carpeta $carpeta): bool
     {
         if( $this->filtro->espacioDeNombre($espacioDeNombre) === false ) {
-            $vomitarExcepcion = self::MODO_ESTRICTO | self::LANZAR_EXCEPCIONES;
-
-            if( ($this->config & $vomitarExcepcion) === $vomitarExcepcion ) {
+            if( $this->configuracion->activados(self::MODO_ESTRICTO, self::LANZAR_EXCEPCIONES) ) {
                 throw new EspacioDeNombreInvalido($espacioDeNombre);
             }
 
@@ -316,7 +309,7 @@ class Autoload
         }
 
         if( isset($this->espaciosDeNombres[$espacioDeNombre]) ) {
-            if( ($this->config & self::REEMPLAZAR_ESPACIOS_DE_NOMBRE) === 0 ) {
+            if( $this->configuracion->desactivados(self::REEMPLAZAR_ESPACIOS_DE_NOMBRE) ) {
                 $this->agregarError(self::ERROR_NAMESPACE_RESERVADO);
                 return false;
             }
@@ -337,20 +330,13 @@ class Autoload
     }
 
     /**
-     *  Obtiene y/o define la configuración interna del gestor
+     *  Obtiene el gestor de configuracion interna
      *
-     *  @param int|null $configuracion Máscara de bit con la configuración o **NULL** para obtener la actual
-     *
-     *  @return int Devuelve la máscara de bit con la configuración actual del gestor
+     *  @return Configuracion Devuelve el gestor de configuración
      */
-    public function configuracion(?int $configuracion = null): int
+    public function configuracion(): Configuracion
     {
-        if( $configuracion === null ) {
-            return $this->config;
-        }
-
-        // AUTOLOAD_REGISTRADO está reservado para el gestor
-        return $this->config = $configuracion &= ~self::AUTOLOAD_REGISTRADO;
+        return $this->configuracion;
     }
 
     /**
