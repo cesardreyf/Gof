@@ -2,9 +2,11 @@
 
 namespace Gof\Gestor\Autoload\Cargador;
 
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Gestor\Autoload\Excepcion\ArchivoInaccesible;
 use Gof\Gestor\Autoload\Excepcion\ArchivoInexistente;
 use Gof\Gestor\Autoload\Interfaz\Cargador;
+use Gof\Interfaz\Bits\Mascara;
 
 class Archivos implements Cargador
 {
@@ -44,7 +46,7 @@ class Archivos implements Cargador
     /**
      *  @var int Máscara de bits con la configuración interna
      */
-    private $config;
+    private $configuracion;
 
     /**
      *  Crea una instancia del cargador de archivos del gestor de Autoloads
@@ -53,7 +55,7 @@ class Archivos implements Cargador
      */
     public function __construct(int $configuracion = self::CONFIGURACION_POR_DEFECTO)
     {
-        $this->config = $configuracion;
+        $this->configuracion = new MascaraDeBits($configuracion);
     }
 
     /**
@@ -72,12 +74,12 @@ class Archivos implements Cargador
      */
     public function cargar(string $rutaDelArchivo): bool
     {
-        if( $this->config & self::INCLUIR_EXTENSION ) {
+        if( $this->configuracion->activados(self::INCLUIR_EXTENSION) ) {
             $rutaDelArchivo .= '.php';
         }
 
         if( file_exists($rutaDelArchivo) === false ) {
-            if( $this->config & self::LANZAR_EXCEPCIONES ) {
+            if( $this->configuracion->activados(self::LANZAR_EXCEPCIONES) ) {
                 throw new ArchivoInexistente($rutaDelArchivo);
             }
 
@@ -86,7 +88,7 @@ class Archivos implements Cargador
         }
 
         if( is_readable($rutaDelArchivo) === false ) {
-            if( $this->config & self::LANZAR_EXCEPCIONES ) {
+            if( $this->configuracion->activados(self::LANZAR_EXCEPCIONES) ) {
                 throw new ArchivoInaccesible($rutaDelArchivo);
             }
 
@@ -99,15 +101,13 @@ class Archivos implements Cargador
     }
 
     /**
-     *  Obtiene y/o define la configuración interna
+     *  Obtiene la configuracion interna
      *
-     *  @param int|null $configuracion Máscara de bits con la nueva configuración o **null** para obtener el actual
-     *
-     *  @return int Devuelve la máscara de bits con la configuración actual
+     *  @return Mascara Devuelve una tipo de datos Mascara de bits
      */
-    public function configuracion(?int $configuracion = null): int
+    public function configuracion(): Mascara
     {
-        return $configuracion === null ? $this->config : $this->config = $configuracion;
+        return $this->configuracion;
     }
 
     /**
