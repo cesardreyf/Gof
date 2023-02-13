@@ -1,8 +1,8 @@
 <?php
 
-namespace Gof\Contrato\Configuracion;
+namespace Gof\Interfaz\Bits;
 
-interface Configuracion
+interface Mascara
 {
     public function obtener(): int;
     public function definir(int $valor): int;

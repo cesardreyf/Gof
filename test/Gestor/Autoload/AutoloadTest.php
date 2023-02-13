@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Gof\Contrato\Configuracion\Configuracion;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Excepcion\CadenaInvalidaParaCargar;
 use Gof\Gestor\Autoload\Excepcion\EspacioDeNombreInexistente;
@@ -12,6 +11,7 @@ use Gof\Gestor\Autoload\Excepcion\ObjetoInexistente;
 use Gof\Gestor\Autoload\Interfaz\Cargador;
 use Gof\Gestor\Autoload\Interfaz\Filtro;
 use Gof\Interfaz\Archivos\Carpeta;
+use Gof\Interfaz\Bits\Mascara;
 use PHPUnit\Framework\TestCase;
 
 class AutoloadTest extends TestCase
@@ -53,7 +53,7 @@ class AutoloadTest extends TestCase
 
     public function testConfiguracion(): void
     {
-        $this->assertInstanceOf(Configuracion::class, $this->autoload->configuracion());
+        $this->assertInstanceOf(Mascara::class, $this->autoload->configuracion());
         $configuracionPorDefecto = Autoload::LANZAR_EXCEPCIONES | Autoload::REEMPLAZAR_ESPACIOS_DE_NOMBRE | Autoload::DESREGISTRAR_AUTOLOAD_AL_DESTRUIRSE;
         $this->assertSame($configuracionPorDefecto, $this->autoload->configuracion()->obtener());
     }

@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-use Gof\Contrato\Configuracion\Configuracion as IConfiguracion;
-use Gof\Gestor\Configuracion\Configuracion;
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
+use Gof\Interfaz\Bits\Mascara;
 use PHPUnit\Framework\TestCase;
 
-class ConfiguracionTest extends TestCase
+class MascaraDeBitsTest extends TestCase
 {
 
     public function testImplementarLaInterfaz(): void
     {
-        $this->assertInstanceOf(IConfiguracion::class, new Configuracion());
+        $this->assertInstanceOf(Mascara::class, new MascaraDeBits());
     }
 
     public function testValorPorDefectoAlInstanciar(): void
     {
         $valorPorDefecto = 0;
-        $configuracion = new Configuracion();
+        $configuracion = new MascaraDeBits();
         $this->assertSame($valorPorDefecto, $configuracion->obtener());
     }
 
     public function testDiferentesValoresAlInstanciar(): void
     {
         $valor1 = 12345;
-        $configuracion1 = new Configuracion($valor1);
+        $configuracion1 = new MascaraDeBits($valor1);
 
         $valor2 = 67890;
-        $configuracion2 = new Configuracion($valor2);
+        $configuracion2 = new MascaraDeBits($valor2);
 
         $this->assertSame($valor1, $configuracion1->obtener());
         $this->assertSame($valor2, $configuracion2->obtener());
@@ -36,7 +36,7 @@ class ConfiguracionTest extends TestCase
     public function testActivarBits(): void
     {
         $bits = 2 | 8 | 32;
-        $configuracion = new Configuracion();
+        $configuracion = new MascaraDeBits();
         $this->assertSame(0, $configuracion->obtener());
         $this->assertSame($bits, $configuracion->activar($bits));
 
@@ -48,7 +48,7 @@ class ConfiguracionTest extends TestCase
     public function testDesactivarBits(): void
     {
         $bitsActivados = 1 | 2 | 4 | 8 | 16;
-        $configuracion = new Configuracion($bitsActivados);
+        $configuracion = new MascaraDeBits($bitsActivados);
         $this->assertSame($bitsActivados, $configuracion->obtener());
 
         $bitsQueQuieroDesactivar = 2 | 8;
@@ -61,7 +61,7 @@ class ConfiguracionTest extends TestCase
     public function testBitsActivados(): void
     {
         $bitsActivados = 1 | 16 | 32;
-        $configuracion = new Configuracion($bitsActivados);
+        $configuracion = new MascaraDeBits($bitsActivados);
 
         $this->assertTrue($configuracion->activados(1));
         $this->assertTrue($configuracion->activados(16));
@@ -75,7 +75,7 @@ class ConfiguracionTest extends TestCase
     public function testBitsDesactivados(): void
     {
         $bitsActivados = 1 | 4 | 16;
-        $configuracion = new Configuracion($bitsActivados);
+        $configuracion = new MascaraDeBits($bitsActivados);
 
         $this->assertTrue($configuracion->desactivados(2));
         $this->assertTrue($configuracion->desactivados(8));
@@ -88,7 +88,7 @@ class ConfiguracionTest extends TestCase
 
     public function testDefinirElValorInterno(): void
     {
-        $configuracion = new Configuracion();
+        $configuracion = new MascaraDeBits();
         $this->assertSame(0, $configuracion->obtener());
 
         $valores = 1 | 2 | 4 | 8;
@@ -102,7 +102,7 @@ class ConfiguracionTest extends TestCase
 
     public function testActivarConVariosArgumentos(): void
     {
-        $configuracion = new Configuracion();
+        $configuracion = new MascaraDeBits();
 
         $activarBitN1 = 0b001;
         $activarBitN2 = 0b010;
@@ -122,7 +122,7 @@ class ConfiguracionTest extends TestCase
         $configuracionInicial = 0b111;
         $configuracionAlFinal = 0b000;
 
-        $configuracion = new Configuracion($configuracionInicial);
+        $configuracion = new MascaraDeBits($configuracionInicial);
         $configuracion->desactivar($desactivarBitN1, $desactivarBitN2, $desactivarBitN3);
         $this->assertSame($configuracionAlFinal, $configuracion->obtener());
     }
@@ -136,7 +136,7 @@ class ConfiguracionTest extends TestCase
         $bitN3Activo = 0b0100;
         $bitN4Activo = 0b1000;
 
-        $configuracion = new Configuracion($bitsActivos);
+        $configuracion = new MascaraDeBits($bitsActivos);
         $this->assertTrue($configuracion->activados($bitN1Activo, $bitN3Activo));
         $this->assertFalse($configuracion->activados($bitN2Activo, $bitN4Activo));
     }
@@ -150,7 +150,7 @@ class ConfiguracionTest extends TestCase
         $bitN3Inactivo = 0b0100;
         $bitN4Inactivo = 0b1000;
 
-        $configuracion = new Configuracion($bitsActivos);
+        $configuracion = new MascaraDeBits($bitsActivos);
         $this->assertTrue($configuracion->desactivados($bitN2Inactivo, $bitN4Inactivo));
         $this->assertFalse($configuracion->desactivados($bitN1Inactivo, $bitN3Inactivo));
     }

@@ -2,6 +2,7 @@
 
 namespace Gof\Gestor\Autoload;
 
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Gestor\Autoload\Excepcion\CadenaInvalidaParaCargar;
 use Gof\Gestor\Autoload\Excepcion\EspacioDeNombreInexistente;
 use Gof\Gestor\Autoload\Excepcion\EspacioDeNombreInvalido;
@@ -9,8 +10,8 @@ use Gof\Gestor\Autoload\Excepcion\ObjetoExistente;
 use Gof\Gestor\Autoload\Excepcion\ObjetoInexistente;
 use Gof\Gestor\Autoload\Interfaz\Cargador;
 use Gof\Gestor\Autoload\Interfaz\Filtro;
-use Gof\Gestor\Configuracion\Configuracion;
 use Gof\Interfaz\Archivos\Carpeta;
+use Gof\Interfaz\Bits\Mascara;
 
 class Autoload
 {
@@ -127,7 +128,7 @@ class Autoload
         $this->filtro($filtro);
         $this->cargador($cargador);
         $this->espaciosDeNombres = array();
-        $this->configuracion = new Configuracion($configuracion);
+        $this->configuracion = new MascaraDeBits($configuracion);
     }
 
     /**
@@ -334,7 +335,7 @@ class Autoload
      *
      *  @return Configuracion Devuelve el gestor de configuración
      */
-    public function configuracion(): Configuracion
+    public function configuracion(): Mascara
     {
         return $this->configuracion;
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Gof\Gestor\Configuracion;
+namespace Gof\Datos\Bits\Mascara;
 
-use Gof\Contrato\Configuracion\Configuracion as IConfiguracion;
+use Gof\Interfaz\Bits\Mascara;
 
-class Configuracion implements IConfiguracion
+class MascaraDeBits implements Mascara
 {
     /**
      *  @var int Máscara de bits con la configuración
