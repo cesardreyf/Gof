@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Gof\Contrato\Registro\Registro;
 use Gof\Gestor\Registro\Simple\RegistroSimple;
+use Gof\Interfaz\Bits\Mascara;
 use Gof\Interfaz\Mensajes\Guardable;
 use PHPUnit\Framework\TestCase;
 
@@ -16,10 +17,16 @@ class RegistroSimpleTest extends TestCase
         $this->gestorDeGuardado = $this->getMockBuilder(Guardable::class)->setMethods(['guardar'])->getMock();
     }
 
-    public function test_implementarContrato(): void
+    public function test_implementarContratoRegistro(): void
     {
         $registro = new RegistroSimple($this->gestorDeGuardado);
         $this->assertInstanceOf(Registro::class, $registro);
+    }
+
+    public function test_metodoConfiguracionDevuelveUnaInstanciaDeMascaraDeBits(): void
+    {
+        $registro = new RegistroSimple($this->gestorDeGuardado);
+        $this->assertInstanceOf(Mascara::class, $registro->configuracion());
     }
 
     public function test_guardarCerosRegistros(): void
@@ -53,8 +60,8 @@ class RegistroSimpleTest extends TestCase
 
     public function test_configuracionUnirMensajesAlRegistrarlos(): void
     {
-        $configuracionDelRegistro = RegistroSimple::UNIR_MENSAJES_AL_REGISTRAR;
-        $mensajes = new RegistroSimple($this->gestorDeGuardado, $configuracionDelRegistro);
+        $mensajes = new RegistroSimple($this->gestorDeGuardado);
+        $mensajes->configuracion()->activar(RegistroSimple::UNIR_MENSAJES_AL_VOLCAR);
 
         $mensajes->registrar('Hola ');
         $mensajes->registrar('mundo');
@@ -65,14 +72,14 @@ class RegistroSimpleTest extends TestCase
 
     public function test_configuracionVolcarPilaAlRegistrar(): void
     {
-        $configuracionDelRegistro = RegistroSimple::VOLCAR_PILA_AL_REGISTRAR;
-        $mensajes = new RegistroSimple($this->gestorDeGuardado, $configuracionDelRegistro);
+        $mensajes = new RegistroSimple($this->gestorDeGuardado);
+        $mensajes->configuracion()->activar(RegistroSimple::VOLCAR_PILA_AL_REGISTRAR);
         $this->gestorDeGuardado->expects($this->once())->method('guardar')->with('Hola mundo')->willReturn(true);
 
         $mensajes->registrar('Hola mundo');
     }
 
-    public function test_obtenerDefinirSeparador(): void
+    public function test_obtenerYDefinirSeparador(): void
     {
         $registros = new RegistroSimple($this->gestorDeGuardado);
         $this->assertSame('', $registros->separador());
@@ -90,8 +97,8 @@ class RegistroSimpleTest extends TestCase
         $mensajeDos = 'Chau mundo';
         $mensajesUnidos = $mensajeUno . $separador . $mensajeDos;
 
-        $configuracionDelRegistro = RegistroSimple::UNIR_MENSAJES_AL_VOLCAR;
-        $saludos = new RegistroSimple($this->gestorDeGuardado, $configuracionDelRegistro);
+        $saludos = new RegistroSimple($this->gestorDeGuardado);
+        $saludos->configuracion()->activar(RegistroSimple::UNIR_MENSAJES_AL_VOLCAR);
         $this->gestorDeGuardado->expects($this->once())->method('guardar')->with($mensajesUnidos);
 
         $saludos->registrar($mensajeUno);
@@ -102,8 +109,8 @@ class RegistroSimpleTest extends TestCase
 
     public function test_configuracionLimpiarPilaAlVolcar(): void
     {
-        $configuracionDelRegistro = RegistroSimple::LIMPIAR_PILA_AL_VOLCAR;
-        $registro = new RegistroSimple($this->gestorDeGuardado, $configuracionDelRegistro);
+        $registro = new RegistroSimple($this->gestorDeGuardado);
+        $registro->configuracion()->activar(RegistroSimple::LIMPIAR_PILA_AL_VOLCAR);
 
         $registro->registrar('algo');
         $registro->registrar('bobo');
@@ -115,8 +122,8 @@ class RegistroSimpleTest extends TestCase
 
     public function test_configuracionNoLimpiarPilaAlVolcar(): void
     {
-        $configuracionDelRegistro = 0;
-        $registro = new RegistroSimple($this->gestorDeGuardado, $configuracionDelRegistro);
+        $registro = new RegistroSimple($this->gestorDeGuardado);
+        $registro->configuracion()->desactivar(RegistroSimple::LIMPIAR_PILA_AL_VOLCAR);
 
         $registro->registrar('algo');
         $registro->volcar();

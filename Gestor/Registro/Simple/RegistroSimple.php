@@ -3,6 +3,7 @@
 namespace Gof\Gestor\Registro\Simple;
 
 use Gof\Contrato\Registro\Registro;
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Mensajes\Guardable;
 
 class RegistroSimple implements Registro
@@ -48,27 +49,27 @@ class RegistroSimple implements Registro
     private $gestor;
 
     /**
-     *  @var int Máscara de bits con la configuración interna del gestor
-     */
-    private $config;
-
-    /**
      *  @var string Separador utilizado para la unión de mensajes
      */
     private $separador;
 
     /**
+     *  @var int Máscara de bits con la configuración interna del gestor
+     */
+    private $configuracion;
+
+    /**
      *  Crea una instancia de la clase RegistroSimple
      *
-     *  @param Guardable $gestor Gestor encargado del guardado de los registros
-     *  @param int       $config Máscara de bit con la configuración interna del gestor
+     *  @param Guardable $gestor        Gestor encargado del guardado de los registros
+     *  @param int       $configuracion Máscara de bit con la configuración interna del gestor
      */
-    public function __construct(Guardable $gestor, int $config = self::CONFIGURACION_POR_DEFECTO)
+    public function __construct(Guardable $gestor, int $configuracion = self::CONFIGURACION_POR_DEFECTO)
     {
         $this->pila = [];
         $this->separador = '';
         $this->gestor = $gestor;
-        $this->config = $config;
+        $this->configuracion = new MascaraDeBits($configuracion);
     }
 
     /**
@@ -87,7 +88,7 @@ class RegistroSimple implements Registro
      */
     public function registrar(string $mensaje): bool
     {
-        if( $this->config & self::UNIR_MENSAJES_AL_REGISTRAR ) {
+        if( $this->configuracion()->activados(self::UNIR_MENSAJES_AL_REGISTRAR) ) {
             $indice = count($this->pila) - 1;
 
             if( $indice < 0 ) {
@@ -99,7 +100,7 @@ class RegistroSimple implements Registro
             $this->pila[] = $mensaje;
         }
 
-        if( $this->config & self::VOLCAR_PILA_AL_REGISTRAR ) {
+        if( $this->configuracion()->activados(self::VOLCAR_PILA_AL_REGISTRAR) ) {
             return $this->volcar();
         }
 
@@ -125,7 +126,7 @@ class RegistroSimple implements Registro
     {
         $resultado = true;
 
-        if( $this->config & self::UNIR_MENSAJES_AL_VOLCAR ) {
+        if( $this->configuracion()->activados(self::UNIR_MENSAJES_AL_VOLCAR) ) {
             $union = implode($this->separador, $this->pila);
             $resultado = $this->gestor->guardar($union);
         } else {
@@ -136,14 +137,14 @@ class RegistroSimple implements Registro
                 if( $guardado === false ) {
                     $resultado = false;
 
-                    if( $this->config & self::INTERRUMPIR_VOLCADO_SI_HAY_ERRORES ) {
+                    if( $this->configuracion()->activados(self::INTERRUMPIR_VOLCADO_SI_HAY_ERRORES) ) {
                         break;
                     }
                 }
             }
         }
 
-        if( $this->config & self::LIMPIAR_PILA_AL_VOLCAR ) {
+        if( $this->configuracion()->activados(self::LIMPIAR_PILA_AL_VOLCAR) ) {
             $this->pila = [];
         }
 
@@ -166,15 +167,13 @@ class RegistroSimple implements Registro
     }
 
     /**
-     *  Obtiene o define la confiruación interna del gestor
+     *  Obtiene la configuracion interna del gestor
      *
-     *  @param int|null $config Máscara de bits con la nueva configuración o NULL para obtener la actual
-     *
-     *  @return int Devuelve un entero con la máscara de bits con la configuración actual
+     *  @return MascaraDeBits Devuelve una MascaraDeBits con la configuración interna
      */
-    public function configuracion(?int $config = null): int
+    public function configuracion(): MascaraDeBits
     {
-        return $config === null ? $this->config : $this->config = $config;
+        return $this->configuracion;
     }
 
     /**
