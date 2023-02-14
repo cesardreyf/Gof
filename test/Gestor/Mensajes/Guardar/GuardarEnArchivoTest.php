@@ -4,118 +4,104 @@ declare(strict_types=1);
 
 use Gof\Datos\Archivos\Archivo;
 use Gof\Gestor\Mensajes\Guardar\GuardarEnArchivo;
+use Gof\Interfaz\Bits\Mascara;
 use PHPUnit\Framework\TestCase;
-
-// TAREA
-//  Hacer más test
 
 class GuardarEnArchivoTest extends TestCase
 {
-    protected static $archivo;
+    const RUTA_DEL_ARCHIVO = __DIR__ . '/ignorame';
 
-    public static function setUpBeforeClass(): void
+    private $gestor;
+
+    public function setUp(): void
     {
-        self::$archivo = new Archivo(__DIR__ . '/ignorame');
+        $this->gestor = new GuardarEnArchivo(new Archivo(self::RUTA_DEL_ARCHIVO));
     }
 
-    public function testMensajeVacioDevuelveFalseAlGuardar(): void
+    public static function tearDownAfterClass(): void
     {
-        $mensaje = '';
-        $gestor = new GuardarEnArchivo(self::$archivo);
-        $this->assertFalse($gestor->guardar($mensaje));
+        file_put_contents(self::RUTA_DEL_ARCHIVO, '', 0);
     }
 
-    public function testConfiguracionPorDefecto(): void
+    public function testInstanciaDeLaConfiguracion(): void
     {
-        $gestor = new GuardarEnArchivo(self::$archivo);
-        $configuracionDelGestor = $gestor->configuracion();
-        $configuracionEsperada = GuardarEnArchivo::CONCATENAR;
-
-        $this->assertSame($configuracionDelGestor, $configuracionEsperada);
-        $this->assertSame($configuracionEsperada, GuardarEnArchivo::CONFIGURACION_POR_DEFECTO);
+        $this->assertInstanceOf(Mascara::class, $this->gestor->configuracion());
     }
 
-    /**
-     *  @dataProvider dataUnSoloMensaje
-     */
-    public function testGuardaMensajeCorrectamenteDevolviendoTrue(string $mensaje): void
+    public function testGuardarDevuelveFalseSiElMensajeEstaVacio(): void
     {
-        $configuracion = 0;
-        $gestor = new GuardarEnArchivo(self::$archivo, $configuracion);
-        $this->assertTrue($gestor->guardar($mensaje));
+        $mensajeVacio = '';
+        $this->assertFalse($this->gestor->guardar($mensajeVacio));
     }
 
     /**
-     *  @dataProvider dataUnSoloMensaje
+     *  @dataProvider dataMensajesQueSePuedenConcatenar
      */
-    public function testMensajeGuardadoCorrespondeConElContenidoDelArchivo(string $mensaje): void
+    public function testGuardarMensajesConcatenados(array $mensajes): void
     {
-        $contenidoDelArchivo = file_get_contents(self::$archivo->ruta());
-        $this->assertSame($mensaje, $contenidoDelArchivo);
+        $mensajeFinalSupuestamenteConcatenado = '';
+        file_put_contents(self::RUTA_DEL_ARCHIVO, '', 0);
+        $this->gestor->configuracion()->activar(GuardarEnArchivo::CONCATENAR);
+
+        foreach( $mensajes as $mensaje ) {
+            $this->assertTrue($this->gestor->guardar($mensaje));
+            $mensajeFinalSupuestamenteConcatenado .= $mensaje;
+        }
+
+        $mensajeGuardadoEnElArchivo = file_get_contents(self::RUTA_DEL_ARCHIVO);
+        $this->assertSame($mensajeFinalSupuestamenteConcatenado, $mensajeGuardadoEnElArchivo);
     }
 
     /**
-     *  @dataProvider dataDosMensajesDiferentesSaludando
+     *  @dataProvider dataMensajesQueSeReemplazaranEnElArchivo
      */
-    public function testReemplazarContenidoDelArchivoConDosMensajesDiferentes(string $mensajeUno, string $mensajeDos): void
+    public function testGuardarMensajesReemplazandoElContenidoDelArchivo(array $mensajes): void
     {
-        $configuracion = 0;
-        $gestor = new GuardarEnArchivo(self::$archivo, $configuracion);
+        $ultimoMensaje = '';
+        file_put_contents(self::RUTA_DEL_ARCHIVO, '', 0);
+        $this->gestor->configuracion()->desactivar(GuardarEnArchivo::CONCATENAR);
 
-        $this->assertTrue($gestor->guardar($mensajeUno));
-        $this->assertTrue($gestor->guardar($mensajeDos));
+        foreach( $mensajes as $mensaje ) {
+            $this->assertTrue($this->gestor->guardar($mensaje));
+            $ultimoMensaje = $mensaje;
+        }
 
-        $contenidoDelArchivo = file_get_contents(self::$archivo->ruta());
-        $this->assertStringNotContainsString($mensajeUno, $contenidoDelArchivo);
-        $this->assertSame($contenidoDelArchivo, $mensajeDos);
+        $mensajeGuardadoEnElArchivo = file_get_contents(self::RUTA_DEL_ARCHIVO);
+        $this->assertSame($mensajeGuardadoEnElArchivo, $ultimoMensaje);
     }
 
     /**
-     *  @dataProvider dataDosMensajesDiferentesSaludando
+     *  @dataProvider dataMensajesParaGuardarQueEstanSucios
      */
-    public function testConcatenarMensajesEnElArchivo(string $mensajeUno, string $mensajeDos): void
+    public function testGuardarMensajesPeroLimpiandoleUnPoquito(string $mensaje): void
     {
-        $configuracion = GuardarEnArchivo::CONCATENAR;
-        $gestor = new GuardarEnArchivo(self::$archivo, $configuracion);
-
-        file_put_contents(self::$archivo->ruta(), '', 0);
-        $this->assertTrue($gestor->guardar($mensajeUno));
-        $this->assertTrue($gestor->guardar($mensajeDos));
-
-        $contenidoDelArchivo = file_get_contents(self::$archivo->ruta());
-        $this->assertSame($contenidoDelArchivo, $mensajeUno . $mensajeDos);
+        file_put_contents(self::RUTA_DEL_ARCHIVO, '', 0);
+        $this->gestor->configuracion()->activar(GuardarEnArchivo::LIMPIAR_MENSAJE);
+        $this->gestor->guardar($mensaje);
+        $this->assertSame(trim($mensaje), file_get_contents(self::RUTA_DEL_ARCHIVO));
     }
 
-    /**
-     *  @dataProvider dataMensajeSucioParaSerLimpiado
-     */
-    public function testLimpiarCadenaAntesDeGuardarla(string $mensaje): void
-    {
-        $configuracion = GuardarEnArchivo::LIMPIAR_MENSAJE;
-        $gestor = new GuardarEnArchivo(self::$archivo, $configuracion);
-
-        $this->assertTrue($gestor->guardar($mensaje));
-        $contenidoDelArchivo = file_get_contents(self::$archivo->ruta());
-
-        $this->assertNotSame($contenidoDelArchivo, $mensaje);
-    }
-
-    public function dataUnSoloMensaje(): array
-    {
-        return [['Hola mundo']];
-    }
-
-    public function dataDosMensajesDiferentesSaludando(): array
+    public function dataMensajesQueSePuedenConcatenar(): array
     {
         return [
-            ['Hola', 'Mundo']
+            [['Hola ', 'Mundo']]
         ];
     }
 
-    public function dataMensajeSucioParaSerLimpiado(): array
+    public function dataMensajesQueSeReemplazaranEnElArchivo(): array
+    {
+        return [[[
+            'Hola',
+            'Mundo',
+            'Necesito',
+            'Mas Bitcoins'
+        ]]];
+    }
+
+    public function dataMensajesParaGuardarQueEstanSucios(): array
     {
         return [
-            ['    Hola    mundo,   todo  bien?   ']
+            ['  Mensaje con espacios al principio y al final   ']
         ];
     }
 

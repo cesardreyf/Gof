@@ -2,6 +2,7 @@
 
 namespace Gof\Gestor\Mensajes\Guardar;
 
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Archivos\Archivo;
 use Gof\Interfaz\Mensajes\Guardable;
 
@@ -21,9 +22,9 @@ class GuardarEnArchivo implements Guardable
     private $archivo;
 
     /**
-     *  @var int Máscara de bit con la configuración del gestor
+     *  @var MascaraDeBits Configuracion interna
      */
-    private $config;
+    private $configuracion;
 
     /**
      *  @var int Número de bytes almacenados
@@ -42,7 +43,7 @@ class GuardarEnArchivo implements Guardable
     {
         $this->bytes = 0;
         $this->archivo = $archivo;
-        $this->config = $configuracion;
+        $this->configuracion = new MascaraDeBits($configuracion);
     }
 
     /**
@@ -59,15 +60,15 @@ class GuardarEnArchivo implements Guardable
             return false;
         }
 
-        if( $this->config & self::CONCATENAR ) {
+        if( $this->configuracion->activados(self::CONCATENAR) ) {
             $configuracion = FILE_APPEND;
         }
 
-        if( $this->config & self::LIMPIAR_MENSAJE ) {
+        if( $this->configuracion->activados(self::LIMPIAR_MENSAJE) ) {
             $mensaje = trim($mensaje);
         }
 
-        if( $this->config & self::RESETEAR_NBYTES_AL_GUARDAR ) {
+        if( $this->configuracion->activados(self::RESETEAR_NBYTES_AL_GUARDAR) ) {
             $this->bytes = 0;
         }
 
@@ -102,13 +103,13 @@ class GuardarEnArchivo implements Guardable
     }
 
     /**
-     *  Obtiene o define la configuración interna del gestor
+     *  Obtiene la configuración interna
      *
-     *  @return int Devuelve una máscara de bits con la configuración actual del gestor
+     *  @return MascaraDeBits Devuelve la configuración interna del gestor
      */
-    public function configuracion(?int $flags = null): int
+    public function configuracion(): MascaraDeBits
     {
-        return $flags === null ? $this->config : $this->config = $flags;
+        return $this->configuracion;
     }
 
 }
