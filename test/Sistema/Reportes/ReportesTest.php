@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Sistema\Reportes;
+
 use Gof\Interfaz\Mensajes\Guardable;
 use Gof\Sistema\Reportes\Interfaz\Reportero;
 use Gof\Sistema\Reportes\Reportes;

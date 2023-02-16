@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
+namespace Test\Sistema\Reportes\Plantilla;
+
+use Exception;
 use Gof\Sistema\Reportes\Interfaz\Plantilla;
 use Gof\Sistema\Reportes\Plantilla\Excepciones;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class ExcepcionesTest extends TestCase
 {

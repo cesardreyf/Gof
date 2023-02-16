@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos\Archivos;
+
+use Exception;
 use Gof\Datos\Archivos\Archivo;
 use Gof\Interfaz\Archivos\Archivo as IArchivo;
 use PHPUnit\Framework\TestCase;

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos\Lista;
+
+use Exception;
 use Gof\Datos\Lista\Numero\ListaDeEnteros;
 use Gof\Interfaz\Lista\Enteros;
 use PHPUnit\Framework\TestCase;

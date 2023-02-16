@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos;
+
 use Gof\Datos\Lista\Lista;
 use PHPUnit\Framework\TestCase;
 

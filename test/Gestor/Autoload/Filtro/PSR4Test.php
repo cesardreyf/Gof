@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Gestor\Autoload\Filtro;
+
 use Gof\Gestor\Autoload\Filtro\PSR4;
 use Gof\Gestor\Autoload\Interfaz\Filtro;
 use PHPUnit\Framework\TestCase;

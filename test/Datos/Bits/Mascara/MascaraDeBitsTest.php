@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos\Bits\Mascara;
+
 use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Bits\Mascara;
 use PHPUnit\Framework\TestCase;

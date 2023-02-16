@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
+namespace Test\Sistema\Reportes\Plantilla;
+
 use Gof\Sistema\Reportes\Interfaz\Plantilla;
 use Gof\Sistema\Reportes\Plantilla\Errores;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class ErroresTest extends TestCase
 {

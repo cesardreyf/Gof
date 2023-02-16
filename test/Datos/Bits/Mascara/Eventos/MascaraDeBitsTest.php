@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos\Bits\Mascara\Eventos;
+
 use Gof\Datos\Bits\Mascara\Eventos\MascaraDeBits as MascaraDeBitsConEventos;
 use Gof\Datos\Bits\Mascara\Eventos\Eventos;
 use Gof\DAtos\Bits\Mascara\MascaraDeBits;

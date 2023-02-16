@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Gestor\Enrutador\Simple;
+
 use Gof\Datos\Lista\Texto\ListaDeTextos;
 use Gof\Gestor\Enrutador\Simple\Enrutador;
 use PHPUnit\Framework\TestCase;

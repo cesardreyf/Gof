@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos\Lista;
+
+use Exception;
 use Gof\Datos\Lista\Texto\ListaDeTextos;
 use Gof\Interfaz\Lista\Textos;
 use PHPUnit\Framework\TestCase;

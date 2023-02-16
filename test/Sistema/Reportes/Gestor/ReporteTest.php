@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Sistema\Reportes\Gestor;
+
 use Gof\Contrato\Registro\Registro;
 use Gof\Sistema\Reportes\Gestor\Reporte;
 use Gof\Sistema\Reportes\Interfaz\Plantilla;

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Gestor\Autoload\Cargador;
+
 use Gof\Gestor\Autoload\Cargador\Archivos;
 use Gof\Gestor\Autoload\Excepcion\ArchivoInaccesible;
 use Gof\Gestor\Autoload\Excepcion\ArchivoInexistente;

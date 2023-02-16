@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Gestor\Mensajes\Guardar;
+
 use Gof\Datos\Archivos\Archivo;
 use Gof\Gestor\Mensajes\Guardar\GuardarEnArchivo;
 use Gof\Interfaz\Bits\Mascara;

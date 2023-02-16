@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Gestor\Registro\Simple;
+
 use Gof\Contrato\Registro\Registro;
 use Gof\Gestor\Registro\Simple\RegistroSimple;
 use Gof\Interfaz\Bits\Mascara;

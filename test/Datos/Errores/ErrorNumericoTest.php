@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Datos\Errores;
+
 use Gof\Datos\Errores\ErrorNumerico;
 use Gof\Interfaz\Errores\Errores;
 use PHPUnit\Framework\TestCase;

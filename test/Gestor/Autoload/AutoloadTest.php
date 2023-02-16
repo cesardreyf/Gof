@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Test\Gestor\Autoload;
+
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Excepcion\CadenaInvalidaParaCargar;
 use Gof\Gestor\Autoload\Excepcion\EspacioDeNombreInexistente;
