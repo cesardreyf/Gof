@@ -60,4 +60,12 @@ class ErrorNumerico implements Errores
         return $this->errores;
     }
 
+    /**
+     *  Limpia la pila de errores
+     */
+    public function limpiar()
+    {
+        $this->errores = [];
+    }
+
 }
