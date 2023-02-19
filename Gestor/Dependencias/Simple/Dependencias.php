@@ -10,6 +10,7 @@ use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseNoReservada;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseReservada;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ObjetoNoCorrespondido;
 use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaCambiar;
+use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaDefinir;
 use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaRemover;
 use Gof\Interfaz\Errores\Errores;
 
@@ -31,14 +32,19 @@ class Dependencias implements IDependencias
     const PERMITIR_REMOVER = 4;
 
     /**
-     *  @var int Indica que se llame a la función que define el objeto justamente después de agregarlo
+     *  @var int Indica que se pueden definir las clases
      */
-    const INSTANCIAR_AL_AGREGAR = 8;
+    const PERMITIR_DEFINIR = 8;
 
     /**
      *  @var int Indica que se llame a la función que define el objeto justamente después de agregarlo
      */
-    const LANZAR_EXCEPCION = 16;
+    const INSTANCIAR_AL_AGREGAR = 16;
+
+    /**
+     *  @var int Indica que se llame a la función que define el objeto justamente después de agregarlo
+     */
+    const LANZAR_EXCEPCION = 32;
 
     /**
      *  @var int Error que indica que la clase no está reservada
@@ -74,6 +80,11 @@ class Dependencias implements IDependencias
      *  @var int Indica que no se tiene permisos para remover
      */
     const ERROR_SIN_PERMISOS_PARA_REMOVER = 302;
+
+    /**
+     *  @var int Indica que no se tiene permisos para remover
+     */
+    const ERROR_SIN_PERMISOS_PARA_DEFINIR = 303;
 
     /**
      *  @var array Lista de clases
@@ -148,12 +159,7 @@ class Dependencias implements IDependencias
             return false;
         }
 
-        if( !empty($this->clases[$nombre]) ) {
-            if( $this->configuracion->activados(self::LANZAR_EXCEPCION) ) {
-                throw new ClaseReservada($nombre);
-            }
-
-            $this->errores->agregar(self::ERROR_CLASE_RESERVADA);
+        if( $this->claseEstaReservada($nombre) ) {
             return false;
         }
 
@@ -214,7 +220,7 @@ class Dependencias implements IDependencias
             return false;
         }
 
-        $this->clases[$nombre] = function() use ($nuevaInstancia) {
+        $this->clases[$nombre] = static function() use ($nuevaInstancia) {
             return $nuevaInstancia;
         };
 
@@ -298,11 +304,63 @@ class Dependencias implements IDependencias
                 return null;
             }
 
-            // Cambia la función de definición a obtención
-            return ($elemento = function() use ($objeto) {
+            return ($elemento = static function() use ($objeto) {
                 return $objeto;
             })();
         };
+    }
+
+    /**
+     *  Define directamente el objeto que devolverá la clase a reservarse
+     *
+     *  A diferencia de Dependencias::agregar() esta función define directamente el objeto que
+     *  será devuelto por Dependencias::obtener().
+     *
+     *  La clase, o interfaz, no debe estar registrada.
+     *  Si ya está reservada use Dependencias::cambiar().
+     *
+     *  @param string $nombre Nombre de la clase o interfaz
+     *  @param object $objeto Instancia del objeto a definir
+     *
+     *  @see Dependencias::agregar()
+     *  @see Dependencias::cambiar()
+     *
+     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     */
+    public function definir(string $nombre, object $objeto): bool
+    {
+        if( $this->configuracion->desactivados(self::PERMITIR_DEFINIR) ) {
+            if( $this->configuracion->activados(self::LANZAR_EXCEPCION) ) {
+                throw new SinPermisosParaDefinir($nombre);
+            }
+
+            $this->errores->agregar(self::ERROR_SIN_PERMISOS_PARA_DEFINIR);
+            return false;
+        }
+
+        if( $this->claseEstaReservada($nombre) || $this->objetoNoCorresponde($objeto, $nombre) ) {
+            return false;
+        }
+
+        $this->clases[$nombre] = static function() use ($objeto) {
+            return $objeto;
+        };
+
+        return true;
+    }
+
+    private function claseEstaReservada(string $nombre): bool
+    {
+        if( empty($this->clases[$nombre]) ) {
+            return false;
+        }
+
+        if( $this->configuracion->activados(self::LANZAR_EXCEPCION) ) {
+            throw new ClaseReservada($nombre);
+        }
+
+        $this->errores->agregar(self::ERROR_CLASE_RESERVADA);
+        return true;
     }
 
     /**

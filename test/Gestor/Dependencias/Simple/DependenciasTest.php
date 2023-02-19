@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Test\Gestor\Dependencias\Simple;
 
 use Gof\Contrato\Dependencias\Dependencias as Contrato;
-use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseInexistente;
-use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseReservada;
-use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseNoReservada;
-use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaCambiar;
-use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaRemover;
-use Gof\Gestor\Dependencias\Simple\Excepcion\ObjetoNoCorrespondido;
 use Gof\Gestor\Dependencias\Simple\Dependencias;
+use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseInexistente;
+use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseNoReservada;
+use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseReservada;
+use Gof\Gestor\Dependencias\Simple\Excepcion\ObjetoNoCorrespondido;
+use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaCambiar;
+use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaDefinir;
+use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaRemover;
 use Gof\Interfaz\Errores\Errores;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -210,6 +211,50 @@ class DependenciasTest extends TestCase
         $this->dependencias->configuracion()->activar(Dependencias::LANZAR_EXCEPCION);
         $this->expectException(SinPermisosParaRemover::class);
         $this->dependencias->remover(UnaClase::class);
+    }
+
+    public function testDefinirUnaInstanciaDeUnaClaseNoReservada(): void
+    {
+        $this->dependencias->configuracion()->activar(Dependencias::PERMITIR_DEFINIR);
+        $this->assertTrue($this->dependencias->definir(UnaClase::class, new UnaClase()));
+        $this->assertInstanceOf(UnaClase::class, $this->dependencias->obtener(UnaClase::class));
+
+        $this->assertTrue($this->dependencias->definir(UnaInterfaz::class, new UnaClaseQueImplementaLainterfaz()));
+        $this->assertInstanceOf(UnaInterfaz::class, $this->dependencias->obtener(UnaInterfaz::class));
+    }
+
+    public function testErrorAlDefinirSinPermisos(): void
+    {
+        $this->dependencias->configuracion()->desactivar(Dependencias::PERMITIR_DEFINIR);
+        $this->assertFalse($this->dependencias->definir(UnaClase::class, new UnaClase()));
+        $this->assertSame(Dependencias::ERROR_SIN_PERMISOS_PARA_DEFINIR, $this->dependencias->errores()->error());
+
+        $this->dependencias->configuracion()->activar(Dependencias::LANZAR_EXCEPCION);
+        $this->expectException(SinPermisosParaDefinir::class);
+        $this->dependencias->definir(UnaClase::class, new UnaClase());
+    }
+
+    public function testErrorAlDefinirUnaClaseYaReservada(): void
+    {
+        $this->dependencias->configuracion()->activar(Dependencias::PERMITIR_DEFINIR);
+        $this->assertTrue($this->dependencias->agregar(UnaClase::class, $this->funcionVacia));
+        $this->assertFalse($this->dependencias->definir(UnaClase::class, new UnaClase()));
+        $this->assertSame(Dependencias::ERROR_CLASE_RESERVADA, $this->dependencias->errores()->error());
+
+        $this->dependencias->configuracion()->activar(Dependencias::LANZAR_EXCEPCION);
+        $this->expectException(ClaseReservada::class);
+        $this->dependencias->definir(UnaClase::class, new UnaClase());
+    }
+
+    public function testErrorAlDefinirUnaClaseQueNoCorresponde(): void
+    {
+        $this->dependencias->configuracion()->activar(Dependencias::PERMITIR_DEFINIR);
+        $this->assertFalse($this->dependencias->definir(UnaInterfaz::class, new UnaClase()));
+        $this->assertSame(Dependencias::ERROR_OBJETO_NO_CORRESPONDIDO, $this->dependencias->errores()->error());
+
+        $this->dependencias->configuracion()->activar(Dependencias::LANZAR_EXCEPCION);
+        $this->expectException(ObjetoNoCorrespondido::class);
+        $this->dependencias->definir(UnaInterfaz::class, new UnaClase());
     }
 
     public function dataDiferentesTiposDeValoresParaRetornar(): array
