@@ -8,6 +8,7 @@ use Gof\Datos\Errores\ErrorNumerico;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseInexistente;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseNoReservada;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseReservada;
+use Gof\Gestor\Dependencias\Simple\Excepcion\DependenciasInexistentes;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ObjetoNoCorrespondido;
 use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaCambiar;
 use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaDefinir;
@@ -259,6 +260,80 @@ class Dependencias implements IDependencias
     }
 
     /**
+     *  Define directamente el objeto que devolverá la clase a reservarse
+     *
+     *  A diferencia de Dependencias::agregar() esta función define directamente el objeto que
+     *  será devuelto por Dependencias::obtener().
+     *
+     *  La clase, o interfaz, no debe estar registrada.
+     *  Si ya está reservada use Dependencias::cambiar().
+     *
+     *  @param string $nombre Nombre de la clase o interfaz
+     *  @param object $objeto Instancia del objeto a definir
+     *
+     *  @see Dependencias::agregar()
+     *  @see Dependencias::cambiar()
+     *
+     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     */
+    public function definir(string $nombre, object $objeto): bool
+    {
+        if( $this->configuracion->desactivados(self::PERMITIR_DEFINIR) ) {
+            if( $this->configuracion->activados(self::LANZAR_EXCEPCION) ) {
+                throw new SinPermisosParaDefinir($nombre);
+            }
+
+            $this->errores->agregar(self::ERROR_SIN_PERMISOS_PARA_DEFINIR);
+            return false;
+        }
+
+        if( $this->claseEstaReservada($nombre) || $this->objetoNoCorresponde($objeto, $nombre) ) {
+            return false;
+        }
+
+        $this->clases[$nombre] = static function() use ($objeto) {
+            return $objeto;
+        };
+
+        return true;
+    }
+
+    /**
+     *  Valida si se encuentran reservadas los nombre de las clases especificadas
+     *
+     *  Si alguna de las dependencias no se encuentra almacenada se devolverá **false**, o se
+     *  lanzará una excepción si está activado Dependencias::
+     *
+     *  Si alguna de las dependencias indicada no se encuentra reservada en el gestor se
+     *  lanzará una excepción Dependencias::DependenciasInexistentes con todas aquellas clases
+     *  que no se encontraron.
+     *
+     *  @param string $nombre   Nombre de la clase a validar si se encuentra reservada o no.
+     *  @param string ...$otros Más nombres de clases
+     *
+     *  @throws Dependencias::DependenciasInexistentes si hay una o más dependencias inexistentes
+     *
+     *  @see Dependencias::existen()
+     *
+     *  @return void
+     */
+    public function dependo(string $nombre, string ...$lista)
+    {
+        $lista[] = $nombre;
+        $inexistentes = [];
+
+        foreach( $lista as $clase ) {
+            if( !isset($this->clases[$clase]) ) {
+                $inexistentes[] = $clase;
+            }
+        }
+
+        if( empty($inexistentes) === false ) {
+            throw new DependenciasInexistentes($inexistentes);
+        }
+    }
+
+    /**
      *  Obtiene la lista de errores
      *
      *  @return Errores Errores ocurridos
@@ -311,44 +386,14 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Define directamente el objeto que devolverá la clase a reservarse
+     *  Verifica si la clase, o interfaz, está ya reservada
      *
-     *  A diferencia de Dependencias::agregar() esta función define directamente el objeto que
-     *  será devuelto por Dependencias::obtener().
+     *  @param string $nombre Nombre de la clase
      *
-     *  La clase, o interfaz, no debe estar registrada.
-     *  Si ya está reservada use Dependencias::cambiar().
+     *  @return bool Devuelve **true** si la clase está reservada o **false** de lo contrario
      *
-     *  @param string $nombre Nombre de la clase o interfaz
-     *  @param object $objeto Instancia del objeto a definir
-     *
-     *  @see Dependencias::agregar()
-     *  @see Dependencias::cambiar()
-     *
-     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     *  @access private
      */
-    public function definir(string $nombre, object $objeto): bool
-    {
-        if( $this->configuracion->desactivados(self::PERMITIR_DEFINIR) ) {
-            if( $this->configuracion->activados(self::LANZAR_EXCEPCION) ) {
-                throw new SinPermisosParaDefinir($nombre);
-            }
-
-            $this->errores->agregar(self::ERROR_SIN_PERMISOS_PARA_DEFINIR);
-            return false;
-        }
-
-        if( $this->claseEstaReservada($nombre) || $this->objetoNoCorresponde($objeto, $nombre) ) {
-            return false;
-        }
-
-        $this->clases[$nombre] = static function() use ($objeto) {
-            return $objeto;
-        };
-
-        return true;
-    }
-
     private function claseEstaReservada(string $nombre): bool
     {
         if( empty($this->clases[$nombre]) ) {

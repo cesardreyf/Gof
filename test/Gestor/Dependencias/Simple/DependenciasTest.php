@@ -9,6 +9,7 @@ use Gof\Gestor\Dependencias\Simple\Dependencias;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseInexistente;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseNoReservada;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ClaseReservada;
+use Gof\Gestor\Dependencias\Simple\Excepcion\DependenciasInexistentes;
 use Gof\Gestor\Dependencias\Simple\Excepcion\ObjetoNoCorrespondido;
 use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaCambiar;
 use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaDefinir;
@@ -257,6 +258,22 @@ class DependenciasTest extends TestCase
         $this->dependencias->definir(UnaInterfaz::class, new UnaClase());
     }
 
+    /**
+     *  @dataProvider dataNombresDeClasesInexistentes
+     */
+    public function testMetodoDependoLanzaExcepcionSiNoExistenLasDependenciasIndicadas(string $nombreDeClaseInexistente): void
+    {
+        $this->expectException(DependenciasInexistentes::class);
+        $this->dependencias->dependo($nombreDeClaseInexistente);
+    }
+
+    public function testMetodoDependoNoLanzaExcepcionSiExistenLasDependencias(): void
+    {
+        $this->assertTrue($this->dependencias->agregar(UnaClase::class, $this->funcionVacia));
+        $this->assertTrue($this->dependencias->agregar(UnaInterfaz::class, $this->funcionVacia));
+        $this->assertNull($this->dependencias->dependo(UnaClase::class, UnaInterfaz::class));
+    }
+
     public function dataDiferentesTiposDeValoresParaRetornar(): array
     {
         return [
@@ -265,6 +282,14 @@ class DependenciasTest extends TestCase
             [null],     //< Void
             [false],    //< Bool
             ['string']  //< String
+        ];
+    }
+
+    public function dataNombresDeClasesInexistentes(): array
+    {
+        return [
+            [UnaClase::class],
+            [UnaInterfaz::class]
         ];
     }
 
