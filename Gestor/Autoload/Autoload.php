@@ -235,7 +235,7 @@ class Autoload
      */
     public function instanciar(string $nombreDeLaClase, ...$argumentos): ?object
     {
-        if( class_exists($nombreDeLaClase, false) === false ) {
+        if( class_exists($nombreDeLaClase, true) === false ) {
             if( $this->configuracion->desactivados(self::CARGAR_AL_INSTANCIAR) ) {
                 return null;
             }
