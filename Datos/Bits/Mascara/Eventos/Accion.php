@@ -2,29 +2,36 @@
 
 namespace Gof\Datos\Bits\Mascara\Eventos;
 
+/**
+ * Clase encargada de indicar qué hacer cuando el evento ocurra
+ *
+ * Almacena una función anónima el cual será llamado cuando el evento se produzca.
+ *
+ * @package Gof\Datos\Bits\Mascara\Eventos
+ */
 class Accion
 {
     /**
-     *  @var int Bits necesarios para activar el evento al cumplirse la condición
+     * @var int Bits necesarios para activar el evento al cumplirse la condición
      */
     private $bits;
 
     /**
-     *  @var array Referencia a la lista de eventos
+     * @var array Referencia a la lista de eventos
      */
     private $lista;
 
     /**
-     *  @var int Condicion para el evento
+     * @var int Condicion para el evento
      */
     private $condicion;
 
     /**
-     *  Crea una instancia de Accion
+     * Constructor
      *
-     *  @param int    $condicion Condición para el evento
-     *  @param int    $bits      Máscara de bits necesarios para activar el evento al cumplirse la condición
-     *  @param array& $lista     Referencia a la lista de eventos
+     * @param int    $condicion Condición para el evento
+     * @param int    $bits      Máscara de bits necesarios para activar el evento al cumplirse la condición
+     * @param array &$lista     Referencia a la lista de eventos
      */
     public function __construct(int $condicion, int $bits, array& $lista)
     {
@@ -34,9 +41,9 @@ class Accion
     }
 
     /**
-     *  Almacena la función anónima como evento a suceder al cumplirse las condiciones
+     * Almacena la función anónima como evento a suceder al cumplirse las condiciones
      *
-     *  @param callable $funcion Función anónima
+     * @param callable $funcion Función anónima
      */
     public function haz(callable $funcion)
     {

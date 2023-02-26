@@ -6,38 +6,63 @@ use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Archivos\Archivo;
 use Gof\Interfaz\Mensajes\Guardable;
 
+/**
+ * Gestor de guardado de mensajes
+ *
+ * Clase encargada de guardar mensajes
+ *
+ * @package Gof\Gestor\Mensajes\Guardar
+ */
 class GuardarEnArchivo implements Guardable
 {
+    /**
+     * Indicador para concatenar los mensajes a ser guardados
+     *
+     * Implica que el contenido del archivo no será reemplazado por el mensaje a guardar
+     *
+     * @var int
+     */
     const CONCATENAR = 1;
 
+    /**
+     * Indicador para limpiar los mensajes
+     *
+     * Antes de guardar los mensajes elimina los espacios sobrantes antes y después del mensaje
+     *
+     * @var int
+     */
     const LIMPIAR_MENSAJE = 2;
 
+    /**
+     * @var int Indicador para restablecer el número de bytes guardados cada vez que se guarde
+     */
     const RESETEAR_NBYTES_AL_GUARDAR = 4;
 
+    /**
+     * @var int Máscara de bits con la configuración por defecto
+     */
     const CONFIGURACION_POR_DEFECTO = self::CONCATENAR;
 
     /**
-     *  @var Archivo Archivo donde se guardarán los mensajes
+     * @var Archivo Archivo donde se guardarán los mensajes
      */
     private $archivo;
 
     /**
-     *  @var MascaraDeBits Configuracion interna
+     * @var MascaraDeBits Configuracion interna
      */
     private $configuracion;
 
     /**
-     *  @var int Número de bytes almacenados
+     * @var int Número de bytes almacenados
      */
     private $bytes;
 
     /**
-     *  Crea una instancia del gestor de guardado de mensajes
+     * Constructor
      *
-     *  Gestor simple para almacenar mensajes de texto en archivo.
-     *
-     *  @param Archivo $archivo       Archivo existente donde se guardarán los mensajes
-     *  @param int     $configuracion Máscara de bits con la configuración del gestor
+     * @param Archivo $archivo       Archivo existente donde se guardarán los mensajes
+     * @param int     $configuracion Máscara de bits con la configuración del gestor
      */
     public function __construct(Archivo $archivo, int $configuracion = self::CONFIGURACION_POR_DEFECTO)
     {
@@ -47,11 +72,11 @@ class GuardarEnArchivo implements Guardable
     }
 
     /**
-     *  Guarda el mensaje en el archivo existente
+     * Guarda el mensaje en el archivo existente
      *
-     *  @param string $mensaje Mensaje de texto a ser guardado
+     * @param string $mensaje Mensaje de texto a ser guardado
      *
-     *  @return bool Devuelve TRUE en caso de éxito o FALSE de lo contrario
+     * @return bool Devuelve TRUE en caso de éxito o FALSE de lo contrario
      */
     public function guardar(string $mensaje): bool
     {
@@ -86,16 +111,16 @@ class GuardarEnArchivo implements Guardable
     }
 
     /**
-     *  Obtiene el número de bytes almacenados en el archivo
+     * Obtiene el número de bytes almacenados en el archivo
      *
-     *  La cantidad de bytes es acumulativo por defecto. Esto quiere decir que con cada nuevo
-     *  mensaje el número de bytes se sumará al anterior.
+     * La cantidad de bytes es acumulativo por defecto. Esto quiere decir que con cada nuevo
+     * mensaje el número de bytes se sumará al anterior.
      *
-     *  Si la flag RESETEAR_NBYTES_AL_GUARDAR está activo, cada vez que se guarde un mensaje
-     *  el número de bytes se establecerá a cero antes del guardado por lo que el resultado
-     *  siempre será el tamaño en bytes del último mensaje guardado.
+     * Si la flag RESETEAR_NBYTES_AL_GUARDAR está activo, cada vez que se guarde un mensaje
+     * el número de bytes se establecerá a cero antes del guardado por lo que el resultado
+     * siempre será el tamaño en bytes del último mensaje guardado.
      *
-     *  @return int Devuelve el número de bytes guardados
+     * @return int Devuelve el número de bytes guardados
      */
     public function bytes(): int
     {
@@ -103,9 +128,9 @@ class GuardarEnArchivo implements Guardable
     }
 
     /**
-     *  Obtiene la configuración interna
+     * Obtiene la configuración interna
      *
-     *  @return MascaraDeBits Devuelve la configuración interna del gestor
+     * @return MascaraDeBits Devuelve la configuración interna del gestor
      */
     public function configuracion(): MascaraDeBits
     {

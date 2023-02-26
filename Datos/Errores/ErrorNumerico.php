@@ -4,19 +4,24 @@ namespace Gof\Datos\Errores;
 
 use Gof\Interfaz\Errores\Errores;
 
+/**
+ * Tipo de datos para pilas de errores con valores numéricos
+ *
+ * @package Gof\Datos\Errores
+ */
 class ErrorNumerico implements Errores
 {
     /**
-     *  @var array Pila de errores
+     * @var int[] Pila de errores
      */
     private $errores = [];
 
     /**
-     *  Agrega un error a la pila de errores
+     * Agrega un error a la pila de errores
      *
-     *  @param int $error Identificador del error
+     * @param int $error Identificador del error
      *
-     *  @return int Devuelve el mismo valor recibido por parámetro
+     * @return int Devuelve el mismo valor recibido por parámetro
      */
     public function agregar(int $error): int
     {
@@ -24,9 +29,9 @@ class ErrorNumerico implements Errores
     }
 
     /**
-     *  Especifica si hay errores en la pila
+     * Especifica si hay errores en la pila
      *
-     *  @return bool Devuelve **true** si hay errores o **false** de lo contrario
+     * @return bool Devuelve **true** si hay errores o **false** de lo contrario
      */
     public function hay(): bool
     {
@@ -34,12 +39,12 @@ class ErrorNumerico implements Errores
     }
 
     /**
-     *  Obtiene el último error ocurrido
+     * Obtiene el último error ocurrido
      *
-     *  Por cada llamada se obtiene el último error y se elimina de la pila.
-     *  Si no hay errores en la pila se devuelve cero.
+     * Por cada llamada se obtiene el último error y se elimina de la pila.
+     * Si no hay errores en la pila se devuelve cero.
      *
-     *  @return int Devuelve el último error o cero si la pila está vacía
+     * @return int Devuelve el último error o cero si la pila está vacía
      */
     public function error(): int
     {
@@ -51,9 +56,9 @@ class ErrorNumerico implements Errores
     }
 
     /**
-     *  Pila de errores
+     * Pila de errores
      *
-     *  @return array Devuelve la pila de errores
+     * @return int[] Devuelve la pila de errores
      */
     public function errores(): array
     {
@@ -61,7 +66,7 @@ class ErrorNumerico implements Errores
     }
 
     /**
-     *  Limpia la pila de errores
+     * Limpia la pila de errores
      */
     public function limpiar()
     {

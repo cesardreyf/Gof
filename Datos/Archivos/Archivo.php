@@ -5,19 +5,29 @@ namespace Gof\Datos\Archivos;
 use Exception;
 use Gof\Interfaz\Archivos\Archivo as IArchivo;
 
+/**
+ * Tipo de datos para archivos
+ *
+ * Tipo de datos para archivos alojados localmente en el servidor que lo ejecuta.
+ *
+ * Esta clase sirve para garantizar que el archivo que contiene existe y es legible.
+ *
+ * @package Gof\Datos\Archivos
+ */
 class Archivo implements IArchivo
 {
+    /**
+     * @var string Ruta donde está ubicado el archivo
+     */
     private $ruta;
 
     /**
-     *  Crea una instancia de la clase Archivo
+     * Constructor
      *
-     *  Esta clase sirve para garantizar que el archivo que contiene existe y es legible.
+     * @param string $rutaDelArchivo Ruta donde se encuentra el archivo
      *
-     *  @param string $rutaDelArchivo Ruta donde se encuentra el archivo
-     *
-     *  @throws Exception Si no existe el archivo
-     *  @throws Exception Si no es legible
+     * @throws Exception Si no existe el archivo
+     * @throws Exception Si no es legible
      */
     public function __construct(string $rutaDelArchivo)
     {
@@ -40,9 +50,9 @@ class Archivo implements IArchivo
     }
 
     /**
-     *  Devuelve la ruta al archivo
+     * Devuelve la ruta del archivo
      *
-     *  @return string Retorna la ruta completa del archivo
+     * @return string Ubicación del archivo.
      */
     public function ruta(): string
     {

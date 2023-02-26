@@ -8,18 +8,22 @@ use Gof\Gestor\Autoload\Excepcion\ArchivoInexistente;
 use Gof\Gestor\Autoload\Interfaz\Cargador;
 use Gof\Interfaz\Bits\Mascara;
 
+/**
+ * Cargador de archivos locales
+ *
+ * Gestiona las cargas de archivos locales para el gestor de autoload
+ *
+ * @package Gof\Gestor\Autoload\Cargador
+ */
 class Archivos implements Cargador
 {
-    // const VALIDAR_EXISTENCIA = 1;
-    // CONST VALIDAR_LECTURA = 2;
-
     /**
-     *  @var int Indica que se lanzará una excepción cuando ocurra un error
+     *  @var int Indicador para lanzar excepciones en caso de errores
      */
     const LANZAR_EXCEPCIONES = 4;
 
     /**
-     *  @var int Indica que se agregará automaticamente la extensión '.php' a las rutas
+     *  @var int Indicador para incluir automáticamente la extensión *.php* a las rutas
      */
     const INCLUIR_EXTENSION = 8;
 
@@ -29,12 +33,12 @@ class Archivos implements Cargador
     const CONFIGURACION_POR_DEFECTO = self::LANZAR_EXCEPCIONES;
 
     /**
-     *  @var int Indica que no existe el archivo
+     *  @var int Error: el archivo no existe
      */
     const ERROR_ARCHIVO_INEXISTENTE = 1;
 
     /**
-     *  @var int Indica que el archivo no es legible
+     *  @var int Error: el archivo es ilegible
      */
     const ERROR_ARCHIVO_ILEGIBLE = 2;
 
@@ -49,9 +53,9 @@ class Archivos implements Cargador
     private $configuracion;
 
     /**
-     *  Crea una instancia del cargador de archivos del gestor de Autoloads
+     * Constructor
      *
-     *  @param int $configuracion Máscara de bits con la configuración deseada
+     * @param int $configuracion Máscara de bits con la configuración deseada
      */
     public function __construct(int $configuracion = self::CONFIGURACION_POR_DEFECTO)
     {
@@ -59,18 +63,19 @@ class Archivos implements Cargador
     }
 
     /**
-     *  Simplemente carga el archivo
+     * Carga el archivo
      *
-     *  Si INCLUIR_EXTENSION está activo se agregará la cadena '.php' a la ruta recibida.
+     * Sí Archivos::INCLUIR_EXTENSION está activo se agregará la cadena *.php* a la
+     * ruta del archivo.
      *
-     *  @param string $rutaDelArchivo Ruta del archivo a ser cargado
+     * @param string $rutaDelArchivo Ruta del archivo a ser cargado
      *
-     *  @throws ArchivoInexistente si la ruta no apunta a ningún archivo
-     *  @throws ArchivoInaccesible si el archivo no puede ser leído
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
      *
-     *  @see Archivos::error() para ver el error ocurrido si falla la carga
+     * @see Archivos::error() para ver el error ocurrido si falla la carga
      *
-     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     * @throws ArchivoInexistente si la ruta no apunta a ningún archivo
+     * @throws ArchivoInaccesible si el archivo no puede ser leído
      */
     public function cargar(string $rutaDelArchivo): bool
     {
@@ -101,9 +106,9 @@ class Archivos implements Cargador
     }
 
     /**
-     *  Obtiene la configuracion interna
+     * Obtiene la configuracion interna
      *
-     *  @return Mascara Devuelve una tipo de datos Mascara de bits
+     * @return Mascara Devuelve una tipo de datos Mascara de bits
      */
     public function configuracion(): Mascara
     {
@@ -111,9 +116,9 @@ class Archivos implements Cargador
     }
 
     /**
-     *  Obtiene el identificador del último error ocurrido
+     * Obtiene el identificador del último error ocurrido
      *
-     *  @return int Devuelve el último error
+     * @return int Devuelve el último error
      */
     public function error(): int
     {
@@ -121,7 +126,7 @@ class Archivos implements Cargador
     }
 
     /**
-     *  Limpia los errores
+     * Limpia los errores
      */
     public function limpiarErrores()
     {

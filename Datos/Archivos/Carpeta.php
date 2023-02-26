@@ -5,19 +5,29 @@ namespace Gof\Datos\Archivos;
 use Exception;
 use Gof\Interfaz\Archivos\Carpeta as ICarpeta;
 
+/**
+ * Tipo de datos para carpetas
+ *
+ * Tipo de datos para carpetas alojados localmente en el mismo servidor donde se ejecuta.
+ *
+ * Esta clase sirve para garantizar que la carpeta a la que apunta existe y es legible.
+ *
+ * @package Gof\Datos\Archivos
+ */
 class Carpeta implements ICarpeta
 {
+    /**
+     * @var string Ubicación de la carpeta
+     */
     private $ruta;
 
     /**
-     *  Crea una instancia de la clase Carpeta
+     * Constructor
      *
-     *  Esta clase sirve para garantizar que la carpeta que contiene existe y es legible.
+     * @param string $rutaDeLaCarpeta Ruta donde se encuentra la carpeta
      *
-     *  @param string $rutaDeLaCarpeta Ruta donde se encuentra la carpeta
-     *
-     *  @throws Exception Si no existe la carpeta
-     *  @throws Exception Si no es legible
+     * @throws Exception Si no existe la carpeta
+     * @throws Exception Si no es legible
      */
     public function __construct(string $rutaDeLaCarpeta)
     {
@@ -37,9 +47,9 @@ class Carpeta implements ICarpeta
     }
 
     /**
-     *  Devuelve la ruta al archivo
+     * Devuelve la ruta de la carpeta
      *
-     *  @return string Retorna la ruta completa del archivo
+     * @return string Retorna la ubicación de la carpeta
      */
     public function ruta(): string
     {

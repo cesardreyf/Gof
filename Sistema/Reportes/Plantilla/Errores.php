@@ -4,10 +4,23 @@ namespace Gof\Sistema\Reportes\Plantilla;
 
 use Gof\Sistema\Reportes\Interfaz\Plantilla;
 
+/**
+ * Plantilla empleada por el sistema de reportes para los errores
+ *
+ * Plantilla encargada de traducir los datos recibidos por el sistema de reportes.
+ *
+ * @package Gof\Sistema\Reportes\Plantilla
+ */
 class Errores implements Plantilla
 {
+    /**
+     * @var string Almacena el mensaje traducido
+     */
 	private $mensaje = '';
 
+    /**
+     * @var array<int, string> Lista de tipos de errores
+     */
     protected $tipoDeErrores = [
             E_ERROR             => 'E_ERROR'
         ,   E_WARNING           => 'E_WARNING'
@@ -27,11 +40,11 @@ class Errores implements Plantilla
     ];
 
     /**
-     *  Mensaje traducido
+     * Mensaje traducido
      *
-     *  Mensaje traducido de los datos recibidos a través del método **traducir**.
+     * Mensaje traducido de los datos recibidos a través del método **traducir**.
      *
-     *  @return string Devuelve el mensaje traducido de los datos
+     * @return string Devuelve el mensaje traducido de los datos
      */
     public function mensaje(): string
     {
@@ -39,16 +52,16 @@ class Errores implements Plantilla
     }
 
     /**
-     *  Traduce los datos recibidos
+     * Traduce los datos recibidos
      *
-     *  Convierte un array de errores en un mensaje con los datos más importante del error.
-     *  El array de errores debe ser proporcionado por la función de PHP: error_get_last()
-     *  o ser un array asociativo y tener las siguientes claves: **type**, **line**,
-     *  **file** y **message**.
+     * Convierte un array de errores en un mensaje con los datos más importante del error.
+     * El array de errores debe ser proporcionado por la función de PHP: error_get_last()
+     * o ser un array asociativo y tener las siguientes claves: **type**, **line**,
+     * **file** y **message**.
      *
-     *  @param array $datos Array de errores
+     * @param array $datos Array de errores
      *
-     *  @return bool Devuelve TRUE si la traducción fue exitosa, FALSE de lo contrario
+     * @return bool Devuelve **true** si la traducción fue exitosa **false** de lo contrario
      */
     public function traducir($datos): bool
     {
@@ -69,6 +82,15 @@ class Errores implements Plantilla
         return true;
     }
 
+    /**
+     * Verifica si los datos no cumple con los requisitos esperados
+     *
+     * @param array $datos Datos a validar
+     *
+     * @return bool Devuelve **true** si los datos **no** tienen la información esperada.
+     *
+     * @access private
+     */
     private function datosNoCumpleConLosRequisitos(array $datos): bool
     {
         $requisitos = ['type', 'line', 'file', 'message'];

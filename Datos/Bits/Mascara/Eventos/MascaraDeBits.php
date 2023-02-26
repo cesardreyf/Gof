@@ -4,13 +4,26 @@ namespace Gof\Datos\Bits\Mascara\Eventos;
 
 use Gof\Datos\Bits\Mascara\MascaraDeBits as IMascaraDeBits;
 
+/**
+ * Tipo de datos para máscara de bits con gestión de eventos
+ *
+ * Tipo de datos para máscaras de bits al cual se le pueden agregar eventos: acciones a hacer
+ * cuando se llama a alguna función específica.
+ *
+ * @package Gof\Datos\Bits\Mascara\Eventos
+ */
 class MascaraDeBits extends IMascaraDeBits
 {
     /**
-     *  @var Eventos Lista de eventos
+     * @var Eventos Lista de eventos
      */
     private $eventos;
 
+    /**
+     * Constructor
+     *
+     * @param int $bitsIniciales Valor inicial
+     */
     public function __construct(int $bitsIniciales = 0)
     {
         $this->eventos = new Eventos();
@@ -18,9 +31,9 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Obtiene el gestor de eventos
+     * Obtiene el gestor de eventos
      *
-     *  @return Eventos Devuelve el gestor de eventos
+     * @return Eventos Devuelve el gestor de eventos
      */
     public function eventos(): Eventos
     {
@@ -28,9 +41,9 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Crea una condición para un evento
+     * Crea una condición para un evento
      *
-     *  @return Eventos Devuelve una instancia del gestor de eventos
+     * @return Eventos Devuelve una instancia del gestor de eventos
      */
     public function al(): Eventos
     {
@@ -38,11 +51,11 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Activa los bits indicados y ejecuta todos los eventos asociados
+     * Activa los bits indicados y ejecuta todos los eventos asociados
      *
-     *  @param int $bits Bits a ser activados
+     * @param int $bits Bits a ser activados
      *
-     *  @return int Devuelve es valor actual de la máscara de bits
+     * @return int Devuelve es valor actual de la máscara de bits
      */
     public function activar(int $bits, int ...$otros): int
     {
@@ -51,11 +64,11 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Desactiva los bits indicados y ejecuta todos los eventos asociados
+     * Desactiva los bits indicados y ejecuta todos los eventos asociados
      *
-     *  @param int $bits Bits a ser desactivados
+     * @param int $bits Bits a ser desactivados
      *
-     *  @return int Devuelve es valor actual de la máscara de bits
+     * @return int Devuelve es valor actual de la máscara de bits
      */
     public function desactivar(int $bits, int ...$otros): int
     {
@@ -64,11 +77,11 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Define el valor de la máscara de bits y ejecuta todos los eventos asociados
+     * Define el valor de la máscara de bits y ejecuta todos los eventos asociados
      *
-     *  @param int $valor Nuevo valor
+     * @param int $valor Nuevo valor
      *
-     *  @return int Devuelve es valor actual de la máscara de bits
+     * @return int Devuelve es valor actual de la máscara de bits
      */
     public function definir(int $valor): int
     {
@@ -77,9 +90,9 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Obtiene el valor de la máscara de bits y ejecuta todos los eventos asociados
+     * Obtiene el valor de la máscara de bits y ejecuta todos los eventos asociados
      *
-     *  @return int Devuelve es valor actual de la máscara de bits
+     * @return int Devuelve es valor actual de la máscara de bits
      */
     public function obtener(): int
     {
@@ -88,14 +101,14 @@ class MascaraDeBits extends IMascaraDeBits
     }
 
     /**
-     *  Llama a los eventos asociados a la condición si coindicen la máscara de bit
+     * Llama a los eventos asociados a la condición si coindicen la máscara de bit
      *
-     *  Llama a las funciones anónimas almacenadas en la lista de eventos siempre que se cumpla
-     *  la condición y coincidan la máscara de bits. La función anónima puede recibir un entero
-     *  con los bits.
+     * Llama a las funciones anónimas almacenadas en la lista de eventos siempre que se cumpla
+     * la condición y coincidan la máscara de bits. La función anónima puede recibir un entero
+     * con los bits.
      *
-     *  @param int $indice Condición o índice de la lista de eventos
-     *  @param int $bits   Máscara de bits
+     * @param int $indice Condición o índice de la lista de eventos
+     * @param int $bits   Máscara de bits
      */
     public function llamar(int $indice, int $bits, int ...$otros)
     {

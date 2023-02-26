@@ -5,18 +5,28 @@ namespace Gof\Sistema\Reportes\Plantilla;
 use Throwable;
 use Gof\Sistema\Reportes\Interfaz\Plantilla;
 
+/**
+ * Plantilla empleada por el sistema de reportes para las excepciones
+ *
+ * Plantilla encargada de traducir los datos de las excepciones en un mensaje guardable.
+ *
+ * @package Gof\Sistema\Reportes\Plantilla
+ */
 class Excepciones implements Plantilla
 {
+    /**
+     * @var string $mensaje Almacena el mensaje traducido
+     */
     private $mensaje = '';
 
     /**
-     *  Convierte una excepción en un mensaje
+     * Convierte una excepción en un mensaje
      *
-     *  Traduce una instancia de Exceptión a un mensaje guardable e imprimible
+     * Traduce una instancia de Exceptión a un mensaje guardable e imprimible
      *
-     *  @param Exception $excepcion Instancia de la excepción a traducir
+     * @param Exception $excepcion Instancia de la excepción a traducir
      *
-     *  @return bool Devuelve TRUE si la traducción fue exitosa, FALSE de lo contrario
+     * @return bool Devuelve **true** si la traducción fue exitosa, **false** de lo contrario
      */
     public function traducir($excepcion): bool
     {
@@ -36,9 +46,9 @@ class Excepciones implements Plantilla
     }
 
     /**
-     *  Mensaje traducido
+     * Mensaje traducido
      *
-     *  @return string Devuelve el mensaje traducido de la excepción
+     * @return string Devuelve el mensaje traducido de la excepción
      */
     public function mensaje(): string
     {

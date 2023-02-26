@@ -16,94 +16,98 @@ use Gof\Gestor\Dependencias\Simple\Excepcion\SinPermisosParaRemover;
 use Gof\Interfaz\Errores\Errores;
 
 /**
- *  Gestor de inyección de dependencias
+ * Gestor de inyección de dependencias
+ *
+ * Clase que ofrece una "alternativa" al patrón Singleton.
+ *
+ * @package Gof\Gestor\Dependencias\Simple
  */
 class Dependencias implements IDependencias
 {
     // const PERMITIR_AGREGAR = 1;
 
     /**
-     *  @var int Indica que se puede modificar las instancias de las clases
+     * @var int Indica que se puede modificar las instancias de las clases
      */
     const PERMITIR_CAMBIAR = 2;
 
     /**
-     *  @var int Indica que se pueden eliminar las clases y sus objetos
+     * @var int Indica que se pueden eliminar las clases y sus objetos
      */
     const PERMITIR_REMOVER = 4;
 
     /**
-     *  @var int Indica que se pueden definir las clases
+     * @var int Indica que se pueden definir las clases
      */
     const PERMITIR_DEFINIR = 8;
 
     /**
-     *  @var int Indica que se llame a la función que define el objeto justamente después de agregarlo
+     * @var int Indica que se llame a la función que define el objeto justamente después de agregarlo
      */
     const INSTANCIAR_AL_AGREGAR = 16;
 
     /**
-     *  @var int Indica que se llame a la función que define el objeto justamente después de agregarlo
+     * @var int Indica que lance excepciones cuando detecte un error
      */
     const LANZAR_EXCEPCION = 32;
 
     /**
-     *  @var int Error que indica que la clase no está reservada
+     * @var int Error que indica que la clase no está reservada
      */
     const ERROR_CLASE_INEXISTENTE = 100;
 
     /**
-     *  @var int Error que indica que el nombre de la clase/interfaz ya está reservada
+     * @var int Error que indica que el nombre de la clase/interfaz ya está reservada
      */
     const ERROR_CLASE_RESERVADA = 110;
 
     /**
-     *  @var int Error que indica que la clase no está reservada
+     * @var int Error que indica que la clase no está reservada
      */
     const ERROR_CLASE_NO_RESERVADA = 111;
 
     /**
-     *  @var int Error que indica que el objeto devuelto por la función registrada no corresponde con la clase/interfaz
+     * @var int Error que indica que el objeto devuelto por la función registrada no corresponde con la clase/interfaz
      */
     const ERROR_OBJETO_NO_CORRESPONDIDO = 200;
 
     /*
-     *  @var int Indica que no se tiene permisos para agregar
+     * @var int Indica que no se tiene permisos para agregar
      */
     // const ERROR_SIN_PERMISOS_PARA_AGREGAR = 300;
 
     /**
-     *  @var int Indica que no se tiene permisos para cambiar
+     * @var int Indica que no se tiene permisos para cambiar
      */
     const ERROR_SIN_PERMISOS_PARA_CAMBIAR = 301;
 
     /**
-     *  @var int Indica que no se tiene permisos para remover
+     * @var int Indica que no se tiene permisos para remover
      */
     const ERROR_SIN_PERMISOS_PARA_REMOVER = 302;
 
     /**
-     *  @var int Indica que no se tiene permisos para remover
+     * @var int Indica que no se tiene permisos para remover
      */
     const ERROR_SIN_PERMISOS_PARA_DEFINIR = 303;
 
     /**
-     *  @var array Lista de clases
+     * @var array<string, callable> Lista de clases
      */
     private $clases;
 
     /**
-     *  @var ErrorNumerico Lista de errores
+     * @var ErrorNumerico Lista de errores
      */
     private $errores;
 
     /**
-     *  @var MascaraDeBits Configuración interna
+     * @var MascaraDeBits Configuración interna
      */
     private $configuracion;
 
     /**
-     *  Crea una instancia del gestor de inyección de dependencias
+     * Constructor
      */
     public function __construct()
     {
@@ -112,42 +116,45 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Agrega una clase a la lista de dependencias disponibles
+     * Agrega una clase a la lista de dependencias disponibles
      *
-     *  Inserta una función anónima que será llamada una sola vez para obtener la instancia
-     *  del objeto en cuestión. El objeto debe ser una instancia de la clase o implementar
-     *  la interfaz indicada en el parámetro $nombre.
+     * Inserta una función anónima que será llamada una sola vez para obtener la instancia
+     * del objeto en cuestión. El objeto debe ser una instancia de la clase o implementar
+     * la interfaz indicada en el parámetro $nombre.
      *
-     *  Si la función no retorna ningún valor o devuelve un tipo de dato diferente a la clase
-     *  o interfaz esperada, al llamar al método Dependencias::obtener() se devolverá un valor
-     *  null o se lanzará una excepción, según la configuración.
+     * Si la función no retorna ningún valor o devuelve un tipo de dato diferente a la clase
+     * o interfaz esperada, al llamar al método Dependencias::obtener() se devolverá un valor
+     * null o se lanzará una excepción, según la configuración.
      *
-     *  El nombre de la clase, o interfaz, será usada como clave asociada al objeto dentro de
-     *  la lista interna del gestor. Para obtener la instancia deberá usarse el mismo nombre.
+     * El nombre de la clase, o interfaz, será usada como clave asociada al objeto dentro de
+     * la lista interna del gestor. Para obtener la instancia deberá usarse el mismo nombre.
      *
-     *  Si ocurre un error la función devolverá un valor **false**. Para obtener más
-     *  información sobre el error ocurrido vea Dependencias::errores().
+     * Si ocurre un error la función devolverá un valor **false**. Para obtener más
+     * información sobre el error ocurrido vea Dependencias::errores().
      *
-     *  Errores generados por esta función:
+     * Errores generados por esta función:
      *
-     *  Dependencias::ERROR_CLASE_INEXISTENTE: si el nombre de la clase no corresponde con
-     *  ninguna clase o interfaz existente (cargada).
+     * Dependencias::ERROR_CLASE_INEXISTENTE: si el nombre de la clase no corresponde con
+     * ninguna clase o interfaz existente (cargada).
      *
-     *  Dependencias::ERROR_CLASE_RESERVADA: si ya se registró previamente un objeto con el
-     *  mismo nombre de la clase o interfaz. Para cambiar el objeto de una clase o interfaz
-     *  ya reservada utilice el método Dependencias::cambiar().
+     * Dependencias::ERROR_CLASE_RESERVADA: si ya se registró previamente un objeto con el
+     * mismo nombre de la clase o interfaz. Para cambiar el objeto de una clase o interfaz
+     * ya reservada utilice el método Dependencias::cambiar().
      *
-     *  Dependencias::ERROR_SIN_PERMISOS_PARA_AGREGAR: si está desactivado en configuración
-     *  Dependencias::PERMITIR_AGREGAR.
+     * Dependencias::ERROR_SIN_PERMISOS_PARA_AGREGAR: si está desactivado en configuración
+     * Dependencias::PERMITIR_AGREGAR.
      *
-     *  @param string   $nombre    Nombre de la clase o la interfaz del objeto
-     *  @param callable $invocador Función que debe retornar el objeto
+     * @param string   $nombre    Nombre de la clase o la interfaz del objeto
+     * @param callable $invocador Función que debe retornar el objeto
      *
-     *  @see Dependencias::obtener() para más información sobre la obtención de la instancia.
-     *  @see Dependencias::cambiar() para cambiar el objeto de una clase ya registrada.
-     *  @see Dependencias::errores() para ver los errores ocurridos.
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
      *
-     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     * @see Dependencias::obtener() para más información sobre la obtención de la instancia.
+     * @see Dependencias::cambiar() para cambiar el objeto de una clase ya registrada.
+     * @see Dependencias::errores() para ver los errores ocurridos.
+     *
+     * @throws ClaseInexistente si la clase, o interfaz, no existe.
+     * @throws ClaseReservada si la clase ya está reservada en el gestor.
      */
     public function agregar(string $nombre, callable $invocador): bool
     {
@@ -174,17 +181,19 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Obtiene la instancia de la clase
+     * Obtiene la instancia de la clase
      *
-     *  Si la clase aún no está definida se llamará al invocador y se almacenará la instancia.
-     *  Si el invocador no devuelve una instancia de la clase, o que implemente la interfaz,
-     *  devolverá **null**.
+     * Si la clase aún no está definida se llamará al invocador y se almacenará la instancia.
+     * Si el invocador no devuelve una instancia de la clase, o que implemente la interfaz,
+     * devolverá **null** o lanzará una excepción, según configuración.
      *
-     *  @param string $nombre Nombre de la clase o interfaz reservada
+     * @param string $nombre Nombre de la clase o interfaz reservada
      *
-     *  @return object|null Devuelve la instancia de la clase o **null** en caso de error
+     * @return ?object Devuelve la instancia de la clase o **null** en caso de error
      *
-     *  @see Dependencias::errores() para ver los errores ocurridos.
+     * @see Dependencias::errores() para ver los errores ocurridos.
+     *
+     * @throws ClaseNoReservada si la clase no está reservada en el gestor.
      */
     public function obtener(string $nombre): ?object
     {
@@ -196,15 +205,19 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Cambia la instancia que devuelve la clase indicada
+     * Cambia la instancia que devuelve la clase indicada
      *
-     *  Modifica la instancia del objeto que se devuelve al llamar al método Dependencias::obtener()
-     *  con el nombre de la clase indicada.
+     * Modifica la instancia del objeto que se devuelve al llamar al método Dependencias::obtener()
+     * con el nombre de la clase indicada.
      *
-     *  @param string $nombre         Nombre de la clase o interfaz
-     *  @param object $nuevaInstancia Nueva instancia de la clase
+     * @param string $nombre         Nombre de la clase o interfaz
+     * @param object $nuevaInstancia Nueva instancia de la clase
      *
-     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     *
+     * @throws SinPermisosParaCambiar si no se tiene permisos para esta acción.
+     * @throws ClaseNoReservada si la clase no está reservada en el gestor.
+     * @throws ObjetoNoCorrespondido si la nueva instancia no corresponde con el tipo de la clase o interfaz.
      */
     public function cambiar(string $nombre, object $nuevaInstancia): bool
     {
@@ -229,14 +242,17 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Elimina una clase reservada
+     * Elimina una clase reservada
      *
-     *  Si en configuración está desactivado Dependencias::PERMITIR_REMOVER se lanzará
-     *  un error Dependencias::ERROR_SIN_PERMISOS_PARA_REMOVER.
+     * Si en configuración está desactivado Dependencias::PERMITIR_REMOVER se lanzará
+     * un error Dependencias::ERROR_SIN_PERMISOS_PARA_REMOVER.
      *
-     *  @param string $nombre Nombre de la clase
+     * @param string $nombre Nombre de la clase
      *
-     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     *
+     * @throws SinPermisosParaRemover si no se tiene permisos para esta acción.
+     * @throws ClaseNoReservada si la clase o interfaz no está reservada por el gestor.
      */
     public function remover(string $nombre): bool
     {
@@ -260,21 +276,25 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Define directamente el objeto que devolverá la clase a reservarse
+     * Define directamente el objeto que devolverá la clase a reservarse
      *
-     *  A diferencia de Dependencias::agregar() esta función define directamente el objeto que
-     *  será devuelto por Dependencias::obtener().
+     * A diferencia de Dependencias::agregar() esta función define directamente el objeto que
+     * será devuelto por Dependencias::obtener().
      *
-     *  La clase, o interfaz, no debe estar registrada.
-     *  Si ya está reservada use Dependencias::cambiar().
+     * La clase, o interfaz, no debe estar registrada.
+     * Si ya está reservada use Dependencias::cambiar().
      *
-     *  @param string $nombre Nombre de la clase o interfaz
-     *  @param object $objeto Instancia del objeto a definir
+     * @param string $nombre Nombre de la clase o interfaz
+     * @param object $objeto Instancia del objeto a definir
      *
-     *  @see Dependencias::agregar()
-     *  @see Dependencias::cambiar()
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
      *
-     *  @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
+     * @see Dependencias::agregar()
+     * @see Dependencias::cambiar()
+     *
+     * @throws SinPermisosParaDefinir si no se tiene permisos para esta acción.
+     * @throws ClaseReservada si la clase ya está reservada.
+     * @throws ObjetoNoCorrespondido si el objeto no corresponde con el tipo de la clase o interfaz.
      */
     public function definir(string $nombre, object $objeto): bool
     {
@@ -299,23 +319,18 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Valida si se encuentran reservadas los nombre de las clases especificadas
+     * Valida si se encuentran reservadas los nombre de las clases especificadas
      *
-     *  Si alguna de las dependencias no se encuentra almacenada se devolverá **false**, o se
-     *  lanzará una excepción si está activado Dependencias::
+     * Si alguna de las dependencias indicada no se encuentra reservada en el gestor se
+     * lanzará una excepción **DependenciasInexistentes** con todas aquellas clases
+     * que no se encontraron.
      *
-     *  Si alguna de las dependencias indicada no se encuentra reservada en el gestor se
-     *  lanzará una excepción Dependencias::DependenciasInexistentes con todas aquellas clases
-     *  que no se encontraron.
+     * @param string $nombre   Nombre de la clase a validar si se encuentra reservada o no.
+     * @param string ...$otros Más nombres de clases
      *
-     *  @param string $nombre   Nombre de la clase a validar si se encuentra reservada o no.
-     *  @param string ...$otros Más nombres de clases
+     * @return void
      *
-     *  @throws Dependencias::DependenciasInexistentes si hay una o más dependencias inexistentes
-     *
-     *  @see Dependencias::existen()
-     *
-     *  @return void
+     * @throws DependenciasInexistentes si hay una o más dependencias inexistentes
      */
     public function dependo(string $nombre, string ...$lista)
     {
@@ -334,9 +349,9 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Obtiene la lista de errores
+     * Obtiene la lista de errores
      *
-     *  @return Errores Errores ocurridos
+     * @return Errores Errores ocurridos
      */
     public function errores(): Errores
     {
@@ -344,9 +359,9 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Obtiene la configuración interna
+     * Obtiene la configuración interna
      *
-     *  @return MascaraDeBits Devuelve una instancia de MascaraDeBits para configurar el gestor
+     * @return MascaraDeBits Devuelve una instancia de MascaraDeBits para configurar el gestor
      */
     public function configuracion(): MascaraDeBits
     {
@@ -354,18 +369,18 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Define la función anónima final que retornará Dependencias::obtener()
+     * Define la función anónima final que retornará Dependencias::obtener()
      *
-     *  Retorna una función donde se definirá la función final que será llamada por
-     *  Dependencias::obtener()
+     * Retorna una función donde se definirá la función final que será llamada por
+     * Dependencias::obtener()
      *
-     *  @param object&  $elemento Elemento del array donde se definirá la función
-     *  @param callable $invocador Función anónima donde se define la clase
-     *  @param string   $clase     Nombre de la clase o interfaz
+     * @param object  &$elemento  Elemento del array donde se definirá la función
+     * @param callable $invocador Función anónima donde se define la clase
+     * @param string   $clase     Nombre de la clase o interfaz
      *
-     *  @return callable Devuelve una función anónima
+     * @return callable Devuelve una función anónima
      *
-     *  @access private
+     * @access private
      */
     private function definicionDeFuncionFinal(&$elemento, callable $invocador, string $clase): callable
     {
@@ -386,13 +401,13 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Verifica si la clase, o interfaz, está ya reservada
+     * Verifica si la clase, o interfaz, está ya reservada
      *
-     *  @param string $nombre Nombre de la clase
+     * @param string $nombre Nombre de la clase
      *
-     *  @return bool Devuelve **true** si la clase está reservada o **false** de lo contrario
+     * @return bool Devuelve **true** si la clase está reservada o **false** de lo contrario
      *
-     *  @access private
+     * @access private
      */
     private function claseEstaReservada(string $nombre): bool
     {
@@ -409,14 +424,14 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Valida si el objeto es una instancia de la clase o si implementa la interfaz
+     * Valida si el objeto es una instancia de la clase o si implementa la interfaz
      *
-     *  @param object $objeto Instancia del objeto
-     *  @param string $clase  Nombre de la clase o interfaz
+     * @param object $objeto Instancia del objeto
+     * @param string $clase  Nombre de la clase o interfaz
      *
-     *  @return bool Devuelve **false** si el objeto es una instancia de la clase, o **true** de lo contrario
+     * @return bool Devuelve **false** si el objeto es una instancia de la clase, o **true** de lo contrario
      *
-     *  @access private
+     * @access private
      */
     private function objetoNoCorresponde($objeto, string $clase): bool
     {
@@ -433,13 +448,13 @@ class Dependencias implements IDependencias
     }
 
     /**
-     *  Valida si el nombre de la clase o interfaz no está reservada
+     * Valida si el nombre de la clase o interfaz no está reservada
      *
-     *  @param string $nombre Nombre de la clase o interfaz
+     * @param string $nombre Nombre de la clase o interfaz
      *
-     *  @return bool Devuelve **true** si la clase no está reservada, **false** de lo contrario
+     * @return bool Devuelve **true** si la clase no está reservada, **false** de lo contrario
      *
-     *  @access private
+     * @access private
      */
     private function claseNoEstaReservada(string $nombre): bool
     {

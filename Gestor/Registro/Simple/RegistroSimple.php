@@ -6,63 +6,70 @@ use Gof\Contrato\Registro\Registro;
 use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Mensajes\Guardable;
 
+/**
+ * Gestor de registros de mensajes
+ *
+ * Clase que gestiona el registro de mensajes y delega la persistencia en otro gestor de guardado.
+ *
+ * @package Gof\Gestor\Registro\Simple
+ */
 class RegistroSimple implements Registro
 {
     /**
-     *  @var int Flag que indica limpiar el pila de mensajes cada vez que se llame a la función volcar
+     * @var int Flag que indica limpiar el pila de mensajes cada vez que se llame a la función volcar
      */
     const LIMPIAR_PILA_AL_VOLCAR = 1;
 
     /**
-     *  @var int Flag que indica unir todos los mensajes del pila en uno solo y guardarlo
+     * @var int Flag que indica unir todos los mensajes del pila en uno solo y guardarlo
      */
     const UNIR_MENSAJES_AL_VOLCAR = 2;
 
     /**
-     *  @var int Flag que indica unir todos los nuevos mensajes con el último
+     * @var int Flag que indica unir todos los nuevos mensajes con el último
      */
     const UNIR_MENSAJES_AL_REGISTRAR = 4;
 
     /**
-     *  @var int Flag que indica que por cada mensaje que se registre llame implícitamente a la función volcar
+     * @var int Flag que indica que por cada mensaje que se registre llame implícitamente a la función volcar
      */
     const VOLCAR_PILA_AL_REGISTRAR = 8;
 
     /**
-     *  @var int Flag que indica que si el gestor de guardado devuelve un error interrumpa el resto de guardados
+     * @var int Flag que indica que si el gestor de guardado devuelve un error interrumpa el resto de guardados
      */
     const INTERRUMPIR_VOLCADO_SI_HAY_ERRORES = 16;
 
     /**
-     *  @var int Máscara de bits con la configuración por defecto
+     * @var int Máscara de bits con la configuración por defecto
      */
     const CONFIGURACION_POR_DEFECTO = self::LIMPIAR_PILA_AL_VOLCAR;
 
     /**
-     *  @var array Array de mensajes a ser registrados
+     * @var array<int, string> Array de mensajes a ser registrados
      */
     private $pila;
 
     /**
-     *  @var Guardable Gestor encargado de guardar los registros
+     * @var Guardable Gestor encargado de guardar los registros
      */
     private $gestor;
 
     /**
-     *  @var string Separador utilizado para la unión de mensajes
+     * @var string Separador utilizado para la unión de mensajes
      */
     private $separador;
 
     /**
-     *  @var int Máscara de bits con la configuración interna del gestor
+     * @var int Máscara de bits con la configuración interna del gestor
      */
     private $configuracion;
 
     /**
-     *  Crea una instancia de la clase RegistroSimple
+     * Constructor
      *
-     *  @param Guardable $gestor        Gestor encargado del guardado de los registros
-     *  @param int       $configuracion Máscara de bit con la configuración interna del gestor
+     * @param Guardable $gestor        Gestor encargado del guardado de los registros
+     * @param int       $configuracion Máscara de bit con la configuración interna del gestor
      */
     public function __construct(Guardable $gestor, int $configuracion = self::CONFIGURACION_POR_DEFECTO)
     {
@@ -73,18 +80,18 @@ class RegistroSimple implements Registro
     }
 
     /**
-     *  Almacena un mensaje en el pila de mensajes
+     * Almacena un mensaje en el pila de mensajes
      *
-     *  Si está activado la flag UNIR_MENSAJES_AL_REGISTRAR el mensaje se concatena con el
-     *  último mensaje en la pila de mensajes.
+     * Si está activado la flag UNIR_MENSAJES_AL_REGISTRAR el mensaje se concatena con el
+     * último mensaje en la pila de mensajes.
      *
-     *  Si esta activado la flag VOLCAR_PILA_AL_REGISTRAR la función *volcar* será llamada
-     *  cada vez que se registre un mensaje. Esta función retornará el valor bool devuelto
-     *  por la función volcar.
+     * Si esta activado la flag VOLCAR_PILA_AL_REGISTRAR la función *volcar* será llamada
+     * cada vez que se registre un mensaje. Esta función retornará el valor bool devuelto
+     * por la función volcar.
      *
-     *  @param string $mensaje Mensaje a ser guardado
+     * @param string $mensaje Mensaje a ser guardado
      *
-     *  @return bool Devuelve TRUE en caso de éxito o FALSE de lo contrario
+     * @return bool Devuelve TRUE en caso de éxito o FALSE de lo contrario
      */
     public function registrar(string $mensaje): bool
     {
@@ -108,19 +115,19 @@ class RegistroSimple implements Registro
     }
 
     /**
-     *  Vuelca todos los mensajes de la pila al gestor de guardado
+     * Vuelca todos los mensajes de la pila al gestor de guardado
      *
-     *  Pasa al gestor de guardado todos y cada uno de los mensajes alojados en la pila,
-     *  uno a la vez. Si cualquiera de estas llamadas falla esta función devolverá FALSE.
+     * Pasa al gestor de guardado todos y cada uno de los mensajes alojados en la pila,
+     * uno a la vez. Si cualquiera de estas llamadas falla esta función devolverá FALSE.
      *
-     *  Si la flag UNIR_MENSAJES_AL_VOLCAR está activo se llamará una sola vez al método
-     *  guardar del gestor de guardado. A este se le pasará una sola cadena de caracteres
-     *  con todos los mensajes unidos y separados por un separador.
+     * Si la flag UNIR_MENSAJES_AL_VOLCAR está activo se llamará una sola vez al método
+     * guardar del gestor de guardado. A este se le pasará una sola cadena de caracteres
+     * con todos los mensajes unidos y separados por un separador.
      *
-     *  Si la flag LIMPIAR_PILA_AL_VOLCAR está activo la pila de mensajes se limpiará
-     *  una vez se hayan guardado todos los mensajes.
+     * Si la flag LIMPIAR_PILA_AL_VOLCAR está activo la pila de mensajes se limpiará
+     * una vez se hayan guardado todos los mensajes.
      *
-     *  @return bool Devuelve el estado del volcado de los mensajes
+     * @return bool Devuelve el estado del volcado de los mensajes
      */
     public function volcar(): bool
     {
@@ -152,14 +159,14 @@ class RegistroSimple implements Registro
     }
 
     /**
-     *  Obtiene o define el separador que será usado al unir mensajes
+     * Obtiene o define el separador que será usado al unir mensajes
      *
-     *  Si no se recibe ninguna cadena como argumento devuelve el separador actual, de lo
-     *  contrario se define el separador y la función devuelve el mismo como valor de retorno.
+     * Si no se recibe ninguna cadena como argumento devuelve el separador actual, de lo
+     * contrario se define el separador y la función devuelve el mismo como valor de retorno.
      *
-     *  @param string|null $separador Cadena de caracteres a usarse como separador de mensajes
+     * @param ?string $separador Cadena de caracteres a usarse como separador de mensajes
      *
-     *  @return string Devuelve el separador actual
+     * @return string Devuelve el separador actual
      */
     public function separador(?string $separador = null): string
     {
@@ -167,9 +174,9 @@ class RegistroSimple implements Registro
     }
 
     /**
-     *  Obtiene la configuracion interna del gestor
+     * Obtiene la configuracion interna del gestor
      *
-     *  @return MascaraDeBits Devuelve una MascaraDeBits con la configuración interna
+     * @return MascaraDeBits Devuelve una MascaraDeBits con la configuración interna
      */
     public function configuracion(): MascaraDeBits
     {
@@ -177,9 +184,9 @@ class RegistroSimple implements Registro
     }
 
     /**
-     *  Obtiene la pila de mensajes
+     * Obtiene la pila de mensajes
      *
-     *  @return array Array con todos los mensajes registrados
+     * @return array<int, string> Array con todos los mensajes registrados
      */
     public function pila(): array
     {
