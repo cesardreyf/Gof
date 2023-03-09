@@ -19,7 +19,7 @@ interface Errores
     /**
      * Obtiene el error
      *
-     * @return int Devuelve el error
+     * @return int Devuelve el útlimo error
      */
     public function error(): int;
 
