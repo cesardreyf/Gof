@@ -28,7 +28,7 @@ interface Errores
      *
      * @return array Devuelve una lista de todos los errores registrados
      */
-    public function errores(): array;
+    public function lista(): array;
 
     /**
      * Limpia los errores registrados

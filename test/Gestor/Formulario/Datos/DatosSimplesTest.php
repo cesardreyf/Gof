@@ -37,7 +37,7 @@ class DatosSimplesTest extends TestCase
             $this->assertNull($form->entero($clave));
         }
 
-        $listaDeErrores = $form->errores()->errores();
+        $listaDeErrores = $form->errores()->lista();
         $clavesDeLosErrores = array_keys($listaDeErrores);
         $clavesDeLosDatos = array_keys($datosQueNoSonEnteros);
         $this->assertSame($clavesDeLosErrores, $clavesDeLosDatos);

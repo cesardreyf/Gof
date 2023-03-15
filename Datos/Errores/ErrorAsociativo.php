@@ -59,11 +59,11 @@ class ErrorAsociativo implements Errores
     }
 
     /**
-     * Pila de errores
+     * Lista de errores
      *
      * @return int[] Devuelve la pila de errores
      */
-    public function errores(): array
+    public function lista(): array
     {
         return $this->errores;
     }

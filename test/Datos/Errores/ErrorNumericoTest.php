@@ -29,7 +29,7 @@ class ErrorNumericoTest extends TestCase
 
     public function testMetodoErroresDevuelveUnArrayVacioAlInstanciar(): void
     {
-        $this->assertEmpty($this->errores->errores());
+        $this->assertEmpty($this->errores->lista());
     }
 
     /**
@@ -38,11 +38,11 @@ class ErrorNumericoTest extends TestCase
     public function testAgregarUnErrorYObtenerlo(int $error): void
     {
         $this->assertSame($error, $this->errores->agregar($error));
-        $this->assertNotEmpty($this->errores->errores());
+        $this->assertNotEmpty($this->errores->lista());
         $this->assertTrue($this->errores->hay());
 
         $this->assertSame($error, $this->errores->error());
-        $this->assertEmpty($this->errores->errores());
+        $this->assertEmpty($this->errores->lista());
         $this->assertFalse($this->errores->hay());
     }
 
@@ -55,7 +55,7 @@ class ErrorNumericoTest extends TestCase
             $this->assertSame($error, $this->errores->agregar($error));
         }
 
-        $this->assertSame($errores, $this->errores->errores());
+        $this->assertSame($errores, $this->errores->lista());
         $this->assertTrue($this->errores->hay());
 
         // Organización mundial de los
@@ -70,7 +70,7 @@ class ErrorNumericoTest extends TestCase
 
         $this->assertEmpty($errores);
         $this->assertFalse($this->errores->hay());
-        $this->assertEmpty($this->errores->errores());
+        $this->assertEmpty($this->errores->lista());
     }
 
     public function dataUnSoloError(): array
