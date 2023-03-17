@@ -334,7 +334,7 @@ class DatosSimples
 
     protected function agregarError(string $clave, int $error)
     {
-        $this->errores->agregar($clave, $error);
+        $this->errores->agregar($error, $clave);
     }
 
 }
