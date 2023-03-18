@@ -17,7 +17,7 @@ class ListaDeEnteros implements Enteros
     /**
      * @var array Lista interna
      */
-    private $lista = [];
+    private array $lista = [];
 
     /**
      * Constructor

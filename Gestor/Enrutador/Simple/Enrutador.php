@@ -18,7 +18,7 @@ class Enrutador implements IEnrutador
     /**
      * @var string Nombre completo de la clase
      */
-    private $nombreClase = '';
+    private string $nombreClase = '';
 
     /**
      * Constructor

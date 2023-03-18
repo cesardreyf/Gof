@@ -104,17 +104,17 @@ class DatosSimples
     /**
      * @var array $datos Lista de datos del formulario
      */
-    protected $datos;
+    protected array $datos;
 
     /**
      * @var ErrorNumerico $errores Lista de errores
      */
-    protected $errores;
+    protected Errores $errores;
 
     /**
      * @var MascaraDeBits Máscara de bits con la configuración del gestor
      */
-    protected $configuracion;
+    protected Mascara $configuracion;
 
     /**
      * Constructor

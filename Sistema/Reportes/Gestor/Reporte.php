@@ -18,17 +18,17 @@ class Reporte implements Reportero
     /**
      * @var Plantilla Plantilla encargada de traducir los datos recibidos
      */
-    private $plantilla;
+    private Plantilla $plantilla;
 
     /**
      * @var Registro Gestor de registros encargado de registrar los mensajes
      */
-    private $registro;
+    private Registro $registro;
 
     /**
      * @var bool Indica si imprimir o no los mensajes una vez se guarden
      */
-    private $imprimir;
+    private bool $imprimir;
 
     /**
      * Constructor

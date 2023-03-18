@@ -16,12 +16,12 @@ class Errores implements Plantilla
     /**
      * @var string Almacena el mensaje traducido
      */
-	private $mensaje = '';
+	private string $mensaje = '';
 
     /**
      * @var array<int, string> Lista de tipos de errores
      */
-    protected $tipoDeErrores = [
+    protected array $tipoDeErrores = [
             E_ERROR             => 'E_ERROR'
         ,   E_WARNING           => 'E_WARNING'
         ,   E_PARSE             => 'E_PARSE'

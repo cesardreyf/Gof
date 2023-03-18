@@ -19,7 +19,7 @@ class Archivo implements IArchivo
     /**
      * @var string Ruta donde está ubicado el archivo
      */
-    private $ruta;
+    private string $ruta;
 
     /**
      * Constructor

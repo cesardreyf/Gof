@@ -17,7 +17,7 @@ class Excepciones implements Plantilla
     /**
      * @var string $mensaje Almacena el mensaje traducido
      */
-    private $mensaje = '';
+    private string $mensaje = '';
 
     /**
      * Convierte una excepción en un mensaje

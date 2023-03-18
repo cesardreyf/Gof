@@ -102,27 +102,27 @@ class Autoload
     /**
      * @var int Almacena el último error ocurrido en el gestor
      */
-    private $error;
+    private int $error;
 
     /**
      * @var MascaraDeBits Máscara de bit con la configuración del gestor
      */
-    private $configuracion;
+    private Mascara $configuracion;
 
     /**
      * @var Filtro Filtro que se aplicarán para las cadenas de Espacios de Nombres y Clases
      */
-    private $filtro;
+    private Filtro $filtro;
 
     /**
      * @var Cargador Subgestor encargado de cargar los archivos
      */
-    private $cargador;
+    private Cargador $cargador;
 
     /**
      * @var array<string, Carpeta> Lista de espacios de nombres reservados
      */
-    private $espaciosDeNombres;
+    private array $espaciosDeNombres;
 
     /**
      * Constructor

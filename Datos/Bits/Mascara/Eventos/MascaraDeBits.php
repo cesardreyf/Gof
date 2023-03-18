@@ -17,7 +17,7 @@ class MascaraDeBits extends IMascaraDeBits
     /**
      * @var Eventos Lista de eventos
      */
-    private $eventos;
+    private Eventos $eventos;
 
     /**
      * Constructor

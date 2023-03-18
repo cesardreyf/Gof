@@ -16,7 +16,7 @@ class ListaDeDatos implements Datos
     /**
      * @var array<string, mixed> Lista de datos
      */
-    private $datos = [];
+    private array $datos = [];
 
     /**
      * Agrega un nuevo dato a la lista
