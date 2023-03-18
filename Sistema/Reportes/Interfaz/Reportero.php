@@ -16,7 +16,7 @@ interface Reportero
      *
      * @return bool Devuelve **true** si fue exitoso o **false** de lo contrario.
      */
-    public function reportar($datos): bool;
+    public function reportar(mixed $datos): bool;
 
     /**
      * Plantilla para la traducción de los datos

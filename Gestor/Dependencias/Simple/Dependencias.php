@@ -374,7 +374,7 @@ class Dependencias implements IDependencias
      * Retorna una función donde se definirá la función final que será llamada por
      * Dependencias::obtener()
      *
-     * @param object  &$elemento  Elemento del array donde se definirá la función
+     * @param ?object &$elemento  Elemento del array donde se definirá la función
      * @param callable $invocador Función anónima donde se define la clase
      * @param string   $clase     Nombre de la clase o interfaz
      *
@@ -382,7 +382,7 @@ class Dependencias implements IDependencias
      *
      * @access private
      */
-    private function definicionDeFuncionFinal(&$elemento, callable $invocador, string $clase): callable
+    private function definicionDeFuncionFinal(?object &$elemento, callable $invocador, string $clase): callable
     {
         return function() use (&$elemento, $invocador, $clase) {
             // Obtiene la instancia de la función anónima
@@ -426,14 +426,14 @@ class Dependencias implements IDependencias
     /**
      * Valida si el objeto es una instancia de la clase o si implementa la interfaz
      *
-     * @param object $objeto Instancia del objeto
+     * @param mixed  $objeto Instancia del objeto
      * @param string $clase  Nombre de la clase o interfaz
      *
      * @return bool Devuelve **false** si el objeto es una instancia de la clase, o **true** de lo contrario
      *
      * @access private
      */
-    private function objetoNoCorresponde($objeto, string $clase): bool
+    private function objetoNoCorresponde(mixed $objeto, string $clase): bool
     {
         if( $objeto instanceof $clase ) {
             return false;

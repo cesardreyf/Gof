@@ -246,7 +246,7 @@ class Autoload
      *
      * @return ?object Devuelve una instancia de la clase si existe o **NULL** de lo contrario
      */
-    public function instanciar(string $nombreDeLaClase, ...$argumentos): ?object
+    public function instanciar(string $nombreDeLaClase, mixed ...$argumentos): ?object
     {
         if( class_exists($nombreDeLaClase, true) === false ) {
             if( $this->configuracion->desactivados(self::CARGAR_AL_INSTANCIAR) ) {

@@ -16,7 +16,7 @@ interface Plantilla
      *
      * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
      */
-    public function traducir($datos): bool;
+    public function traducir(mixed $datos): bool;
 
     /**
      * Mensaje traducido

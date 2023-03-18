@@ -63,7 +63,7 @@ class Errores implements Plantilla
      *
      * @return bool Devuelve **true** si la traducción fue exitosa **false** de lo contrario
      */
-    public function traducir($datos): bool
+    public function traducir(mixed $datos): bool
     {
         if( is_array($datos) === false ) {
             return false;

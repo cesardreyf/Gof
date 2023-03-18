@@ -53,7 +53,7 @@ class Reporte implements Reportero
      *
      * @return bool Devuelve TRUE si el reporte fue exitoso, FALSE de lo contrario
      */
-    public function reportar($datos): bool
+    public function reportar(mixed $datos): bool
     {
         if( $this->plantilla()->traducir($datos) === false ) {
             return false;

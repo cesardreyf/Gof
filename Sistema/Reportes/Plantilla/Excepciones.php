@@ -28,7 +28,7 @@ class Excepciones implements Plantilla
      *
      * @return bool Devuelve **true** si la traducción fue exitosa, **false** de lo contrario
      */
-    public function traducir($excepcion): bool
+    public function traducir(mixed $excepcion): bool
     {
         if( $excepcion instanceof Throwable ) {
             $this->mensaje = date('(d/m/Y) [G:i:s]')    . "\n\n\t"
