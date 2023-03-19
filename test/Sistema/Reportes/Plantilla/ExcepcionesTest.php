@@ -24,13 +24,9 @@ class ExcepcionesTest extends TestCase
         $this->assertInstanceOf(Plantilla::class, $this->plantilla);
     }
 
-    public function testDatosDiferentesDeExceptionDevuelvenFalse(): void
+    public function testErrorAlTraducirUnArray(): void
     {
-        $this->assertFalse($this->plantilla->traducir(new stdClass()));
-        $this->assertFalse($this->plantilla->traducir(123456789));
-        $this->assertFalse($this->plantilla->traducir(array()));
-        $this->assertFalse($this->plantilla->traducir('hola'));
-        $this->assertFalse($this->plantilla->traducir(1.234));
+        $this->assertFalse($this->plantilla->traducir([]));
     }
 
     public function testDatosTipoExceptionDevuelveTrue(): void

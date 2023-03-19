@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Reportes\Plantilla;
 
 use Gof\Sistema\Reportes\Interfaz\Plantilla;
+use Throwable;
 
 /**
  * Plantilla empleada por el sistema de reportes para los errores
@@ -63,9 +64,9 @@ class Errores implements Plantilla
      *
      * @return bool Devuelve **true** si la traducción fue exitosa **false** de lo contrario
      */
-    public function traducir(mixed $datos): bool
+    public function traducir(array|Throwable $datos): bool
     {
-        if( is_array($datos) === false ) {
+        if( $datos instanceof Throwable ) {
             return false;
         }
 
