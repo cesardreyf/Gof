@@ -16,7 +16,7 @@ class MascaraDeBits implements Mascara
     /**
      * @var int Máscara de bits
      */
-    private $marcas;
+    private int $marcas;
 
     /**
      * Constructor

@@ -46,17 +46,17 @@ class GuardarEnArchivo implements Guardable
     /**
      * @var Archivo Archivo donde se guardarán los mensajes
      */
-    private $archivo;
+    private Archivo $archivo;
 
     /**
      * @var MascaraDeBits Configuracion interna
      */
-    private $configuracion;
+    private MascaraDeBits $configuracion;
 
     /**
      * @var int Número de bytes almacenados
      */
-    private $bytes;
+    private int $bytes;
 
     /**
      * Constructor

@@ -17,7 +17,7 @@ abstract class ErrorAbstracto implements Errores
     /**
      * @var array<string, int> Pila de errores
      */
-    protected $errores = [];
+    protected array $errores = [];
 
     public function __construct(array $listaDeErrores = [])
     {

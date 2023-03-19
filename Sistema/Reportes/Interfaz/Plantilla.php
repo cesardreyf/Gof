@@ -2,6 +2,8 @@
 
 namespace Gof\Sistema\Reportes\Interfaz;
 
+use Throwable;
+
 /**
  * Interfaz empleada por el sistema de reportes para las plantillas
  *
@@ -16,7 +18,7 @@ interface Plantilla
      *
      * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario
      */
-    public function traducir($datos): bool;
+    public function traducir(array|Throwable $datos): bool;
 
     /**
      * Mensaje traducido

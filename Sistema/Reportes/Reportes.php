@@ -27,12 +27,12 @@ class Reportes
     /**
      * @var Reportero Gestor de errores
      */
-    private $gestorDeErrores;
+    private Reportero $gestorDeErrores;
 
     /**
      * @var Reportero Gestor de excepciones
      */
-    private $gestorDeExcepciones;
+    private Reportero $gestorDeExcepciones;
 
     /**
      * Constructor

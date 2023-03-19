@@ -14,12 +14,12 @@ class Accion
     /**
      * @var int Bits necesarios para activar el evento al cumplirse la condición
      */
-    private $bits;
+    private int $bits;
 
     /**
      * @var array Referencia a la lista de eventos
      */
-    private $lista;
+    private array $lista;
 
     /**
      * @var int Condicion para el evento

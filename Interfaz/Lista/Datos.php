@@ -19,7 +19,7 @@ interface Datos extends Lista
      *
      * @return ?string Devuelve el identificador asociado al nuevo dato en la lista o **NULL** en caso de error.
      */
-    public function agregar($dato, ?string $clave = null): ?string;
+    public function agregar(mixed $dato, ?string $clave = null): ?string;
 
     /**
      * Remueve un dato de la lista
@@ -38,7 +38,7 @@ interface Datos extends Lista
      *
      * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
      */
-    public function cambiar(string $id, $nuevoDato): bool;
+    public function cambiar(string $id, mixed $nuevoDato): bool;
 
     /**
      * Obtiene un dato de la lista
@@ -47,5 +47,5 @@ interface Datos extends Lista
      *
      * @return mixed Devuelve el valor almacenado en la lista si existe o **NULL** de lo contrario.
      */
-    public function obtener(string $identificador);
+    public function obtener(string $identificador): mixed;
 }

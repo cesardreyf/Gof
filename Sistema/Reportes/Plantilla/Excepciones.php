@@ -17,7 +17,7 @@ class Excepciones implements Plantilla
     /**
      * @var string $mensaje Almacena el mensaje traducido
      */
-    private $mensaje = '';
+    private string $mensaje = '';
 
     /**
      * Convierte una excepción en un mensaje
@@ -28,7 +28,7 @@ class Excepciones implements Plantilla
      *
      * @return bool Devuelve **true** si la traducción fue exitosa, **false** de lo contrario
      */
-    public function traducir($excepcion): bool
+    public function traducir(array|Throwable $excepcion): bool
     {
         if( $excepcion instanceof Throwable ) {
             $this->mensaje = date('(d/m/Y) [G:i:s]')    . "\n\n\t"

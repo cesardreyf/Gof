@@ -45,12 +45,12 @@ class Archivos implements Cargador
     /**
      *  @var int Último error ocurrido
      */
-    private $error = 0;
+    private int $error = 0;
 
     /**
-     *  @var int Máscara de bits con la configuración interna
+     *  @var Mascara Máscara de bits con la configuración interna
      */
-    private $configuracion;
+    private Mascara $configuracion;
 
     /**
      * Constructor

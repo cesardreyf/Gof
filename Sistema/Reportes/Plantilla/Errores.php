@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Reportes\Plantilla;
 
 use Gof\Sistema\Reportes\Interfaz\Plantilla;
+use Throwable;
 
 /**
  * Plantilla empleada por el sistema de reportes para los errores
@@ -16,12 +17,12 @@ class Errores implements Plantilla
     /**
      * @var string Almacena el mensaje traducido
      */
-	private $mensaje = '';
+	private string $mensaje = '';
 
     /**
      * @var array<int, string> Lista de tipos de errores
      */
-    protected $tipoDeErrores = [
+    protected array $tipoDeErrores = [
             E_ERROR             => 'E_ERROR'
         ,   E_WARNING           => 'E_WARNING'
         ,   E_PARSE             => 'E_PARSE'
@@ -63,9 +64,9 @@ class Errores implements Plantilla
      *
      * @return bool Devuelve **true** si la traducción fue exitosa **false** de lo contrario
      */
-    public function traducir($datos): bool
+    public function traducir(array|Throwable $datos): bool
     {
-        if( is_array($datos) === false ) {
+        if( $datos instanceof Throwable ) {
             return false;
         }
 

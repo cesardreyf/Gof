@@ -34,7 +34,7 @@ class Eventos
     /**
      * @var array Lista de eventos
      */
-    private $eventos = [];
+    private array $eventos = [];
 
     /**
      * Devuelve una Acción a cumplirse cuando se llame al método MascaraDeBits::activar()

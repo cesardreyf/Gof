@@ -17,7 +17,7 @@ class ListaDeTextos implements Textos
     /**
      * @var string[] Lista de textos
      */
-    private $lista = [];
+    private array $lista = [];
 
     /**
      * Constructor

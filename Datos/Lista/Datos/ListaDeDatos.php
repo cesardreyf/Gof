@@ -16,7 +16,7 @@ class ListaDeDatos implements Datos
     /**
      * @var array<string, mixed> Lista de datos
      */
-    private $datos = [];
+    private array $datos = [];
 
     /**
      * Agrega un nuevo dato a la lista
@@ -35,7 +35,7 @@ class ListaDeDatos implements Datos
      *
      * @see ListaDeDatos::cambiar() para cambiar el valor de un elemento ya existente.
      */
-    public function agregar($dato, ?string $clave = null): ?string
+    public function agregar(mixed $dato, ?string $clave = null): ?string
     {
         if( $clave === null ) {
             $id = (string)count($this->datos);
@@ -81,7 +81,7 @@ class ListaDeDatos implements Datos
      *
      * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
      */
-    public function cambiar(string $identificador, $dato): bool
+    public function cambiar(string $identificador, mixed $dato): bool
     {
         if( isset($this->datos[$identificador]) ) {
             $this->datos[$identificador] = $dato;
@@ -100,7 +100,7 @@ class ListaDeDatos implements Datos
      *
      * @return mixed Devuelve el dato asociado al identificador si existe o **NULL** de lo contrario.
      */
-    public function obtener(string $identificador)
+    public function obtener(string $identificador): mixed
     {
         if( isset($this->datos[$identificador]) ) {
             return $this->datos[$identificador];

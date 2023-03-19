@@ -19,7 +19,7 @@ class Carpeta implements ICarpeta
     /**
      * @var string Ubicación de la carpeta
      */
-    private $ruta;
+    private string $ruta;
 
     /**
      * Constructor

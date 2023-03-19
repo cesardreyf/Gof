@@ -8,6 +8,7 @@ use Gof\Sistema\Reportes\Interfaz\Plantilla;
 use Gof\Sistema\Reportes\Plantilla\Errores;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use Exception;
 
 class ErroresTest extends TestCase
 {
@@ -30,11 +31,7 @@ class ErroresTest extends TestCase
 
     public function testErrorDeTipoDeDatosAlTraducir(): void
     {
-        $this->assertFalse($this->plantilla->traducir(new stdClass()));
-        $this->assertFalse($this->plantilla->traducir(123456789));
-        $this->assertFalse($this->plantilla->traducir('algo'));
-        $this->assertFalse($this->plantilla->traducir(false));
-        $this->assertFalse($this->plantilla->traducir(1.5));
+        $this->assertFalse($this->plantilla->traducir(new Exception()));
     }
 
     /**

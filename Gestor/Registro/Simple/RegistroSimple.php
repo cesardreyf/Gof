@@ -48,22 +48,22 @@ class RegistroSimple implements Registro
     /**
      * @var array<int, string> Array de mensajes a ser registrados
      */
-    private $pila;
+    private array $pila;
 
     /**
      * @var Guardable Gestor encargado de guardar los registros
      */
-    private $gestor;
+    private Guardable $gestor;
 
     /**
      * @var string Separador utilizado para la unión de mensajes
      */
-    private $separador;
+    private string $separador;
 
     /**
-     * @var int Máscara de bits con la configuración interna del gestor
+     * @var MascaraDeBits Máscara de bits con la configuración interna del gestor
      */
-    private $configuracion;
+    private MascaraDeBits $configuracion;
 
     /**
      * Constructor
