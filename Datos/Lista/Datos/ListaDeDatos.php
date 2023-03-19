@@ -16,7 +16,12 @@ class ListaDeDatos implements Datos
     /**
      * @var array<string, mixed> Lista de datos
      */
-    private array $datos = [];
+    private array $datos;
+
+    public function __construct(array $datos = [])
+    {
+        $this->datos = $datos;
+    }
 
     /**
      * Agrega un nuevo dato a la lista
