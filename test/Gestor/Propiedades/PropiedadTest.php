@@ -111,4 +111,52 @@ class PropiedadTest extends TestCase
         $this->assertSame($gatito, $propiedad->obtener($identificador));
     }
 
+    /**
+     * @dataProvider dataUwu
+     */
+    public function testPasarListaDePropiedadesPorConstructor(array $listaDeElementos): void
+    {
+        $propiedad = new Propiedad(Adorable::class, $listaDeElementos);
+        $this->assertSame($listaDeElementos, $propiedad->lista());
+    }
+
+    public function dataUwu(): array
+    {
+        //
+        $gatito = $this->createMock(Adorable::class);
+        $perrito = $this->createMock(Adorable::class);
+        $lorito = $this->createMock(Adorable::class);
+        $cacatua = $this->createMock(Adorable::class);
+        $pokemon = $this->createMock(Adorable::class);
+        return [
+            [[$gatito, $perrito, $lorito, $cacatua, $pokemon]]
+        ];
+    }
+
+    /**
+     * @dataProvider dataUnUwuDosNoTantos
+     */
+    public function testAgregarPropiedadesDesdeElConstructorIgnorandoLosInvalidos(array $listaDeElementos): void
+    {
+        $configuracion = Propiedad::IGNORAR_PROPIEDADES_INVALIDAS;
+        $propiedad = new Propiedad(Adorable::class, $listaDeElementos, $configuracion);
+
+        $listaDePropiedadesConSoloAdorables = array_filter($listaDeElementos, function($propiedad) {
+            return $propiedad instanceof Adorable;
+        });
+
+        $this->assertSame($listaDePropiedadesConSoloAdorables, $propiedad->lista());
+    }
+
+    public function dataUnUwuDosNoTantos(): array
+    {
+        return [
+            [[
+              'gatito' => $this->createMock(Adorable::class),
+              'cucaracha' => new stdClass(),
+              'vibora' => new stdClass()
+            ]]
+        ];
+    }
+
 }
