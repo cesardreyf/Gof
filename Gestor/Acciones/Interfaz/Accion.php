@@ -4,5 +4,11 @@ namespace Gof\Gestor\Acciones\Interfaz;
 
 interface Accion
 {
-    public function accionar(string $identificador, mixed $elemento);
+    /**
+     * Recibe una propiedad y un identificador
+     *
+     * @param mixed $elemento Elemento recibido.
+     * @param string $identificador Clave asociada al elemento.
+     */
+    public function accionar(mixed $elemento, string $identificador);
 }

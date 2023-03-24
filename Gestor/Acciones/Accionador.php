@@ -47,10 +47,21 @@ class Accionador
     public function accionar(): bool
     {
         foreach( $this->datos->lista() as $identificador => $elemento ) {
-            $this->accion->accionar($identificador, $elemento);
+            $this->accion->accionar($elemento, $identificador);
         }
 
         return true;
+    }
+
+    /**
+     * Ejecuta la acción sobre un único elemento
+     *
+     * @param mixed $elemento Elemento a pasar al accionador.
+     * @param string $identificador Clave o identificador del elemento.
+     */
+    public function accionarEn(mixed $elemento, string $identificador): mixed
+    {
+        return $this->accion->accionar($elemento, $identificador);
     }
 
     /**
