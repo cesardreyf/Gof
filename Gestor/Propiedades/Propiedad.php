@@ -40,7 +40,9 @@ class Propiedad extends ListaDeDatos
     /**
      * Constructor
      *
-     * @param string $interfaz Nombre completo del tipo que deberán implementar los elementos.
+     * @param string $interfaz      Nombre completo del tipo que deberán implementar los elementos.
+     * @param array  $datos         Lista de propiedades (opcional).
+     * @param int    $configuracion Máscara de bits con la configuración.
      */
     public function __construct(string $interfaz, array $datos = [], int $configuracion = 0)
     {
