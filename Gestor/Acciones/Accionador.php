@@ -12,17 +12,12 @@ use Gof\Interfaz\Lista;
  *
  * @package Gof\Gestor\Acciones
  */
-class Accionador
+class Accionador extends AccionadorSimple
 {
     /**
      * @var Lista Lista de datos con los elementos.
      */
     private Lista $datos;
-
-    /**
-     * @var Accion Acción que se ejecutará por cada elemento.
-     */
-    private Accion $accion;
 
     /**
      * Constructor
@@ -33,7 +28,7 @@ class Accionador
     public function __construct(Lista $datos, Accion $accion)
     {
         $this->datos = $datos;
-        $this->accion = $accion;
+        parent::__construct($accion);
     }
 
     /**
@@ -47,21 +42,10 @@ class Accionador
     public function accionar(): bool
     {
         foreach( $this->datos->lista() as $identificador => $elemento ) {
-            $this->accion->accionar($elemento, $identificador);
+            $this->accionarEn($elemento, $identificador);
         }
 
         return true;
-    }
-
-    /**
-     * Ejecuta la acción sobre un único elemento
-     *
-     * @param mixed $elemento Elemento a pasar al accionador.
-     * @param string $identificador Clave o identificador del elemento.
-     */
-    public function accionarEn(mixed $elemento, string $identificador): mixed
-    {
-        return $this->accion->accionar($elemento, $identificador);
     }
 
     /**

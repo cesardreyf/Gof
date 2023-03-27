@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\Gestor\Acciones;
 
 use Gof\Gestor\Acciones\Accionador;
+use Gof\Gestor\Acciones\AccionadorSimple;
 use Gof\Gestor\Acciones\Interfaz\Accion;
 use Gof\Interfaz\Lista;
 use PHPUnit\Framework\TestCase;
@@ -21,6 +22,11 @@ class AccionadorTest extends TestCase
         $this->accionar = $this->createMock(Accion::class);
         $this->listaDeDatos = $this->createMock(Lista::class);
         $this->accionador = new Accionador($this->listaDeDatos, $this->accionar);
+    }
+
+    public function testExtiendeDeAccionadorSimple(): void
+    {
+        $this->assertInstanceOf(AccionadorSimple::class, $this->accionador);
     }
 
     /**
