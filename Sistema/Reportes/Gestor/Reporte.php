@@ -55,6 +55,10 @@ class Reporte implements Reportero
      */
     public function reportar(mixed $datos): bool
     {
+        if( empty($datos) ) {
+            return false;
+        }
+
         if( $this->plantilla()->traducir($datos) === false ) {
             return false;
         }
