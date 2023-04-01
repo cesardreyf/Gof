@@ -37,6 +37,8 @@ class Propiedad extends ListaDeDatos
      */
     private string $tipo;
 
+    private MascaraDeBits $configuracion;
+
     /**
      * Constructor
      *

@@ -23,6 +23,8 @@ class GestorUrl
      */
     const SEPARADOR_POR_DEFECTO = '/';
 
+    private Lista $lista;
+
     /**
      * Constructor
      *
