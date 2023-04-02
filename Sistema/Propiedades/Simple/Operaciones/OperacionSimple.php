@@ -84,7 +84,7 @@ class OperacionSimple
      *
      * Ejecuta la **acción** del módulo sobre la propiedad.
      *
-     * @param mixed $propiedad Propiedad a pasarle a la **accion**.
+     * @param mixed  $propiedad     Propiedad a pasarle a la **accion**.
      * @param string $identificador Clave asociada a la propiedad.
      *
      * @return mixed Devuelve lo que retorna el **accionar**.
@@ -105,13 +105,7 @@ class OperacionSimple
     protected function procesarErrores(mixed $resultado, string $identificador): bool
     {
         if( $resultado !== 0 ) {
-            if( is_int($resultado) ) {
-                $this->errores->agregar($resultado, $identificador);
-            } else {
-                $this->errores->agregar(self::RESULTADO_INESPERADO, $identificador);
-                // TAREA: Lanzar excepcion?
-            }
-
+            $this->errores->agregar(is_int($resultado) ? $resultado : self::RESULTADO_INESPERADO, $identificador);
             return true;
         }
 
