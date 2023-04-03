@@ -20,12 +20,12 @@ use InvalidArgumentException;
  *
  * @package Gof\Gestor\Propiedades
  */
-class Propiedad extends ListaDeDatos
+class PropiedadMultipo extends ListaDeDatos
 {
     /**
      * @var string Mensaje de excepción lanzada cuando el tipo de propiedad no es la esperada.
      */
-    const EXCEPCION_DE_TIPO = 'Se esperaba una propiedad de tipo: ';
+    const EXCEPCION_DE_TIPO = 'La propiedad no implementa las siguientes interfaces: ';
 
     /**
      * @var int Directiva para ignorar las propiedades que no cumplan con el tipo esperado.
@@ -33,9 +33,9 @@ class Propiedad extends ListaDeDatos
     const IGNORAR_PROPIEDADES_INVALIDAS = 1;
 
     /**
-     * @var string Nombre de la interfaz que deben implementar los elementos.
+     * @var string[] Lista de interfaces.
      */
-    private string $tipo;
+    private array $interfaces;
 
     /**
      * @var MascaraDeBits Configuración interna del gestor.
@@ -46,22 +46,21 @@ class Propiedad extends ListaDeDatos
      * Constructor
      *
      * @param string $interfaz      Nombre completo del tipo que deberán implementar los elementos.
-     * @param array  $datos         Lista de propiedades (opcional).
-     * @param int    $configuracion Máscara de bits con la configuración.
+     * @param string ...$interfaces Más interfaces.
      */
-    public function __construct(string $interfaz, array $datos = [], int $configuracion = 0)
+    public function __construct(string $interfaz, string ...$interfaces)
     {
-        if( interface_exists($interfaz) === false ) {
-            throw new InvalidArgumentException("La interfaz: $interfaz; no existe");
+        $this->interfaces = $interfaces;
+        $this->interfaces[] = $interfaz;
+
+        foreach( $interfaces as $interfaz ) {
+            if( interface_exists($interfaz) === false ) {
+                throw new InvalidArgumentException("La interfaz: $interfaz; no existe");
+            }
         }
 
         parent::__construct([]);
-        $this->tipo = $interfaz;
-        $this->configuracion = new MascaraDeBits($configuracion);
-
-        foreach( $datos as $identificador => $propiedad ) {
-            $this->agregar($propiedad, $identificador);
-        }
+        $this->configuracion = new MascaraDeBits(0);
     }
 
     /**
@@ -84,15 +83,13 @@ class Propiedad extends ListaDeDatos
      */
     public function agregar(mixed $propiedad, ?string $identificador = null): ?string
     {
-        if( $propiedad instanceof $this->tipo ) {
+        if( $this->implementaLasInterfaces($propiedad) ) {
             return parent::agregar($propiedad, $identificador);
         }
 
-        if( $this->configuracion->activados(self::IGNORAR_PROPIEDADES_INVALIDAS) ) {
+        if( $this->lanzarExcepcion() === false ) {
             return null;
         }
-
-        throw new InvalidArgumentException(self::EXCEPCION_DE_TIPO . $this->tipo);
     }
 
     /**
@@ -115,15 +112,11 @@ class Propiedad extends ListaDeDatos
      */
     public function cambiar(string $identificador, mixed $propiedad): bool
     {
-        if( $propiedad instanceof $this->tipo ) {
+        if( $this->implementaLasInterfaces($propiedad) ) {
             return parent::cambiar($identificador, $propiedad);
         }
 
-        if( $this->configuracion->activados(self::IGNORAR_PROPIEDADES_INVALIDAS) ) {
-            return false;
-        }
-
-        throw new InvalidArgumentException(self::EXCEPCION_DE_TIPO . $this->tipo);
+        return $this->lanzarExcepcion();
     }
 
     /**
@@ -134,6 +127,44 @@ class Propiedad extends ListaDeDatos
     public function configuracion(): MascaraDeBits
     {
         return $this->configuracion;
+    }
+
+    /**
+     * Valida si la propiedad implementa todas las interfaces registradas
+     *
+     * @param mixed $propiedad Objeto a validar.
+     *
+     * @return bool Devuelve **true** si es válido o **false** si el objeto no implementa uno o más interfaces.
+     *
+     * @access protected
+     */
+    protected function implementaLasInterfaces(mixed $propiedad): bool
+    {
+        foreach( $this->interfaces as $interfaz ) {
+            if( !$propiedad instanceof $interfaz ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Lanza una excepcion si ocurrió un error de validación
+     *
+     * @return bool Devuelve **false** si está activado **IGNORAR_PROPIEDADES_INVALIDAS**.
+     *
+     * @throws InvalidArgumentException si no está activado **IGNORAR_PROPIEDADES_INVALIDAS**.
+     *
+     * @access protected
+     */
+    protected function lanzarExcepcion(): bool
+    {
+        if( $this->configuracion->activados(self::IGNORAR_PROPIEDADES_INVALIDAS) ) {
+            return false;
+        }
+
+        throw new InvalidArgumentException(self::EXCEPCION_DE_TIPO . implode(', ', $this->interfaces) . '.');
     }
 
 }
