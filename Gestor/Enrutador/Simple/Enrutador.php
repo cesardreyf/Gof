@@ -20,6 +20,8 @@ class Enrutador implements IEnrutador
      */
     private string $nombreClase = '';
 
+    private array $resto = [];
+
     /**
      * Constructor
      *
@@ -54,9 +56,10 @@ class Enrutador implements IEnrutador
     public function __construct(Lista $objetivos, array $disponibles, string $principal, string $inexistente)
     {
         $espacioDeNombre = '';
+        $recursos = $objetivos->lista();
         $nombreDeLaClase = ucfirst($principal);
 
-        foreach( $objetivos->lista() as $objetivo ) {
+        while( $objetivo = array_shift($recursos) ) {
             if( in_array($objetivo, $disponibles) ) {
                 $nombreDeLaClase = ucfirst($objetivo);
                 break;
@@ -74,6 +77,7 @@ class Enrutador implements IEnrutador
             break;
         }
 
+        $this->resto = $recursos;
         $this->nombreClase = $espacioDeNombre . $nombreDeLaClase;
     }
 
@@ -85,6 +89,16 @@ class Enrutador implements IEnrutador
     public function nombreClase(): string
     {
         return $this->nombreClase;
+    }
+
+    /**
+     * Obtiene el resto de parámetros de la URL
+     *
+     * @return array Devuelve un array con las propiedades para los controladores.
+     */
+    public function resto(): array
+    {
+        return $this->resto;
     }
 
 }
