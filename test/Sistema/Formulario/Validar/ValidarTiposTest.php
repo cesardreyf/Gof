@@ -98,6 +98,10 @@ class ValidarTiposTest extends TestCase
             ['int_negativo', PHP_INT_MIN],
             ['string_int_postivo', '1234567890'],
             ['string_int_negativo', '-1234567890'],
+
+            ['string_int_con_espacios_a_la_izquierda', ' 1234567890'],
+            ['string_int_con_espacios_a_la_derecha', '1234567890 '],
+            ['string_int_con_espacios_al_rededor', ' 1234567890 '],
         ];
     }
 
