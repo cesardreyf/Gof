@@ -5,6 +5,9 @@ namespace Gof\Sistema\Formulario\Interfaz;
 /**
  * Interfaz que almacena constantes con mensajes de errores
  *
+ * Interfaz que contiene constantes con mensajes de errores comunes para el
+ * sistema de formulario.
+ *
  * @package Gof\Sistema\Formulario\Interfaz
  */
 interface ErroresMensaje

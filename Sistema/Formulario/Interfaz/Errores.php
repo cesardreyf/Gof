@@ -5,6 +5,9 @@ namespace Gof\Sistema\Formulario\Interfaz;
 /**
  * Interfaz con constantes predefinidas de errores
  *
+ * Interfaz que contiene constantes con códigos de errores comunes para el
+ * sistema de formulario.
+ *
  * @package Gof\Sistema\Formulario\Interfaz
  */
 interface Errores
