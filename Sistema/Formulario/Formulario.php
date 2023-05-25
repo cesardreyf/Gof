@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Formulario;
 
 use Gof\Datos\Formulario\Campo;
+use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
@@ -58,7 +59,7 @@ class Formulario implements Tipos, Errores
             return $this->campos[$clave];
         }
 
-        $campo = new Campo($clave, $tipo);
+        $campo = AsignarCampo::segunTipo($clave, $tipo);
         $siElCampo = new ValidarExistencia($campo, $this->datos);
 
         if( $siElCampo->existe() ) {
