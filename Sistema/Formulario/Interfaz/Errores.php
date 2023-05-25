@@ -26,4 +26,9 @@ interface Errores
      * @var int Indica que el valor del campo no es un int válido
      */
     public const ERROR_NO_ES_INT = 201;
+
+    /**
+     * @var int Indica que el valor del campo no es un array válido
+     */
+    public const ERROR_NO_ES_ARRAY = 202;
 }

@@ -5,6 +5,7 @@ namespace Gof\Sistema\Formulario\Validar;
 use Gof\Interfaz\Formulario\Campo;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
+use Gof\Sistema\Formulario\Validar\Tipos\ValidarArray;
 use Gof\Sistema\Formulario\Validar\Tipos\ValidarInt;
 use Gof\Sistema\Formulario\Validar\Tipos\ValidarString;
 
@@ -54,6 +55,9 @@ class ValidarTipos implements ErroresMensaje
 
             case Tipos::TIPO_INT:
                 return ValidarInt::validar($campo);
+
+            case Tipos::TIPO_ARRAY:
+                return ValidarArray::validar($campo);
         }
     }
 

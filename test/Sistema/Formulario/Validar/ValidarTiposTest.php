@@ -138,4 +138,54 @@ class ValidarTiposTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider dataCamposDeTipoArrayValidos
+     */
+    public function testValidarArrayValidos(string $clave, array $valor): void
+    {
+        $campo = new Campo($clave, Tipos::TIPO_ARRAY);
+        $campo->valor = $valor;
+
+        $validacionDeTipo = new ValidarTipos($campo);
+        $this->assertTrue($validacionDeTipo->valido());
+
+        $this->assertFalse($campo->error()->hay());
+    }
+
+    public function dataCamposDeTipoArrayValidos(): array
+    {
+        return [
+            ['array_unidimensional', ['algo']],
+            ['array_bidimensional', ['algo' => ['bobo']]],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCamposDeTipoArrayInvalidos
+     */
+    public function testValidarArrayInvalidos(string $clave, mixed $valor): void
+    {
+        $campo = new Campo($clave, Tipos::TIPO_ARRAY);
+        $campo->valor = $valor;
+
+        $validacionDeTipo = new ValidarTipos($campo);
+        $this->assertFalse($validacionDeTipo->valido());
+
+        $codigoDeErrorEsperado = Errores::ERROR_NO_ES_ARRAY;
+        $mensajeDeErrorEsperado = ValidarTipos::NO_ES_ARRAY;
+
+        $this->assertSame($codigoDeErrorEsperado, $campo->error()->codigo());
+        $this->assertSame($mensajeDeErrorEsperado, $campo->error()->mensaje());
+    }
+
+    public function dataCamposDeTipoArrayInvalidos(): array
+    {
+        return [
+            ['integer', PHP_INT_MAX],
+            ['float', PHP_FLOAT_MAX],
+            ['string', '[algo]'],
+            ['object', new stdClass()],
+        ];
+    }
+
 }
