@@ -2,7 +2,7 @@
 
 namespace Gof\Sistema\Formulario\Mediador\Campo;
 
-use Gof\Interfaz\Formulario\Campo;
+use Gof\Sistema\Formulario\Interfaz\Campo;
 
 /**
  * Mediador para los errores de campos

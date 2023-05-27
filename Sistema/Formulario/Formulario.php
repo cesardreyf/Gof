@@ -2,7 +2,7 @@
 
 namespace Gof\Sistema\Formulario;
 
-use Gof\Datos\Formulario\Campo;
+use Gof\Sistema\Formulario\Datos\Campo;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;

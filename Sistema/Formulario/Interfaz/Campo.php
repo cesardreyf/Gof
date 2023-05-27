@@ -1,6 +1,6 @@
 <?php
 
-namespace Gof\Interfaz\Formulario;
+namespace Gof\Sistema\Formulario\Interfaz;
 
 use Gof\Interfaz\Errores\Mensajes\Error;
 

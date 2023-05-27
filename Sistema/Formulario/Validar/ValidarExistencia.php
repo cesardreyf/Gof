@@ -2,7 +2,7 @@
 
 namespace Gof\Sistema\Formulario\Validar;
 
-use Gof\Interfaz\Formulario\Campo;
+use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 
 /**

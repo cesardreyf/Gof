@@ -2,8 +2,8 @@
 
 namespace Gof\Sistema\Formulario\Gestor\Asignar;
 
-use Gof\Datos\Formulario\Campo as CampoBasico;
-use Gof\Interfaz\Formulario\Campo;
+use Gof\Sistema\Formulario\Datos\Campo as CampoBasico;
+use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 
 /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Test\Datos\Formulario;
+namespace Test\Sistema\Formulario\Datos;
 
-use Gof\Datos\Formulario\Campo;
+use Gof\Sistema\Formulario\Datos\Campo;
 use Gof\Interfaz\Errores\Mensajes\Error;
 use PHPUnit\Framework\TestCase;
 use stdClass;

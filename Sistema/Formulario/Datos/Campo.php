@@ -1,9 +1,9 @@
 <?php
 
-namespace Gof\Datos\Formulario;
+namespace Gof\Sistema\Formulario\Datos;
 
 use Gof\Datos\Errores\Mensajes\Error;
-use Gof\Interfaz\Formulario\Campo as ICampo;
+use Gof\Sistema\Formulario\Interfaz\Campo as ICampo;
 
 /**
  * Dato de tipo campo para almacenar información
@@ -11,7 +11,7 @@ use Gof\Interfaz\Formulario\Campo as ICampo;
  * Clase creada para el sistema de formularios que almacena información típica y básica de
  * un campo de un formulario como: clave, valor, tipo y errores.
  *
- * @package Gof\Datos\Formulario
+ * @package Gof\Sistema\Formulario\Datos
  */
 class Campo implements ICampo
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Test\Sistema\Formulario;
 
-use Gof\Interfaz\Formulario\Campo;
 use Gof\Sistema\Formulario\Formulario;
+use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use PHPUnit\Framework\TestCase;
 
