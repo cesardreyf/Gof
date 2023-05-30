@@ -7,12 +7,19 @@ namespace Test\Sistema\Formulario\Datos\Campo;
 use Gof\Sistema\Formulario\Datos\Campo\TipoArray;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
+use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Mediador\Campo\Error;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class TipoArrayTest extends TestCase
 {
+
+    public function testValidarQueElTipoCorresponda(): void
+    {
+        $vector = new TipoArray('validando_el_tipo');
+        $this->assertSame(Tipos::TIPO_ARRAY, $vector->tipo());
+    }
 
     /**
      * @dataProvider dataValoresValidosParaElTipoArray

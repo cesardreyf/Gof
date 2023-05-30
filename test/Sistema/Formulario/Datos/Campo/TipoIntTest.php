@@ -14,6 +14,12 @@ use stdClass;
 class TipoIntTest extends TestCase
 {
 
+    public function testValidarQueElTipoCorresponda(): void
+    {
+        $vector = new TipoInt('validando_el_tipo');
+        $this->assertSame(Tipos::TIPO_INT, $vector->tipo());
+    }
+
     public function testValidarCamposVaciosNulos(): void
     {
         $entero = new TipoInt('campo_de_tipo_int');

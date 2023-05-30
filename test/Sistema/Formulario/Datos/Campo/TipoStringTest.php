@@ -7,11 +7,18 @@ namespace Test\Sistema\Formulario\Datos\Campo;
 use Gof\Sistema\Formulario\Datos\Campo\TipoString;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
+use Gof\Sistema\Formulario\Interfaz\Tipos;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class TipoStringTest extends TestCase
 {
+
+    public function testValidarQueElTipoCorresponda(): void
+    {
+        $vector = new TipoString('validando_el_tipo');
+        $this->assertSame(Tipos::TIPO_STRING, $vector->tipo());
+    }
 
     /**
      * @dataProvider dataValoresDeTipoStringValidos
