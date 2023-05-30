@@ -8,14 +8,31 @@ use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Mediador\Campo\Error;
 
+/**
+ * Campo de tipo int
+ *
+ * @package Gof\Sistema\Formulario\Datos\Campo
+ */
 class TipoInt extends Campo
 {
 
+    /**
+     * Constructor
+     *
+     * @param string $clave Nombre del campo.
+     */
     public function __construct(string $clave)
     {
         parent::__construct($clave, Tipos::TIPO_INT);
     }
 
+    /**
+     * Valida que el valor del campo sea un int válido
+     *
+     * Admite valores enteros y string numéricos.
+     *
+     * @return ?bool Si es válido devuelve **true**, caso contrario **false**.
+     */
     public function validar(): ?bool
     {
         if( $this->error()->hay() ) {

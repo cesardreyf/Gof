@@ -20,7 +20,7 @@ interface Tipos
     public const TIPO_INT = 1;
 
     /**
-     * @var int Define que el tipo del campo debe ser un **array** (select).
+     * @var int Define que el tipo del campo debe ser un **array**.
      */
     public const TIPO_ARRAY = 2;
 }
