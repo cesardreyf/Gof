@@ -7,7 +7,6 @@ use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
-use Gof\Sistema\Formulario\Validar\ValidarTipos;
 
 /**
  * Sistema para obtener datos de formulario
@@ -64,8 +63,7 @@ class Formulario implements Tipos, Errores
 
         if( $siElCampo->existe() ) {
             $campo->valor = $this->datos[$clave];
-
-            new ValidarTipos($campo);
+            $campo->validar();
         }
 
         return $this->campos[$clave] = $campo;

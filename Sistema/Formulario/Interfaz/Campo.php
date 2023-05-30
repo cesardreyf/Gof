@@ -10,4 +10,5 @@ interface Campo
     public function error(): Error;
     public function valor(): mixed;
     public function clave(): string;
+    public function validar(): ?bool;
 }

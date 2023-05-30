@@ -95,4 +95,9 @@ class Campo implements ICampo
         return $this->error;
     }
 
+    public function validar(): ?bool
+    {
+        return false;
+    }
+
 }
