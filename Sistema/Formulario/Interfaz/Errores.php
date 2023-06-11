@@ -31,4 +31,14 @@ interface Errores
      * @var int Indica que el valor del campo no es un array válido
      */
     public const ERROR_NO_ES_ARRAY = 202;
+
+    /**
+     * @var int Indica que el valor del campo no es una tabla válida
+     */
+    public const ERROR_NO_ES_TABLA = 203;
+
+    /**
+     * @var int Indica que el campo está vacío y no contiene nada
+     */
+    public const ERROR_CAMPO_VACIO = 300;
 }

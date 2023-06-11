@@ -26,4 +26,14 @@ interface ErroresMensaje
      * @var string Mensaje de error para cuando el tipo del campo no es un **array**.
      */
     public const NO_ES_ARRAY = 'Se esperaba un valor de tipo array';
+
+    /**
+     * @var string Mensaje de error para cuando el tipo del campo no es una tabla.
+     */
+    public const NO_ES_TABLA = 'Se esperaba un valor de tipo array de arrays';
+
+    /**
+     * @var string Mensaje de error para cuando el campo está vacío.
+     */
+    public const CAMPO_VACIO = 'Campo vacío';
 }
