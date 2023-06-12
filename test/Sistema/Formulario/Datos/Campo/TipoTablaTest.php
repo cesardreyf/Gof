@@ -115,6 +115,20 @@ class TipoTablaTest extends TestCase
                     'columna_de_tipo_string' => Tipos::TIPO_STRING,
                 ]
             ],
+            [
+                // Tabla
+                [
+                    // Fila #0
+                    [
+                        'columna_sobrante' => 'sobrando',
+                        'columna_obligatoria' => PHP_INT_MAX
+                    ],
+                ],
+                // Columnas
+                [
+                    'columna_obligatoria' => Tipos::TIPO_INT
+                ]
+            ],
         ];
     }
 

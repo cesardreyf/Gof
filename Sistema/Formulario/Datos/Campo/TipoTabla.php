@@ -97,18 +97,18 @@ class TipoTabla extends Campo
             return false;
         }
 
-        array_walk($this->columnas, function($tipo, $columna) use (&$validarColumna) {
-            $validarColumna[$columna] = AsignarCampo::segunTipo($columna, $tipo);
+        array_walk($this->columnas, function($tipo, $columna) use (&$validar) {
+            $validar[$columna] = AsignarCampo::segunTipo($columna, $tipo);
         });
 
-        $filasQueNoSonValidas = array_filter($this->valor(), function($fila) use ($validarColumna) {
+        $filasQueNoSonValidas = array_filter($this->valor(), function($fila) use ($validar) {
             if( is_array($fila) === false ) {
                 Error::reportar($this, self::FILAS_INVALIDAS, self::ERROR_FILAS_INVALIDAS);
                 return true;
             }
 
             // Si no hay columnas que validar...
-            if( empty($validarColumna) ) {
+            if( empty($validar) ) {
                 return false;
             }
 
@@ -117,9 +117,9 @@ class TipoTabla extends Campo
                 return true;
             }
 
-            $columnasInvalidas = array_filter($fila, function($valor, $columna) use ($validarColumna) {
-                $validarColumna[$columna]->valor = $valor;
-                return !$validarColumna[$columna]->validar();
+            $columnasInvalidas = array_filter($validar, function($validarColumna, $columna) use ($fila) {
+                $validarColumna->valor = $fila[$columna];
+                return !$validarColumna->validar();
             }, ARRAY_FILTER_USE_BOTH);
 
             if( empty($columnasInvalidas) === false ) {
