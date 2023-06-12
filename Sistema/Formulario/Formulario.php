@@ -70,6 +70,18 @@ class Formulario implements Tipos, Errores
     }
 
     /**
+     * Verifica si el formulario tiene los datos esperados
+     *
+     * Consulta la lista de errores y si está vacío devuelve **true**.
+     *
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
+     */
+    public function valido(): bool
+    {
+        return empty($this->errores());
+    }
+
+    /**
      * Obtiene una lista con todos los errores
      *
      * Genera un array con todos los errores ocurridos en los campos
