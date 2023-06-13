@@ -33,7 +33,7 @@ class FormularioTest extends TestCase
         return [
             ['nombre_del_campo', Tipos::TIPO_STRING, 'valor_del_campo'],
             ['numero_natural', Tipos::TIPO_INT, PHP_INT_MAX],
-            ['numero_entero', Tipos::TIPO_INT, ~PHP_INT_MAX],
+            ['numero_entero', Tipos::TIPO_INT, PHP_INT_MIN],
         ];
     }
 
@@ -48,10 +48,20 @@ class FormularioTest extends TestCase
 
         $formulario->campo($nombreDeUnCampoInexistenteEnLosDatosDelFormulario, Tipos::TIPO_STRING);
         $formulario->campo($propiedadDeTipoInt, Tipos::TIPO_INT);
+        $this->assertFalse($formulario->validar());
 
         $arrayDeErrores = $formulario->errores();
         $this->assertTrue(isset($arrayDeErrores[$propiedadDeTipoInt]));
         $this->assertTrue(isset($arrayDeErrores[$nombreDeUnCampoInexistenteEnLosDatosDelFormulario]));
+    }
+
+    public function testValidarLosDatosDelFormularioDevuelveTrue(): void
+    {
+        $datosDelFormulario = ['nombre_de_campo' => PHP_INT_MAX];
+        $formulario = new Formulario($datosDelFormulario);
+        $formulario->campo('nombre_de_campo', Tipos::TIPO_INT);
+        $this->assertTrue($formulario->validar());
+        $this->assertEmpty($formulario->errores());
     }
 
 }
