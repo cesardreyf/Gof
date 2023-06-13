@@ -54,7 +54,7 @@ class ErrorTest extends TestCase
         $this->assertTrue($error->hay());
         $this->assertNotEmpty($error->lista());
 
-        $mensajeDeErrorQuitadoDeLaPila = $error->mensaje();
+        $error->limpiar();
         $this->assertFalse($error->hay());
         $this->assertEmpty($error->lista());
 
@@ -76,7 +76,7 @@ class ErrorTest extends TestCase
 
         $this->assertNotEmpty($error->lista());
         $this->assertSame($nuevoMensajeDeError, $error->mensaje());
-        $this->assertEmpty($error->lista());
+        $this->assertCount(1, $error->lista());
     }
 
     /**
@@ -91,7 +91,7 @@ class ErrorTest extends TestCase
 
         $this->assertSame($variosMensajes, $error->lista());
         while( $mensaje = array_pop($variosMensajes) ) {
-            $this->assertSame($mensaje, $error->mensaje());
+            $this->assertSame($mensaje, $error->quitar());
         }
 
         $this->assertEmpty($error->lista());

@@ -64,8 +64,10 @@ class Error implements IError
      * Obtiene último mensaje o define uno nuevo
      *
      * Si se pasa un mensaje como argumento se agregará un nuevo mensaje a la
-     * lista de errores. Si no se pasa nada por parámetros se obtendrá el
-     * último mensaje agregado y este se eliminará de la pila de errores.
+     * lista de errores. Si no se pasa nada por parámetro se obtendrá el último
+     * mensaje agregado.
+     *
+     * Si no hay mensajes almacenados en la pila de errores se devolverá un string vacío.
      *
      * @param ?string $mensaje Nuevo mensaje de error o **null** para obtener el último.
      *
@@ -73,7 +75,26 @@ class Error implements IError
      */
     public function mensaje(?string $mensaje = null): string
     {
-        return $mensaje === null ? (array_pop($this->errores) ?? '') : $this->errores[] = $mensaje;
+        if( $mensaje === null ) {
+            $tope = count($this->errores) - 1;
+            return $tope < 0 ? '' : $this->errores[$tope];
+        }
+
+        return $this->errores[] = $mensaje;
+    }
+
+    /**
+     * Quita el último mensaje de la pila de errores
+     *
+     * Obtiene el mensaje del tope de la pila de errores y luego lo remueve.
+     *
+     * **NOTA**: Esto no afecta al código de errores.
+     *
+     * @return string Devuelve un mensaje de error
+     */
+    public function quitar(): string
+    {
+        return array_pop($this->errores) ?? '';
     }
 
     /**
