@@ -92,7 +92,7 @@ class Formulario implements Tipos, Errores
      */
     public function valido(): bool
     {
-        return empty($this->errores());
+        return empty($this->errores(true));
     }
 
     /**
@@ -102,18 +102,20 @@ class Formulario implements Tipos, Errores
      * almacenados internamente. Estos son asociados a los nombres de sus
      * propios campos.
      *
+     * @param bool $limpiar Limpia la caché de errores y la actualiza.
+     *
      * @return array Devuelve un array con todos los errores
      */
-    public function errores(): array
+    public function errores(bool $limpiar = false): array
     {
-        if( $this->actualizarCache ) {
+        if( $this->actualizarCache || $limpiar ) {
+            $this->actualizarCache = false;
+
             $this->errores = array_map(function($campo) {
                 return $campo->error()->mensaje();
             }, array_filter($this->campos, function($campo) {
                 return $campo->error()->hay();
             }));
-
-            $this->actualizarCache = false;
         }
 
         return $this->errores;
