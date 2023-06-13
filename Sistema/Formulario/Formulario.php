@@ -28,6 +28,16 @@ class Formulario implements Tipos, Errores
     private array $campos;
 
     /**
+     * @var array Caché de errores
+     */
+    private array $errores;
+
+    /**
+     * @var bool Indica si actualizar la caché de errores
+     */
+    private bool $actualizarCache;
+
+    /**
      * Constructor
      *
      * @param array Array con los datos desde donde se obtendrán los datos del formulario
@@ -36,6 +46,9 @@ class Formulario implements Tipos, Errores
     {
         $this->campos = [];
         $this->datos = $datos;
+
+        $this->errores = [];
+        $this->actualizarCache = true;
     }
 
     /**
@@ -66,6 +79,7 @@ class Formulario implements Tipos, Errores
             $campo->validar();
         }
 
+        $this->actualizarCache = true;
         return $this->campos[$clave] = $campo;
     }
 
@@ -92,11 +106,17 @@ class Formulario implements Tipos, Errores
      */
     public function errores(): array
     {
-        return array_map(function($campo) {
-            return $campo->error()->mensaje();
-        }, array_filter($this->campos, function($campo) {
-            return $campo->error()->hay();
-        }));
+        if( $this->actualizarCache ) {
+            $this->errores = array_map(function($campo) {
+                return $campo->error()->mensaje();
+            }, array_filter($this->campos, function($campo) {
+                return $campo->error()->hay();
+            }));
+
+            $this->actualizarCache = false;
+        }
+
+        return $this->errores;
     }
 
 }
