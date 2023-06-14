@@ -121,4 +121,17 @@ class Formulario implements Tipos, Errores
         return $this->errores;
     }
 
+    /**
+     * Limpia los errores almacenados internamente
+     */
+    public function limpiarErrores()
+    {
+        // $this->actualizarCache = true;
+        $this->errores = [];
+
+        array_walk($this->campos, function($campo) {
+            $campo->error()->limpiar();
+        });
+    }
+
 }

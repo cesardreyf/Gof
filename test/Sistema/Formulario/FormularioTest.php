@@ -55,6 +55,47 @@ class FormularioTest extends TestCase
         $this->assertTrue(isset($arrayDeErrores[$nombreDeUnCampoInexistenteEnLosDatosDelFormulario]));
     }
 
+    /**
+     * @dataProvider dataDatosYCamposDeunFormularioInvalido
+     */
+    public function testValidarLosDatosDelFormularioDevuelveFalse(array $datos, array $campos): void
+    {
+        $formulario = new Formulario($datos);
+        $this->assertEmpty($formulario->errores());
+
+        array_walk($campos, function(int $tipo, string $nombre) use ($formulario) {
+            $formulario->campo($nombre, $tipo);
+        });
+
+        $this->assertFalse($formulario->validar());
+        $this->assertNotEmpty($formulario->errores());
+    }
+
+    /**
+     * @dataProvider dataDatosYCamposDeunFormularioInvalido
+     */
+    public function testLimpiarErrores(array $datos, array $campos): void
+    {
+        $formulario = new Formulario($datos);
+        array_walk($campos, function(int $tipo, string $nombre) use ($formulario) {
+            $formulario->campo($nombre, $tipo);
+        });
+
+        $this->assertFalse($formulario->validar());
+        $formulario->limpiarErrores();
+        $this->assertEmpty($formulario->errores());
+    }
+
+    public function dataDatosYCamposDeunFormularioInvalido(): array
+    {
+        return [
+            [
+                ['integer' => 'no soy un número entero'],
+                ['integer' => Tipos::TIPO_INT]
+            ],
+        ];
+    }
+
     public function testValidarLosDatosDelFormularioDevuelveTrue(): void
     {
         $datosDelFormulario = ['nombre_de_campo' => PHP_INT_MAX];
