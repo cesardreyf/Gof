@@ -38,6 +38,11 @@ interface Errores
     public const ERROR_NO_ES_TABLA = 203;
 
     /**
+     * @var int Indica que el valor del campo no es un float
+     */
+    public const ERROR_NO_ES_FLOAT = 204;
+
+    /**
      * @var int Indica que el campo está vacío y no contiene nada
      */
     public const ERROR_CAMPO_VACIO = 300;

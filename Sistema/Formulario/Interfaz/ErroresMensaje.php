@@ -33,6 +33,11 @@ interface ErroresMensaje
     public const NO_ES_TABLA = 'Se esperaba un valor de tipo array de arrays';
 
     /**
+     * @var string Mensaje de error para cuando el tipo del campo no es un **float**.
+     */
+    public const NO_ES_FLOAT = 'Se esperaba un valor de tipo float';
+
+    /**
      * @var string Mensaje de error para cuando el campo está vacío.
      */
     public const CAMPO_VACIO = 'Campo vacío';

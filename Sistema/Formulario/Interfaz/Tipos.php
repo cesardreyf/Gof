@@ -20,13 +20,18 @@ interface Tipos
     public const TIPO_INT = 1;
 
     /**
+     * @var int Define que el tipo del campo debe ser un **float**.
+     */
+    public const TIPO_FLOAT = 2;
+
+    /**
      * @var int Define que el tipo del campo debe ser un **array**.
      */
-    public const TIPO_ARRAY = 2;
+    public const TIPO_ARRAY = 3;
 
     /**
      * @var int Define que el tipo del campo debe ser una **tabla** (array de arrays).
      */
-    public const TIPO_TABLA = 3;
+    public const TIPO_TABLA = 4;
 }
 

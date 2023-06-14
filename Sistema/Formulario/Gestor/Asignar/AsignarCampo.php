@@ -4,6 +4,7 @@ namespace Gof\Sistema\Formulario\Gestor\Asignar;
 
 use Gof\Sistema\Formulario\Datos\Campo as CampoBasico;
 use Gof\Sistema\Formulario\Datos\Campo\TipoArray;
+use Gof\Sistema\Formulario\Datos\Campo\TipoFloat;
 use Gof\Sistema\Formulario\Datos\Campo\TipoInt;
 use Gof\Sistema\Formulario\Datos\Campo\TipoString;
 use Gof\Sistema\Formulario\Datos\Campo\TipoTabla;
@@ -39,6 +40,9 @@ abstract class AsignarCampo
 
             case Tipos::TIPO_TABLA:
                 return new TipoTabla($alias);
+
+            case Tipos::TIPO_FLOAT:
+                return new TipoFloat($alias);
 
             default:
                 return new CampoBasico($alias, $tipo);
