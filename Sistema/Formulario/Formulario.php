@@ -2,8 +2,11 @@
 
 namespace Gof\Sistema\Formulario;
 
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
+use Gof\Interfaz\Bits\Mascara;
 use Gof\Sistema\Formulario\Datos\Campo;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
+use Gof\Sistema\Formulario\Interfaz\Configuracion;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
@@ -15,7 +18,7 @@ use Gof\Sistema\Formulario\Validar\ValidarExistencia;
  *
  * @package Gof\Sistema\Formulario
  */
-class Formulario implements Tipos, Errores
+class Formulario implements Tipos, Errores, Configuracion
 {
     /**
      * @var array Datos del formulario
@@ -38,6 +41,11 @@ class Formulario implements Tipos, Errores
     private bool $actualizarCache;
 
     /**
+     * @var MascaraDeBits Gestor de máscaras de bits para la configuración
+     */
+    private MascaraDeBits $configuracion;
+
+    /**
      * Constructor
      *
      * @param array Array con los datos desde donde se obtendrán los datos del formulario
@@ -49,6 +57,8 @@ class Formulario implements Tipos, Errores
 
         $this->errores = [];
         $this->actualizarCache = true;
+
+        $this->configuracion = new MascaraDeBits();
     }
 
     /**
@@ -132,6 +142,18 @@ class Formulario implements Tipos, Errores
         array_walk($this->campos, function($campo) {
             $campo->error()->limpiar();
         });
+    }
+
+    /**
+     * Gestor de configuración
+     *
+     * Máscara de bits para configurar el comportamiento del sistema.
+     *
+     * @return Mascara Máscara de bits para la configuración interna del sistema.
+     */
+    public function configuracion(): Mascara
+    {
+        return $this->configuracion;
     }
 
 }
