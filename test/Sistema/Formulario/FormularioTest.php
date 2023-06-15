@@ -12,6 +12,12 @@ use PHPUnit\Framework\TestCase;
 class FormularioTest extends TestCase
 {
 
+    public function testConfiguracionPorDefecto(): void
+    {
+        $formulario = new Formulario([]);
+        $this->assertSame(Formulario::CONFIGURACION_POR_DEFECTO, $formulario->configuracion()->obtener());
+    }
+
     /**
      * @dataProvider dataDatosDeFormulario
      */

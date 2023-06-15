@@ -21,6 +21,11 @@ use Gof\Sistema\Formulario\Validar\ValidarExistencia;
 class Formulario implements Tipos, Errores, Configuracion
 {
     /**
+     * @var int Máscara de bits con la configuración por defecto
+     */
+    public const CONFIGURACION_POR_DEFECTO = Configuracion::VALIDAR_AL_CREAR;
+
+    /**
      * @var array Datos del formulario
      */
     private array $datos;
@@ -58,7 +63,7 @@ class Formulario implements Tipos, Errores, Configuracion
         $this->errores = [];
         $this->actualizarCache = true;
 
-        $this->configuracion = new MascaraDeBits();
+        $this->configuracion = new MascaraDeBits(self::CONFIGURACION_POR_DEFECTO);
     }
 
     /**
@@ -86,7 +91,10 @@ class Formulario implements Tipos, Errores, Configuracion
 
         if( $siElCampo->existe() ) {
             $campo->valor = $this->datos[$clave];
-            $campo->validar();
+            
+            if( $this->configuracion->activados(self::VALIDAR_AL_CREAR) ) {
+                $campo->validar();
+            }
         }
 
         $this->actualizarCache = true;
