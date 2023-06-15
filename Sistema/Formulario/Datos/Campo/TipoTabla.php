@@ -9,6 +9,17 @@ use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Mediador\Campo\Error;
 
+/**
+ * Campo de tipo tabla
+ *
+ * Campo para validar datos de tipo tabla que contengan filas y columnas.  El
+ * valor debe ser un array de arrays. Cada elemento del valor debe ser una fila
+ * mientras que el valor de cada fila debe ser un array cuyos índices deben ser
+ * el nombre de la columna y su valor el esperado según la declaración del
+ * mismo. Las columnas se definen por su nombre y el tipo esperado.
+ *
+ * @package Gof\Sistema\Formulario\Datos\Campo
+ */
 class TipoTabla extends Campo
 {
     /**
