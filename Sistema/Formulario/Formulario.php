@@ -4,8 +4,8 @@ namespace Gof\Sistema\Formulario;
 
 use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Bits\Mascara;
-use Gof\Sistema\Formulario\Datos\Campo;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
+use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Configuracion;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
@@ -23,7 +23,7 @@ class Formulario implements Tipos, Errores, Configuracion
     /**
      * @var int Máscara de bits con la configuración por defecto
      */
-    public const CONFIGURACION_POR_DEFECTO = Configuracion::VALIDAR_AL_CREAR;
+    public const CONFIGURACION_POR_DEFECTO = 0;
 
     /**
      * @var array Datos del formulario
@@ -104,13 +104,26 @@ class Formulario implements Tipos, Errores, Configuracion
     /**
      * Valida si los valores de los campos del formulario son correctos
      *
-     * Internamente consulta la lista de errores y si está vacío devuelve **true**.
+     * Recorre la lista de campos y valida cada uno de ellos. Si **todos**
+     * los campos son válidos devuelve **true**.
      *
      * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
      */
     public function validar(): bool
     {
-        return empty($this->errores(true));
+        $camposValidos = true;
+
+        array_walk($this->campos, function(Campo $campo) use (&$camposValidos) {
+            if( $campo->validar() === false ) {
+                $camposValidos = false;
+            }
+        });
+
+        if( $camposValidos === false ) {
+            $this->actualizarCache = true;
+        }
+
+        return $camposValidos;
     }
 
     /**
