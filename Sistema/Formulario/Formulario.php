@@ -157,8 +157,11 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function limpiarErrores()
     {
-        // $this->actualizarCache = true;
         $this->errores = [];
+
+        if( $this->configuracion->activados(Configuracion::ACTUALIZAR_CACHE_AL_LIMPIAR) ) {
+            $this->actualizarCache = true;
+        }
 
         array_walk($this->campos, function($campo) {
             $campo->error()->limpiar();
