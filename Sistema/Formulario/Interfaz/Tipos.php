@@ -33,5 +33,10 @@ interface Tipos
      * @var int Define que el tipo del campo debe ser una **tabla** (array de arrays).
      */
     public const TIPO_TABLA = 4;
+
+    /**
+     * @var int Define que el tipo del campo debe ser un **select**.
+     */
+    public const TIPO_SELECT = 5;
 }
 
