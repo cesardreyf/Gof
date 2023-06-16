@@ -91,7 +91,7 @@ class Formulario implements Tipos, Errores, Configuracion
 
         if( $siElCampo->existe() ) {
             $campo->valor = $this->datos[$clave];
-            
+
             if( $this->configuracion->activados(self::VALIDAR_AL_CREAR) ) {
                 $campo->validar();
             }
@@ -157,11 +157,8 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function limpiarErrores()
     {
+        // $this->actualizarCache = true;
         $this->errores = [];
-
-        if( $this->configuracion->activados(Configuracion::ACTUALIZAR_CACHE_AL_LIMPIAR) ) {
-            $this->actualizarCache = true;
-        }
 
         array_walk($this->campos, function($campo) {
             $campo->error()->limpiar();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Sistema\Formulario;
 
+use Gof\Interfaz\Bits\Mascara;
 use Gof\Sistema\Formulario\Formulario;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
@@ -15,100 +16,151 @@ class FormularioTest extends TestCase
     public function testConfiguracionPorDefecto(): void
     {
         $formulario = new Formulario([]);
+        $this->assertInstanceOf(Mascara::class, $formulario->configuracion());
         $this->assertSame(Formulario::CONFIGURACION_POR_DEFECTO, $formulario->configuracion()->obtener());
     }
 
     /**
-     * @dataProvider dataDatosDeFormulario
+     * @dataProvider dataNombreDeCampoYSuTipo
      */
-    public function testObtencionDeCamposDesdeArrayDeDatos(string $clave, int $tipo, mixed $valor): void
+    public function testCrearCampoSegunElTipo(string $nombreDelCampo, int $tipoDeDatoEsperado): void
     {
-        $datosDelFormulario = [$clave => $valor];
-        $formulario = new Formulario($datosDelFormulario);
+        $formulario = new Formulario([]);
+        $campoCreadoPorElSistema = $formulario->campo($nombreDelCampo, $tipoDeDatoEsperado);
 
-        $campo = $formulario->campo($clave, $tipo);
-        $this->assertInstanceOf(Campo::class, $campo);
-
-        $this->assertSame($tipo,  $campo->tipo());
-        $this->assertSame($clave, $campo->clave());
-        $this->assertSame($valor, $campo->valor());
+        $this->assertInstanceOf(Campo::class, $campoCreadoPorElSistema);
+        $this->assertSame($tipoDeDatoEsperado, $campoCreadoPorElSistema->tipo());
     }
 
-    public function dataDatosDeFormulario(): array
+    public function dataNombreDeCampoYSuTipo(): array
     {
         return [
-            ['nombre_del_campo', Tipos::TIPO_STRING, 'valor_del_campo'],
-            ['numero_natural', Tipos::TIPO_INT, PHP_INT_MAX],
-            ['numero_entero', Tipos::TIPO_INT, PHP_INT_MIN],
+            ['campo_de_tipo_int', Tipos::TIPO_INT],
+            ['campo_de_tipo_float', Tipos::TIPO_FLOAT],
         ];
     }
 
-    public function testObtenerListaDeLosErroresOcurridosDuranteLaValidacionDeLosCampos(): void
+    /**
+     * @dataProvider dataNombreDeCampoYSuTipo
+     */
+    public function testObtenerCampoPreviamenteCreado(string $nombreDelCampo, int $tipoDeDatoEsperado): void
     {
-        $nombreDeUnCampoInexistenteEnLosDatosDelFormulario = 'campo_inexistente';
-        $propiedadDeTipoInt = 'error_se_espera_un_int_pero_es_un_string';
-        $datosDelFormulario = [$propiedadDeTipoInt => 'abcdef'];
+        $formulario = new Formulario([]);
+        $campoCreadoPorElSistema = $formulario->campo($nombreDelCampo, $tipoDeDatoEsperado);
+        $this->assertSame($campoCreadoPorElSistema, $formulario->campo($nombreDelCampo));
+    }
 
-        $formulario = new Formulario($datosDelFormulario);
-        $this->assertEmpty($formulario->errores());
+    public function testValidarAlCrearElCampo(): void
+    {
+        $campoDeTipoInt = 'campo_de_tipo_int_invalido';
+        $datosDeFormulario = [$campoDeTipoInt => PHP_FLOAT_MAX];
 
-        $formulario->campo($nombreDeUnCampoInexistenteEnLosDatosDelFormulario, Tipos::TIPO_STRING);
-        $formulario->campo($propiedadDeTipoInt, Tipos::TIPO_INT);
-        $this->assertFalse($formulario->validar());
+        // Formulario sin validación al crear el campo
+        $formularioSinValidarAlCrear = new Formulario($datosDeFormulario);
+        $formularioSinValidarAlCrear->configuracion()->desactivar(Formulario::VALIDAR_AL_CREAR);
+        $campoCreadoPorElSistema = $formularioSinValidarAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
 
-        $arrayDeErrores = $formulario->errores();
-        $this->assertTrue(isset($arrayDeErrores[$propiedadDeTipoInt]));
-        $this->assertTrue(isset($arrayDeErrores[$nombreDeUnCampoInexistenteEnLosDatosDelFormulario]));
+        $this->assertFalse($campoCreadoPorElSistema->error()->hay());
+        $this->assertEmpty($formularioSinValidarAlCrear->errores());
+
+
+        // Formulario con validación al crear el campo
+        $formularioQueValidaAlCrear = new Formulario($datosDeFormulario);
+        $formularioQueValidaAlCrear->configuracion()->activar(Formulario::VALIDAR_AL_CREAR);
+        $campoCreadoPorElSistema = $formularioQueValidaAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
+
+        $this->assertTrue($campoCreadoPorElSistema->error()->hay());
+        $this->assertNotEmpty($formularioQueValidaAlCrear->errores());
     }
 
     /**
-     * @dataProvider dataDatosYCamposDeunFormularioInvalido
+     * @dataProvider dataDatosDeUnFormularioValidoConCamposYTipos
      */
-    public function testValidarLosDatosDelFormularioDevuelveFalse(array $datos, array $campos): void
+    public function testValidarDevuelveTrueSoloSiTodosLosCamposSonValidos(array $datosDeFormulario, array $camposYTipos): void
     {
-        $formulario = new Formulario($datos);
-        $this->assertEmpty($formulario->errores());
+        $formulario = new Formulario($datosDeFormulario);
 
-        array_walk($campos, function(int $tipo, string $nombre) use ($formulario) {
-            $formulario->campo($nombre, $tipo);
-        });
+        foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
+            $formulario->campo($nombreDelCampo, $tipoDeDato);
+        }
+
+        $this->assertTrue($formulario->validar());
+        $this->assertEmpty($formulario->errores());
+    }
+
+    public function dataDatosDeUnFormularioValidoConCamposYTipos(): array
+    {
+        return [
+            [
+                ['campo_de_tipo_int' => PHP_INT_MAX],
+                ['campo_de_tipo_int' => Tipos::TIPO_INT]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataDatosDeUnFormularioInvalidoConCamposYTipos
+     */
+    public function testValidarDevuelveFalseSiUnoOMasCamposSonInvalidos(array $datosDeFormulario, array $camposYTipos): void
+    {
+        $formulario = new Formulario($datosDeFormulario);
+
+        foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
+            $formulario->campo($nombreDelCampo, $tipoDeDato);
+        }
 
         $this->assertFalse($formulario->validar());
         $this->assertNotEmpty($formulario->errores());
     }
 
     /**
-     * @dataProvider dataDatosYCamposDeunFormularioInvalido
+     * @dataProvider dataDatosDeUnFormularioInvalidoConCamposYTipos
      */
-    public function testLimpiarErrores(array $datos, array $campos): void
+    public function testGuardarErroresAsociandoElNombreDelCampo(array $datosDeFormulario, array $camposYTipos): void
     {
-        $formulario = new Formulario($datos);
-        array_walk($campos, function(int $tipo, string $nombre) use ($formulario) {
-            $formulario->campo($nombre, $tipo);
-        });
+        $formulario = new Formulario($datosDeFormulario);
+
+        foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
+            $formulario->campo($nombreDelCampo, $tipoDeDato);
+        }
 
         $this->assertFalse($formulario->validar());
+        $this->assertCount(count($camposYTipos), $formulario->errores());
+        $this->assertSame(array_keys($camposYTipos), array_keys($formulario->errores()));
+    }
+
+    /**
+     * @dataProvider dataDatosDeUnFormularioInvalidoConCamposYTipos
+     */
+    public function testLimpiarErrores(array $datosDeFormulario, array $camposYTipos): void
+    {
+        $formulario = new Formulario($datosDeFormulario);
+
+        foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
+            $formulario->campo($nombreDelCampo, $tipoDeDato);
+        }
+
+        $this->assertFalse($formulario->validar());
+        $this->assertNotEmpty($formulario->errores());
+
         $formulario->limpiarErrores();
         $this->assertEmpty($formulario->errores());
     }
 
-    public function dataDatosYCamposDeunFormularioInvalido(): array
+    public function dataDatosDeUnFormularioInvalidoConCamposYTipos(): array
     {
         return [
             [
-                ['integer' => 'no soy un número entero'],
-                ['integer' => Tipos::TIPO_INT]
+                [
+                    'integer' => PHP_FLOAT_MAX,
+                    'float' => PHP_INT_MAX
+                ],
+                [
+                    'integer' => Tipos::TIPO_INT,
+                    'float' => Tipos::TIPO_FLOAT
+                ]
             ],
         ];
-    }
-
-    public function testValidarLosDatosDelFormularioDevuelveTrue(): void
-    {
-        $datosDelFormulario = ['nombre_de_campo' => PHP_INT_MAX];
-        $formulario = new Formulario($datosDelFormulario);
-        $formulario->campo('nombre_de_campo', Tipos::TIPO_INT);
-        $this->assertTrue($formulario->validar());
-        $this->assertEmpty($formulario->errores());
     }
 
 }
