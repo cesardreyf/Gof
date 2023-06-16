@@ -95,6 +95,8 @@ class Errores implements ErroresInterfaz
      *
      * Limpia la lista interna de errores (caché) y los errores almacenados en
      * los campos.
+     *
+     * @see Errores::actualizarCache()
      */
     public function limpiar()
     {
