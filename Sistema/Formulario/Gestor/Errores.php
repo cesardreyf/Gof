@@ -52,7 +52,7 @@ class Errores implements ErroresInterfaz
      */
     public function hay(): bool
     {
-        return empty($this->errores);
+        return !empty($this->errores);
     }
 
     /**
@@ -105,7 +105,7 @@ class Errores implements ErroresInterfaz
      * Actualiza la caché de los mensajes de errores
      *
      * Interfamente activa el estado de actualizar caché lo que hará que la
-     * próxima vez que se llae a la lista de errores revise todos los campos en
+     * próxima vez que se llame a la lista de errores revise todos los campos en
      * búsqueda de errores y los almacene en la caché.
      *
      * @see Errores::lista()
