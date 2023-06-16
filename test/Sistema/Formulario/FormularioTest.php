@@ -61,6 +61,7 @@ class FormularioTest extends TestCase
         $campoCreadoPorElSistema = $formularioSinValidarAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
 
         $this->assertFalse($campoCreadoPorElSistema->error()->hay());
+        $this->assertFalse($formularioSinValidarAlCrear->errores()->hay());
         $this->assertEmpty($formularioSinValidarAlCrear->errores()->lista());
 
 
@@ -70,7 +71,8 @@ class FormularioTest extends TestCase
         $campoCreadoPorElSistema = $formularioQueValidaAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
 
         $this->assertTrue($campoCreadoPorElSistema->error()->hay());
-        $this->assertNotEmpty($formularioQueValidaAlCrear->errores());
+        $this->assertTrue($formularioQueValidaAlCrear->errores()->hay());
+        $this->assertNotEmpty($formularioQueValidaAlCrear->errores()->lista());
     }
 
     /**
