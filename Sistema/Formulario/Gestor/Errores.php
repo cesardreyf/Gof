@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Formulario\Gestor;
 
 use Gof\Sistema\Formulario\Contratos\Errores as ErroresInterfaz;
+use Gof\Sistema\Formulario\Interfaz\Campo;
 
 /**
  * Gestor de errores
@@ -75,9 +76,9 @@ class Errores implements ErroresInterfaz
         if( $this->actualizarCache ) {
             $this->actualizarCache = false;
 
-            $this->errores = array_map(function($campo) {
+            $this->errores = array_map(function(Campo $campo) {
                 return $campo->error()->mensaje();
-            }, array_filter($this->campos, function($campo) {
+            }, array_filter($this->campos, function(Campo $campo) {
                 return $campo->error()->hay();
             }));
         }
@@ -95,7 +96,7 @@ class Errores implements ErroresInterfaz
     {
         $this->errores = [];
 
-        array_walk($this->campos, function($campo) {
+        array_walk($this->campos, function(Campo $campo) {
             $campo->error()->limpiar();
         });
     }
