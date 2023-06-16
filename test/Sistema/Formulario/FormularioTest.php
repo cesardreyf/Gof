@@ -61,7 +61,7 @@ class FormularioTest extends TestCase
         $campoCreadoPorElSistema = $formularioSinValidarAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
 
         $this->assertFalse($campoCreadoPorElSistema->error()->hay());
-        $this->assertEmpty($formularioSinValidarAlCrear->errores());
+        $this->assertEmpty($formularioSinValidarAlCrear->errores()->lista());
 
 
         // Formulario con validación al crear el campo
@@ -85,7 +85,7 @@ class FormularioTest extends TestCase
         }
 
         $this->assertTrue($formulario->validar());
-        $this->assertEmpty($formulario->errores());
+        $this->assertEmpty($formulario->errores()->lista());
     }
 
     public function dataDatosDeUnFormularioValidoConCamposYTipos(): array
@@ -125,8 +125,8 @@ class FormularioTest extends TestCase
         }
 
         $this->assertFalse($formulario->validar());
-        $this->assertCount(count($camposYTipos), $formulario->errores());
-        $this->assertSame(array_keys($camposYTipos), array_keys($formulario->errores()));
+        $this->assertCount(count($camposYTipos), $formulario->errores()->lista());
+        $this->assertSame(array_keys($camposYTipos), array_keys($formulario->errores()->lista()));
     }
 
     /**
@@ -141,10 +141,10 @@ class FormularioTest extends TestCase
         }
 
         $this->assertFalse($formulario->validar());
-        $this->assertNotEmpty($formulario->errores());
+        $this->assertNotEmpty($formulario->errores()->lista());
 
-        $formulario->limpiarErrores();
-        $this->assertEmpty($formulario->errores());
+        $formulario->errores()->limpiar();
+        $this->assertEmpty($formulario->errores()->lista());
     }
 
     public function dataDatosDeUnFormularioInvalidoConCamposYTipos(): array

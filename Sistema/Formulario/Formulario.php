@@ -4,7 +4,9 @@ namespace Gof\Sistema\Formulario;
 
 use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Bits\Mascara;
+use Gof\Sistema\Formulario\Contratos\Errores as InterfazDelGestorDeErrores;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
+use Gof\Sistema\Formulario\Gestor\Errores as GestorDeErrores;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Configuracion;
 use Gof\Sistema\Formulario\Interfaz\Errores;
@@ -36,19 +38,14 @@ class Formulario implements Tipos, Errores, Configuracion
     private array $campos;
 
     /**
-     * @var array Caché de errores
-     */
-    private array $errores;
-
-    /**
-     * @var bool Indica si actualizar la caché de errores
-     */
-    private bool $actualizarCache;
-
-    /**
      * @var MascaraDeBits Gestor de máscaras de bits para la configuración
      */
     private MascaraDeBits $configuracion;
+
+    /**
+     * @var GestorDeErrores Gestor encargado de manejar los errores del sistema
+     */
+    private GestorDeErrores $gestorDeErrores;
 
     /**
      * Constructor
@@ -60,9 +57,7 @@ class Formulario implements Tipos, Errores, Configuracion
         $this->campos = [];
         $this->datos = $datos;
 
-        $this->errores = [];
-        $this->actualizarCache = true;
-
+        $this->gestorDeErrores = new GestorDeErrores($this->campos);
         $this->configuracion = new MascaraDeBits(self::CONFIGURACION_POR_DEFECTO);
     }
 
@@ -97,7 +92,7 @@ class Formulario implements Tipos, Errores, Configuracion
             }
         }
 
-        $this->actualizarCache = true;
+        $this->gestorDeErrores->actualizarCache();
         return $this->campos[$clave] = $campo;
     }
 
@@ -120,49 +115,15 @@ class Formulario implements Tipos, Errores, Configuracion
         });
 
         if( $camposValidos === false ) {
-            $this->actualizarCache = true;
+            $this->gestorDeErrores->actualizarCache();
         }
 
         return $camposValidos;
     }
 
-    /**
-     * Obtiene una lista con todos los errores
-     *
-     * Genera un array con todos los errores ocurridos en los campos
-     * almacenados internamente. Estos son asociados a los nombres de sus
-     * propios campos.
-     *
-     * @param bool $limpiar Limpia la caché de errores y la actualiza.
-     *
-     * @return array Devuelve un array con todos los errores
-     */
-    public function errores(bool $limpiar = false): array
+    public function errores(): InterfazDelGestorDeErrores
     {
-        if( $this->actualizarCache || $limpiar ) {
-            $this->actualizarCache = false;
-
-            $this->errores = array_map(function($campo) {
-                return $campo->error()->mensaje();
-            }, array_filter($this->campos, function($campo) {
-                return $campo->error()->hay();
-            }));
-        }
-
-        return $this->errores;
-    }
-
-    /**
-     * Limpia los errores almacenados internamente
-     */
-    public function limpiarErrores()
-    {
-        // $this->actualizarCache = true;
-        $this->errores = [];
-
-        array_walk($this->campos, function($campo) {
-            $campo->error()->limpiar();
-        });
+        return $this->gestorDeErrores;
     }
 
     /**
