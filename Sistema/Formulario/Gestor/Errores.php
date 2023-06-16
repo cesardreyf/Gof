@@ -52,6 +52,10 @@ class Errores implements ErroresInterfaz
      */
     public function hay(): bool
     {
+        if( $this->actualizarCache ) {
+            $this->lista();
+        }
+
         return !empty($this->errores);
     }
 
