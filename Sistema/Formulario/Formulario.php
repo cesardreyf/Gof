@@ -5,13 +5,12 @@ namespace Gof\Sistema\Formulario;
 use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Bits\Mascara;
 use Gof\Sistema\Formulario\Contratos\Errores as InterfazDelGestorDeErrores;
-use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
+use Gof\Sistema\Formulario\Gestor\Campos as GestorDeCampos;
 use Gof\Sistema\Formulario\Gestor\Errores as GestorDeErrores;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Configuracion;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
-use Gof\Sistema\Formulario\Validar\ValidarExistencia;
 
 /**
  * Sistema para obtener datos de formulario
@@ -28,14 +27,14 @@ class Formulario implements Tipos, Errores, Configuracion
     public const CONFIGURACION_POR_DEFECTO = 0;
 
     /**
-     * @var array Datos del formulario
-     */
-    private array $datos;
-
-    /**
      * @var array Lista de campos del formulario
      */
-    private array $campos;
+    private array $campos = [];
+
+    /**
+     * @var GestorDeErrores Gestor encargado de manejar los errores del sistema
+     */
+    private GestorDeErrores $gestorDeErrores;
 
     /**
      * @var MascaraDeBits Gestor de máscaras de bits para la configuración
@@ -43,9 +42,9 @@ class Formulario implements Tipos, Errores, Configuracion
     private MascaraDeBits $configuracion;
 
     /**
-     * @var GestorDeErrores Gestor encargado de manejar los errores del sistema
+     * @var array Datos del formulario
      */
-    private GestorDeErrores $gestorDeErrores;
+    private GestorDeCampos $gestorDeCampos;
 
     /**
      * Constructor
@@ -54,11 +53,9 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function __construct(array $datos)
     {
-        $this->campos = [];
-        $this->datos = $datos;
-
         $this->gestorDeErrores = new GestorDeErrores($this->campos);
-        $this->configuracion = new MascaraDeBits(self::CONFIGURACION_POR_DEFECTO);
+        $this->configuracion   = new MascaraDeBits(self::CONFIGURACION_POR_DEFECTO);
+        $this->gestorDeCampos  = new GestorDeCampos($this->campos, $datos, $this->gestorDeErrores, $this->configuracion);
     }
 
     /**
@@ -77,23 +74,7 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function campo(string $clave, int $tipo = self::TIPO_STRING): Campo
     {
-        if( isset($this->campos[$clave]) ) {
-            return $this->campos[$clave];
-        }
-
-        $campo = AsignarCampo::segunTipo($clave, $tipo);
-        $siElCampo = new ValidarExistencia($campo, $this->datos);
-
-        if( $siElCampo->existe() ) {
-            $campo->valor = $this->datos[$clave];
-
-            if( $this->configuracion->activados(self::VALIDAR_AL_CREAR) ) {
-                $campo->validar();
-            }
-        }
-
-        $this->gestorDeErrores->actualizarCache();
-        return $this->campos[$clave] = $campo;
+        return $this->gestorDeCampos->crear($clave, $tipo);
     }
 
     /**
@@ -106,19 +87,7 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function validar(): bool
     {
-        $camposValidos = true;
-
-        array_walk($this->campos, function(Campo $campo) use (&$camposValidos) {
-            if( $campo->validar() === false ) {
-                $camposValidos = false;
-            }
-        });
-
-        if( $camposValidos === false ) {
-            $this->gestorDeErrores->actualizarCache();
-        }
-
-        return $camposValidos;
+        return $this->gestorDeCampos->validar();
     }
 
     public function errores(): InterfazDelGestorDeErrores
