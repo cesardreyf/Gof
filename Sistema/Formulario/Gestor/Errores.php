@@ -20,25 +20,19 @@ class Errores implements ErroresInterfaz
     private array $errores;
 
     /**
-     * @var bool Indica si actualizar la caché de errores
+     * @var Sistema
      */
-    private bool $actualizarCache;
-
-    /**
-     * @var array Referencia a la lista de campos del sistema
-     */
-    private array $campos;
+    private Sistema $sistema;
 
     /**
      * Constructor
      *
-     * @param array &$listaDeCampos Referencia a la lista de campos del sistema.
+     * @param Sistema $sistema Instancia del sistema
      */
-    public function __construct(array &$listaDeCampos)
+    public function __construct(Sistema $sistema)
     {
         $this->errores = [];
-        $this->actualizarCache = true;
-        $this->campos =& $listaDeCampos;
+        $this->sistema = $sistema;
     }
 
     /**
@@ -52,7 +46,7 @@ class Errores implements ErroresInterfaz
      */
     public function hay(): bool
     {
-        if( $this->actualizarCache ) {
+        if( $this->sistema->actualizarCache ) {
             $this->lista();
         }
 
@@ -77,12 +71,12 @@ class Errores implements ErroresInterfaz
      */
     public function lista(): array
     {
-        if( $this->actualizarCache ) {
-            $this->actualizarCache = false;
+        if( $this->sistema->actualizarCache ) {
+            $this->sistema->actualizarCache = false;
 
             $this->errores = array_map(function(Campo $campo) {
                 return $campo->error()->mensaje();
-            }, array_filter($this->campos, function(Campo $campo) {
+            }, array_filter($this->sistema->campos, function(Campo $campo) {
                 return $campo->error()->hay();
             }));
         }
@@ -102,7 +96,7 @@ class Errores implements ErroresInterfaz
     {
         $this->errores = [];
 
-        array_walk($this->campos, function(Campo $campo) {
+        array_walk($this->sistema->campos, function(Campo $campo) {
             $campo->error()->limpiar();
         });
     }
@@ -118,7 +112,7 @@ class Errores implements ErroresInterfaz
      */
     public function actualizarCache()
     {
-        $this->actualizarCache = true;
+        $this->sistema->actualizarCache = true;
     }
 
 }

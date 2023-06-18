@@ -7,6 +7,7 @@ namespace Test\Sistema\Formulario\Gestor;
 use Gof\Interfaz\Errores\Mensajes\Error;
 use Gof\Sistema\Formulario\Contratos\Errores as ErroresInterfaz;
 use Gof\Sistema\Formulario\Gestor\Errores;
+use Gof\Sistema\Formulario\Gestor\Sistema;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use PHPUnit\Framework\TestCase;
 
@@ -18,10 +19,9 @@ class ErroresTest extends TestCase
     /**
      * @dataProvider dataCampoConError
      */
-    public function testHayErrores(Campo $campoConError): void
+    public function testHayErrores(Sistema $sistema): void
     {
-        $campos = [$campoConError];
-        $errores = new Errores($campos);
+        $errores = new Errores($sistema);
 
         $this->assertTrue($errores->hay());
         $this->assertNotEmpty($errores->lista());
@@ -30,10 +30,9 @@ class ErroresTest extends TestCase
     /**
      * @dataProvider dataCampoConError
      */
-    public function testRecorrerListaDeCamposEnBusquedaDeErroresYObtenerUnaLista(Campo $campoConError): void
+    public function testRecorrerListaDeCamposEnBusquedaDeErroresYObtenerUnaLista(Sistema $sistema): void
     {
-        $campos = [$campoConError];
-        $errores = new Errores($campos);
+        $errores = new Errores($sistema);
 
         $this->assertNotEmpty($errores->lista());
         $this->assertCount(1, $errores->lista());
@@ -45,10 +44,9 @@ class ErroresTest extends TestCase
     /**
      * @dataProvider dataCampoConError
      */
-    public function testActualizarCacheDeErrores(Campo $campoConError): void
+    public function testActualizarCacheDeErrores(Sistema $sistema): void
     {
-        $listaDeCampos = [$campoConError];
-        $errores = new Errores($listaDeCampos);
+        $errores = new Errores($sistema);
         $erroresCacheados = [self::ERROR_MENSAJE_1];
         $this->assertSame($erroresCacheados, $errores->lista());
         $this->assertSame($erroresCacheados, $errores->lista());
@@ -62,10 +60,9 @@ class ErroresTest extends TestCase
     /**
      * @dataProvider dataCampoConError
      */
-    public function testLimpiarLaCache(Campo $campoConError): void
+    public function testLimpiarLaCache(Sistema $sistema): void
     {
-        $listaDeCampos = [$campoConError];
-        $errores = new Errores($listaDeCampos);
+        $errores = new Errores($sistema);
 
         $this->assertNotEmpty($errores->lista());
         $errores->limpiar();
@@ -102,7 +99,9 @@ class ErroresTest extends TestCase
             ->method('error')
             ->willReturn($error);
 
-        return [[$campoConError]];
+        $sistema = new Sistema();
+        $sistema->campos = [$campoConError];
+        return [[$sistema]];
     }
 
 }

@@ -9,22 +9,19 @@ use Gof\Sistema\Formulario\Interfaz\Configuracion;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
 use Gof\Interfaz\Lista;
 
+/**
+ * Gestor de campos
+ *
+ * Clase encargada de gestionar la validación de los campos.
+ *
+ * @package Gof\Sistema\Formulario\Gestor
+ */
 class Campos
 {
     /**
-     * @var array Datos del formulario
+     * @var Sistema
      */
-    private array $datos;
-
-    /**
-     * @var array Lista de campos del formulario
-     */
-    private array $campos;
-
-    /**
-     * @var Errores Instancia del gestor de errors
-     */
-    private Errores $gErrores;
+    private Sistema $sistema;
 
     /**
      * @var Mascara Configuración del sistema
@@ -34,14 +31,12 @@ class Campos
     /**
      * Constructor
      *
-     * @param array &$campos Referencia a la lista de campos.
-     * @param array  $datos  Array con los datos del formulario.
+     * @param Sistema $sistema       Instancia del sistema.
+     * @param Mascara $configuracion Instancia de la configuración.
      */
-    public function __construct(array &$campos, array $datos, Errores $gErrores, Mascara $configuracion)
+    public function __construct(Sistema $sistema, Mascara $configuracion)
     {
-        $this->datos = $datos;
-        $this->campos =& $campos;
-        $this->gErrores = $gErrores;
+        $this->sistema = $sistema;
         $this->configuracion = $configuracion;
     }
 
@@ -58,23 +53,23 @@ class Campos
      */
     public function crear(string $nombreDelCampo, int $tipoDeDato): Campo
     {
-        if( isset($this->campos[$nombreDelCampo]) ) {
-            return $this->campos[$nombreDelCampo];
+        if( isset($this->sistema->campos[$nombreDelCampo]) ) {
+            return $this->sistema->campos[$nombreDelCampo];
         }
 
         $campo     = AsignarCampo::segunTipo($nombreDelCampo, $tipoDeDato);
-        $siElCampo = new ValidarExistencia($campo, $this->datos);
+        $siElCampo = new ValidarExistencia($campo, $this->sistema->datos);
 
         if( $siElCampo->existe() ) {
-            $campo->valor = $this->datos[$nombreDelCampo];
+            $campo->valor = $this->sistema->datos[$nombreDelCampo];
 
             if( $this->configuracion->activados(Configuracion::VALIDAR_AL_CREAR) ) {
                 $campo->validar();
             }
         }
 
-        $this->gErrores->actualizarCache();
-        return $this->campos[$nombreDelCampo] = $campo;
+        $this->sistema->actualizarCache = true;
+        return $this->sistema->campos[$nombreDelCampo] = $campo;
     }
 
     /**
@@ -88,14 +83,14 @@ class Campos
     {
         $camposValidos = true;
 
-        array_walk($this->campos, function(Campo $campo) use (&$camposValidos) {
+        array_walk($this->sistema->campos, function(Campo $campo) use (&$camposValidos) {
             if( $campo->validar() === false ) {
                 $camposValidos = false;
             }
         });
 
         if( $camposValidos === false ) {
-            $this->gErrores->actualizarCache();
+            $this->sistema->actualizarCache = true;
         }
 
         return $camposValidos;
