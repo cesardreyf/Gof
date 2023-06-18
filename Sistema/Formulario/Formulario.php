@@ -4,6 +4,7 @@ namespace Gof\Sistema\Formulario;
 
 use Gof\Interfaz\Bits\Mascara;
 use Gof\Sistema\Formulario\Contratos\Errores as IError;
+use Gof\Sistema\Formulario\Contratos\Campos as ICampos;
 use Gof\Sistema\Formulario\Gestor\Campos as GestorDeCampos;
 use Gof\Sistema\Formulario\Gestor\Errores as GestorDeErrores;
 use Gof\Sistema\Formulario\Gestor\Sistema;
@@ -57,39 +58,22 @@ class Formulario implements Tipos, Errores, Configuracion
     }
 
     /**
-     * Obtiene un elemento de tipo Campo con los datos del formulario
+     * Gestor de campos
      *
-     * Crea un elemento de tipo Campo con el valor asociado a la **clave**. Si
-     * ocurren errores estos son almacenados internamente dentro del objeto
-     * devuelto.
+     * El gestor de campos se encarga de crear y validar los campos.
      *
-     * @param string $clave Nombre del campo a obtener desde el formulario.
-     * @param int    $tipo  Tipo de dato a obtener (ver Tipos).
-     *
-     * @return Campo Devuelve un objeto de tipo Campo.
-     *
-     * @see Tipos
+     * @return ICampos Devuelve una instancia del gestor de campos.
      */
-    public function campo(string $clave, int $tipo = self::TIPO_STRING): Campo
+    public function campos(): ICampos
     {
-        return $this->gestorDeCampos->crear($clave, $tipo);
-    }
-
-    /**
-     * Valida si los valores de los campos del formulario son correctos
-     *
-     * Recorre la lista de campos y valida cada uno de ellos. Si **todos**
-     * los campos son válidos devuelve **true**.
-     *
-     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
-     */
-    public function validar(): bool
-    {
-        return $this->gestorDeCampos->validar();
+        return $this->gestorDeCampos;
     }
 
     /**
      * Gestor de errores
+     *
+     * El gestor de errores se encarga de almacenar y mostrar los mensajes de
+     * errores producidos por los campos durante la etapa de validación.
      *
      * @return IError Devuelve una instancia del gestor de errores.
      */

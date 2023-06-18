@@ -26,7 +26,7 @@ class FormularioTest extends TestCase
     public function testCrearCampoSegunElTipo(string $nombreDelCampo, int $tipoDeDatoEsperado): void
     {
         $formulario = new Formulario([]);
-        $campoCreadoPorElSistema = $formulario->campo($nombreDelCampo, $tipoDeDatoEsperado);
+        $campoCreadoPorElSistema = $formulario->campos()->crear($nombreDelCampo, $tipoDeDatoEsperado);
 
         $this->assertInstanceOf(Campo::class, $campoCreadoPorElSistema);
         $this->assertSame($tipoDeDatoEsperado, $campoCreadoPorElSistema->tipo());
@@ -46,8 +46,8 @@ class FormularioTest extends TestCase
     public function testObtenerCampoPreviamenteCreado(string $nombreDelCampo, int $tipoDeDatoEsperado): void
     {
         $formulario = new Formulario([]);
-        $campoCreadoPorElSistema = $formulario->campo($nombreDelCampo, $tipoDeDatoEsperado);
-        $this->assertSame($campoCreadoPorElSistema, $formulario->campo($nombreDelCampo));
+        $campoCreadoPorElSistema = $formulario->campos()->crear($nombreDelCampo, $tipoDeDatoEsperado);
+        $this->assertSame($campoCreadoPorElSistema, $formulario->campos()->obtener($nombreDelCampo));
     }
 
     public function testValidarAlCrearElCampo(): void
@@ -58,7 +58,7 @@ class FormularioTest extends TestCase
         // Formulario sin validación al crear el campo
         $formularioSinValidarAlCrear = new Formulario($datosDeFormulario);
         $formularioSinValidarAlCrear->configuracion()->desactivar(Formulario::VALIDAR_AL_CREAR);
-        $campoCreadoPorElSistema = $formularioSinValidarAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
+        $campoCreadoPorElSistema = $formularioSinValidarAlCrear->campos()->crear($campoDeTipoInt, Tipos::TIPO_INT);
 
         $this->assertFalse($campoCreadoPorElSistema->error()->hay());
         $this->assertFalse($formularioSinValidarAlCrear->errores()->hay());
@@ -68,7 +68,7 @@ class FormularioTest extends TestCase
         // Formulario con validación al crear el campo
         $formularioQueValidaAlCrear = new Formulario($datosDeFormulario);
         $formularioQueValidaAlCrear->configuracion()->activar(Formulario::VALIDAR_AL_CREAR);
-        $campoCreadoPorElSistema = $formularioQueValidaAlCrear->campo($campoDeTipoInt, Tipos::TIPO_INT);
+        $campoCreadoPorElSistema = $formularioQueValidaAlCrear->campos()->crear($campoDeTipoInt, Tipos::TIPO_INT);
 
         $this->assertTrue($campoCreadoPorElSistema->error()->hay());
         $this->assertTrue($formularioQueValidaAlCrear->errores()->hay());
@@ -83,10 +83,10 @@ class FormularioTest extends TestCase
         $formulario = new Formulario($datosDeFormulario);
 
         foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
-            $formulario->campo($nombreDelCampo, $tipoDeDato);
+            $formulario->campos()->crear($nombreDelCampo, $tipoDeDato);
         }
 
-        $this->assertTrue($formulario->validar());
+        $this->assertTrue($formulario->campos()->validar());
         $this->assertEmpty($formulario->errores()->lista());
     }
 
@@ -108,10 +108,10 @@ class FormularioTest extends TestCase
         $formulario = new Formulario($datosDeFormulario);
 
         foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
-            $formulario->campo($nombreDelCampo, $tipoDeDato);
+            $formulario->campos()->crear($nombreDelCampo, $tipoDeDato);
         }
 
-        $this->assertFalse($formulario->validar());
+        $this->assertFalse($formulario->campos()->validar());
         $this->assertNotEmpty($formulario->errores());
     }
 
@@ -123,10 +123,10 @@ class FormularioTest extends TestCase
         $formulario = new Formulario($datosDeFormulario);
 
         foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
-            $formulario->campo($nombreDelCampo, $tipoDeDato);
+            $formulario->campos()->crear($nombreDelCampo, $tipoDeDato);
         }
 
-        $this->assertFalse($formulario->validar());
+        $this->assertFalse($formulario->campos()->validar());
         $this->assertCount(count($camposYTipos), $formulario->errores()->lista());
         $this->assertSame(array_keys($camposYTipos), array_keys($formulario->errores()->lista()));
     }
@@ -139,10 +139,10 @@ class FormularioTest extends TestCase
         $formulario = new Formulario($datosDeFormulario);
 
         foreach( $camposYTipos as $nombreDelCampo => $tipoDeDato ) {
-            $formulario->campo($nombreDelCampo, $tipoDeDato);
+            $formulario->campos()->crear($nombreDelCampo, $tipoDeDato);
         }
 
-        $this->assertFalse($formulario->validar());
+        $this->assertFalse($formulario->campos()->validar());
         $this->assertNotEmpty($formulario->errores()->lista());
 
         $formulario->errores()->limpiar();

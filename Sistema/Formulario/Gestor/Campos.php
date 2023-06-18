@@ -3,11 +3,13 @@
 namespace Gof\Sistema\Formulario\Gestor;
 
 use Gof\Interfaz\Bits\Mascara;
+use Gof\Interfaz\Lista;
+use Gof\Sistema\Formulario\Contratos\Campos as ICampos;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Configuracion;
+use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
-use Gof\Interfaz\Lista;
 
 /**
  * Gestor de campos
@@ -16,7 +18,7 @@ use Gof\Interfaz\Lista;
  *
  * @package Gof\Sistema\Formulario\Gestor
  */
-class Campos
+class Campos implements ICampos
 {
     /**
      * @var Sistema
@@ -44,7 +46,7 @@ class Campos
      *
      * @return Campo Devuelve una instancia del campo.
      */
-    public function crear(string $nombreDelCampo, int $tipoDeDato): Campo
+    public function crear(string $nombreDelCampo, int $tipoDeDato = Tipos::TIPO_STRING): Campo
     {
         if( isset($this->sistema->campos[$nombreDelCampo]) ) {
             return $this->sistema->campos[$nombreDelCampo];
@@ -66,11 +68,22 @@ class Campos
     }
 
     /**
-     * Valida todos los campos registrados
+     * Obtiene un campo según su nombre
      *
-     * Recorre la lista de campos y los valida.
+     * @return ?Campo Devuelve una instancia del campo requerido o **null** si no existe.
+     */
+    public function obtener(string $nombreDelCampo): ?Campo
+    {
+        return $this->sistema->campos[$nombreDelCampo] ?? null;
+    }
+
+    /**
+     * Valida si los valores de los campos del formulario son correctos
      *
-     * @return bool Devuelve **true** si todos los campos son válidos o **false** de lo contrario.
+     * Recorre la lista de campos y valida cada uno de ellos. Si **todos**
+     * los campos son válidos devuelve **true**.
+     *
+     * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
      */
     public function validar(): bool
     {
@@ -87,6 +100,27 @@ class Campos
         }
 
         return $camposValidos;
+    }
+
+    /**
+     * Limpia la lista de campos
+     *
+     * Vacía el array de campos del sistema.
+     */
+    public function limpiar()
+    {
+        $this->sistema->campos = [];
+        $this->sistema->actualizarCache = true;
+    }
+
+    /**
+     * Obtiene la lista de campos
+     *
+     * @return array<string, Campo> Devuelve un array con todos los campos creados.
+     */
+    public function lista(): array
+    {
+        return $this->sistema->campos;
     }
 
 }
