@@ -2,7 +2,6 @@
 
 namespace Gof\Sistema\Formulario;
 
-use Gof\Datos\Bits\Mascara\MascaraDeBits;
 use Gof\Interfaz\Bits\Mascara;
 use Gof\Sistema\Formulario\Contratos\Errores as InterfazDelGestorDeErrores;
 use Gof\Sistema\Formulario\Gestor\Campos as GestorDeCampos;
@@ -38,11 +37,6 @@ class Formulario implements Tipos, Errores, Configuracion
     private GestorDeErrores $gestorDeErrores;
 
     /**
-     * @var MascaraDeBits Gestor de máscaras de bits para la configuración
-     */
-    private MascaraDeBits $configuracion;
-
-    /**
      * @var array Datos del formulario
      */
     private GestorDeCampos $gestorDeCampos;
@@ -54,12 +48,12 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function __construct(array $datos)
     {
-        $this->sistema        = new sistema();
+        $this->sistema = new sistema();
         $this->sistema->datos = $datos;
+        $this->sistema->configuracion->definir(self::CONFIGURACION_POR_DEFECTO);
 
+        $this->gestorDeCampos  = new GestorDeCampos($this->sistema);
         $this->gestorDeErrores = new GestorDeErrores($this->sistema);
-        $this->configuracion   = new MascaraDeBits(self::CONFIGURACION_POR_DEFECTO);
-        $this->gestorDeCampos  = new GestorDeCampos($this->sistema, $this->configuracion);
     }
 
     /**
@@ -108,7 +102,7 @@ class Formulario implements Tipos, Errores, Configuracion
      */
     public function configuracion(): Mascara
     {
-        return $this->configuracion;
+        return $this->sistema->configuracion;
     }
 
 }

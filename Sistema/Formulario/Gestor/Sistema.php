@@ -2,6 +2,8 @@
 
 namespace Gof\Sistema\Formulario\Gestor;
 
+use Gof\Datos\Bits\Mascara\MascaraDeBits;
+
 /**
  * Gestor de datos y estados del sistema
  *
@@ -26,4 +28,18 @@ class Sistema
      * @var bool Estado que indica que se debe actualizar la caché de errores
      */
     public bool $actualizarCache = true;
+
+    /**
+     * @var MascaraDeBits Máscara de bits para la configuración
+     */
+    public MascaraDeBits $configuracion;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->configuracion = new MascaraDeBits();
+    }
+
 }

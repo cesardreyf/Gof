@@ -24,20 +24,13 @@ class Campos
     private Sistema $sistema;
 
     /**
-     * @var Mascara Configuración del sistema
-     */
-    private Mascara $configuracion;
-
-    /**
      * Constructor
      *
      * @param Sistema $sistema       Instancia del sistema.
-     * @param Mascara $configuracion Instancia de la configuración.
      */
-    public function __construct(Sistema $sistema, Mascara $configuracion)
+    public function __construct(Sistema $sistema)
     {
         $this->sistema = $sistema;
-        $this->configuracion = $configuracion;
     }
 
     /**
@@ -63,7 +56,7 @@ class Campos
         if( $siElCampo->existe() ) {
             $campo->valor = $this->sistema->datos[$nombreDelCampo];
 
-            if( $this->configuracion->activados(Configuracion::VALIDAR_AL_CREAR) ) {
+            if( $this->sistema->configuracion->activados(Configuracion::VALIDAR_AL_CREAR) ) {
                 $campo->validar();
             }
         }
