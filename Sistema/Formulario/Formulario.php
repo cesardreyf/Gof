@@ -3,7 +3,7 @@
 namespace Gof\Sistema\Formulario;
 
 use Gof\Interfaz\Bits\Mascara;
-use Gof\Sistema\Formulario\Contratos\Errores as InterfazDelGestorDeErrores;
+use Gof\Sistema\Formulario\Contratos\Errores as IError;
 use Gof\Sistema\Formulario\Gestor\Campos as GestorDeCampos;
 use Gof\Sistema\Formulario\Gestor\Errores as GestorDeErrores;
 use Gof\Sistema\Formulario\Gestor\Sistema;
@@ -88,7 +88,12 @@ class Formulario implements Tipos, Errores, Configuracion
         return $this->gestorDeCampos->validar();
     }
 
-    public function errores(): InterfazDelGestorDeErrores
+    /**
+     * Gestor de errores
+     *
+     * @return IError Devuelve una instancia del gestor de errores.
+     */
+    public function errores(): IError
     {
         return $this->gestorDeErrores;
     }
