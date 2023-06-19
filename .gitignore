@@ -7,3 +7,6 @@ composer.lock
 
 # PHPUnit
 .phpunit.result.cache
+
+# Archivos de textos
+tareas.txt
