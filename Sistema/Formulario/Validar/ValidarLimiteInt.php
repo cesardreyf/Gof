@@ -4,7 +4,8 @@ namespace Gof\Sistema\Formulario\Validar;
 
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
-use Gof\Sistema\Mediador\Campo\Error;
+use Gof\Sistema\Formulario\Interfaz\Errores;
+use Gof\Sistema\Formulario\Mediador\Campo\Error;
 
 /**
  * Valida los límites de un campo de tipo int
@@ -13,7 +14,7 @@ use Gof\Sistema\Mediador\Campo\Error;
  *
  * @package Gof\Sistema\Formulario\Validar
  */
-class ValidarLimite implements Validable
+class ValidarLimiteInt implements Validable
 {
     /**
      * @var Campo $campo Instancia del campo a validar
@@ -47,12 +48,8 @@ class ValidarLimite implements Validable
      */
     public function validar(): ?bool
     {
-        if( $this->campo->error()->hay() ) {
+        if( $this->campo->error()->hay() || !is_numeric($this->campo->valor()) ) {
             return null;
-        }
-
-        if( !is_numeric($this->campo->valor()) ) {
-            return false;
         }
 
         if( $this->minimo > PHP_INT_MIN && $this->campo->valor() < $this->minimo ) {

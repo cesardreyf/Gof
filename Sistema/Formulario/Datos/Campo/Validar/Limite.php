@@ -2,7 +2,7 @@
 
 namespace Gof\Sistema\Formulario\Datos\Campo\Validar;
 
-use Gof\Sistema\Formulario\Validar\ValidarLimite;
+use Gof\Sistema\Formulario\Validar\ValidarLimiteInt;
 
 /**
  * Agrega validación de límite a un campo
@@ -17,11 +17,11 @@ trait Limite
     /**
      * Valida los límites del campo
      *
-     * @return ValidarLimite
+     * @return ValidarLimiteInt
      */
-    public function limite(): ValidarLimite
+    public function limite(): ValidarLimiteInt
     {
-        return $this->validador(ValidarLimite::class);
+        return $this->validador(ValidarLimiteInt::class);
     }
 
 }
