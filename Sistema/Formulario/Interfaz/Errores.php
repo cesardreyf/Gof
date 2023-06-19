@@ -51,4 +51,24 @@ interface Errores
      * @var int Indica que el campo está vacío y no contiene nada
      */
     public const ERROR_CAMPO_VACIO = 300;
+
+    /**
+     * @var int Error que indica que existen filas dentro de la tabla que no son arrays.
+     */
+    public const ERROR_FILAS_INVALIDAS = 10001;
+
+    /**
+     * @var int Error que indica que una de las filas no contiene todas las columnas obligatorias.
+     */
+    public const ERROR_COLUMNAS_FALTAN = 10100;
+
+    /**
+     * @var int Error que indica que existen filas cuyas columnas no son válidas.
+     */
+    public const ERROR_COLUMNAS_INVALIDAS = 10101;
+
+    /**
+     * @var int Código de error que indica que la opción seleccionada no es válida.
+     */
+    public const ERROR_OPCION_INVALIDA = 20001;
 }

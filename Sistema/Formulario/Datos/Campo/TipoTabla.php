@@ -38,22 +38,7 @@ class TipoTabla extends Campo
     public const COLUMNAS_INVALIDAS = 'Alguna de las filas tiene columnas inválidas';
 
     /**
-     * @var int Error que indica que existen filas dentro de la tabla que no son arrays.
-     */
-    public const ERROR_FILAS_INVALIDAS = 10001;
-
-    /**
-     * @var int Error que indica que una de las filas no contiene todas las columnas obligatorias.
-     */
-    public const ERROR_COLUMNAS_FALTAN = 10100;
-
-    /**
-     * @var int Error que indica que existen filas cuyas columnas no son válidas.
-     */
-    public const ERROR_COLUMNAS_INVALIDAS = 10101;
-
-    /**
-     * @vara array<string, int> Lista de columnas y tipos correspondientes.
+     * @var array<string, int> Lista de columnas y tipos correspondientes.
      */
     private array $columnas = [];
 
@@ -114,7 +99,7 @@ class TipoTabla extends Campo
 
         $filasQueNoSonValidas = array_filter($this->valor(), function($fila) use ($validar) {
             if( is_array($fila) === false ) {
-                Error::reportar($this, self::FILAS_INVALIDAS, self::ERROR_FILAS_INVALIDAS);
+                Error::reportar($this, self::FILAS_INVALIDAS, Errores::ERROR_FILAS_INVALIDAS);
                 return true;
             }
 
@@ -124,7 +109,7 @@ class TipoTabla extends Campo
             }
 
             if( empty(array_diff_key($this->columnas, $fila)) === false ) {
-                Error::reportar($this, self::COLUMNAS_FALTAN, self::ERROR_COLUMNAS_FALTAN);
+                Error::reportar($this, self::COLUMNAS_FALTAN, Errores::ERROR_COLUMNAS_FALTAN);
                 return true;
             }
 
@@ -134,7 +119,7 @@ class TipoTabla extends Campo
             }, ARRAY_FILTER_USE_BOTH);
 
             if( empty($columnasInvalidas) === false ) {
-                Error::reportar($this, self::COLUMNAS_INVALIDAS, self::ERROR_COLUMNAS_INVALIDAS);
+                Error::reportar($this, self::COLUMNAS_INVALIDAS, Errores::ERROR_COLUMNAS_INVALIDAS);
                 return true;
             }
 

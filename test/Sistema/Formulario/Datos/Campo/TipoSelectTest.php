@@ -175,7 +175,7 @@ class TipoSelectTest extends TestCase
             [
                 'opcion inexistente',
                 ['unica_opcion_valida'],
-                TipoSelect::ERROR_OPCION_INVALIDA,
+                Errores::ERROR_OPCION_INVALIDA,
                 TipoSelect::OPCION_INVALIDA
             ],
         ];

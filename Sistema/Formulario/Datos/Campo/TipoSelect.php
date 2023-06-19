@@ -24,11 +24,6 @@ class TipoSelect extends Campo
     public const OPCION_INVALIDA = 'La opción seleccionada no es válida';
 
     /**
-     * @var int Código de error que indica que la opción seleccionada no es válida.
-     */
-    public const ERROR_OPCION_INVALIDA = 20001;
-
-    /**
      * @var string[] Conjunto de opciones válidas para el campo
      */
     private array $opciones = [];
@@ -103,7 +98,7 @@ class TipoSelect extends Campo
         }
 
         if( $this->opcionEsValida($this->valor()) === false ) {
-            Error::reportar($this, self::OPCION_INVALIDA, self::ERROR_OPCION_INVALIDA);
+            Error::reportar($this, self::OPCION_INVALIDA, Errores::ERROR_OPCION_INVALIDA);
             return false;
         }
 

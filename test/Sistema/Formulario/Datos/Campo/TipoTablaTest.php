@@ -182,13 +182,13 @@ class TipoTablaTest extends TestCase
             [
                 [[], [], PHP_INT_MAX],
                 [],
-                TipoTabla::ERROR_FILAS_INVALIDAS,
+                Errores::ERROR_FILAS_INVALIDAS,
                 TipoTabla::FILAS_INVALIDAS
             ],
             [
                 [PHP_FLOAT_MAX, true, [], [], []],
                 [],
-                TipoTabla::ERROR_FILAS_INVALIDAS,
+                Errores::ERROR_FILAS_INVALIDAS,
                 TipoTabla::FILAS_INVALIDAS
             ],
         ];
@@ -206,7 +206,7 @@ class TipoTablaTest extends TestCase
                     'col1' => Tipos::TIPO_INT,
                     'col2' => Tipos::TIPO_STRING
                 ],
-                TipoTabla::ERROR_COLUMNAS_FALTAN,
+                Errores::ERROR_COLUMNAS_FALTAN,
                 TipoTabla::COLUMNAS_FALTAN
             ],
         ];
@@ -222,7 +222,7 @@ class TipoTablaTest extends TestCase
                 [
                     'columnas_de_tipo_int' => Tipos::TIPO_INT
                 ],
-                TipoTabla::ERROR_COLUMNAS_INVALIDAS,
+                Errores::ERROR_COLUMNAS_INVALIDAS,
                 TipoTabla::COLUMNAS_INVALIDAS
             ],
         ];
