@@ -56,14 +56,20 @@ class ValidarLimite implements Validable
         }
 
         if( $this->minimo > PHP_INT_MIN && $this->campo->valor() < $this->minimo ) {
-            // Errores temporal
-            Error::reportar($this->campo, 1, "El límite mínimo es {$this->minimo}");
+            Error::reportar(
+                $this->campo,
+                "El límite mínimo es {$this->minimo}",
+                Errores::ERROR_LIMITE_MINIMO_NO_ALCANZADO
+            );
             return false;
         }
 
         if( $this->maximo > $this->minimo && $this->campo->valor() > $this->maximo ) {
-            // Errores temporal
-            Error:reportar($this->campo, 2, "El límite máximo es {$this->maximo}");
+            Error::reportar(
+                $this->campo,
+                "El límite máximo es {$this->maximo}",
+                Errores::ERROR_LIMITE_MAXIMO_EXCEDIDO
+            );
             return false;
         }
 

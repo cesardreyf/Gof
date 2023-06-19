@@ -53,6 +53,16 @@ interface Errores
     public const ERROR_CAMPO_VACIO = 300;
 
     /**
+     * @var int Indica que el valor del campo es menor que el límite mínimo
+     */
+    public const ERROR_LIMITE_MINIMO_NO_ALCANZADO = 1100;
+
+    /**
+     * @var int Indica que el valor del campo es mayor que el límite máximo
+     */
+    public const ERROR_LIMITE_MAXIMO_EXCEDIDO = 1101;
+
+    /**
      * @var int Error que indica que existen filas dentro de la tabla que no son arrays.
      */
     public const ERROR_FILAS_INVALIDAS = 10001;
