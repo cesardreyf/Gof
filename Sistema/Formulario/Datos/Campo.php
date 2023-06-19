@@ -4,6 +4,7 @@ namespace Gof\Sistema\Formulario\Datos;
 
 use Gof\Datos\Errores\Mensajes\Error;
 use Gof\Sistema\Formulario\Interfaz\Campo as ICampo;
+use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
 
 /**
  * Dato de tipo campo para almacenar información
@@ -38,6 +39,11 @@ class Campo implements ICampo
      * @var mixed Valor del campo
      */
     public mixed $valor;
+
+    /**
+     * @var array<string, Validable> Lista de validaciones extra.
+     */
+    protected array $vextra = [];
 
     /**
      * Constructor
@@ -98,6 +104,40 @@ class Campo implements ICampo
     public function validar(): ?bool
     {
         return false;
+    }
+
+    /**
+     * Agrega una nueva validación al campo
+     *
+     * Agrega a la cola de validaciones del campo una nueva validación. Si ya
+     * existe simplemente obtiene una instancia de la misma.
+     *
+     * Si no existe el validador reservado se crea una instancia y se le pasa
+     * por el constructor la instancia del campo.
+     *
+     * @param string $validador Nombre completo de la clase.
+     *
+     * @return Validable
+     */
+    public function validador(string $validador): Validable
+    {
+        if( !isset($this->vextra[$validador]) ) {
+            // TAREA
+            //  Validar que lo que se está pasando sea una clase
+            $this->vextra[$validador] = new $validador($this);
+        }
+
+        return $this->vextra[$validador];
+    }
+
+    /**
+     * Obtiene la lista de validaciones extras
+     *
+     * @return array<string, Validable>
+     */
+    public function vextra(): array
+    {
+        return $this->vextra;
     }
 
 }

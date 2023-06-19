@@ -16,8 +16,8 @@ class TipoIntTest extends TestCase
 
     public function testValidarQueElTipoCorresponda(): void
     {
-        $vector = new TipoInt('validando_el_tipo');
-        $this->assertSame(Tipos::TIPO_INT, $vector->tipo());
+        $entero = new TipoInt('validando_el_tipo');
+        $this->assertSame(Tipos::TIPO_INT, $entero->tipo());
     }
 
     public function testValidarCamposVaciosNulos(): void

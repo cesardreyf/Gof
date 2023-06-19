@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Formulario\Interfaz;
 
 use Gof\Interfaz\Errores\Mensajes\Error;
+use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
 
 /**
  * Interfaz para los campos de los formularios
@@ -12,7 +13,7 @@ use Gof\Interfaz\Errores\Mensajes\Error;
  *
  * @package Gof\Sistema\Formulario\Interfaz
  */
-interface Campo
+interface Campo extends Validable
 {
     /**
      * Tipo del campo
@@ -43,11 +44,4 @@ interface Campo
      * @return string Devuelve el nombre del campo.
      */
     public function clave(): string;
-
-    /**
-     * Valida el tipo de dato del campo
-     *
-     * @return ?bool Devuelve **true** si es válido o **false** de lo contrario; **null** en caso de errores.
-     */
-    public function validar(): ?bool;
 }

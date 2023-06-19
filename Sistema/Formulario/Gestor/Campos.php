@@ -92,6 +92,11 @@ class Campos implements ICampos
         array_walk($this->sistema->campos, function(Campo $campo) use (&$camposValidos) {
             if( $campo->validar() === false ) {
                 $camposValidos = false;
+                return;
+            }
+
+            foreach( $campo->vextra() as $validacionesExtra ) {
+                if( !$validacionesExtra->validar() ) break;
             }
         });
 
