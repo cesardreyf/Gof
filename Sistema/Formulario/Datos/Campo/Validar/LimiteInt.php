@@ -11,7 +11,7 @@ use Gof\Sistema\Formulario\Validar\ValidarLimiteInt;
  *
  * @package Gof\Sistema\Formulario\Datos\Campo\Validar
  */
-trait Limite
+trait LimiteInt
 {
 
     /**

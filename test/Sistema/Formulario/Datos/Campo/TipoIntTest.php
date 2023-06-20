@@ -8,6 +8,7 @@ use Gof\Sistema\Formulario\Datos\Campo\TipoInt;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
+use Gof\Sistema\Formulario\Validar\ValidarLimiteInt;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -105,6 +106,12 @@ class TipoIntTest extends TestCase
 
         $this->assertTrue($entero->error()->hay());
         $this->assertNull($entero->validar());
+    }
+
+    public function testMetodoValidarLimite(): void
+    {
+        $entero = new TipoInt('');
+        $this->assertInstanceOf(ValidarLimiteInt::class, $entero->limite());
     }
 
 }

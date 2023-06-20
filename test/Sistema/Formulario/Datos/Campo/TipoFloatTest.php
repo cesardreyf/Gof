@@ -9,6 +9,7 @@ use Gof\Sistema\Formulario\Datos\Campo\TipoFloat;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
+use Gof\Sistema\Formulario\Validar\ValidarLimiteFloat;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -102,6 +103,11 @@ class TipoFloatTest extends TestCase
             ['', Errores::ERROR_CAMPO_VACIO, ErroresMensaje::CAMPO_VACIO],
             ['   ', Errores::ERROR_CAMPO_VACIO, ErroresMensaje::CAMPO_VACIO],
         ];
+    }
+
+    public function testMetodoValidarLimite(): void
+    {
+        $this->assertInstanceOf(ValidarLimiteFloat::class, $this->float->limite());
     }
 
 }

@@ -15,7 +15,7 @@ use Gof\Sistema\Formulario\Mediador\Campo\Error;
  */
 class TipoInt extends Campo
 {
-    use Validar\Limite;
+    use Validar\LimiteInt;
 
     /**
      * Constructor

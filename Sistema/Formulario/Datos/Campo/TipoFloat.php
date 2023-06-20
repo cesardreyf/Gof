@@ -15,6 +15,7 @@ use Gof\Sistema\Formulario\Mediador\Campo\Error;
  */
 class TipoFloat extends Campo
 {
+    use Validar\LimiteFloat;
 
     /**
      * Constructor
