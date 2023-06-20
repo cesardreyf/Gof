@@ -91,7 +91,7 @@ class Campos implements ICampos
         $camposValidos = true;
 
         array_walk($this->sistema->campos, function(Campo $campo) use (&$camposValidos) {
-            if( $campo->validar() === false ) {
+            if( !$campo->validar() ) {
                 $error = $campo->error()->codigo();
 
                 if( $error === Errores::ERROR_CAMPO_INEXISTENTE || $error === Errores::ERROR_CAMPO_VACIO ) {
