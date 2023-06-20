@@ -96,6 +96,9 @@ class Campos implements ICampos
 
                 if( $error === Errores::ERROR_CAMPO_INEXISTENTE || $error === Errores::ERROR_CAMPO_VACIO ) {
                     if( $campo->obligatorio() === false ) {
+                        if( $this->sistema->configuracion->activados(Configuracion::LIMPIAR_ERRORES_CAMPOS_OPCIONALES) ) {
+                            $campo->error()->limpiar();
+                        }
                         return;
                     }
                 }
@@ -105,7 +108,10 @@ class Campos implements ICampos
             }
 
             foreach( $campo->vextra() as $validacionesExtra ) {
-                if( !$validacionesExtra->validar() ) break;
+                if( !$validacionesExtra->validar() ) {
+                    $camposValidos = false;
+                    break;
+                }
             }
         });
 

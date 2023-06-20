@@ -25,7 +25,7 @@ class Formulario implements Tipos, Errores, Configuracion
     /**
      * @var int Máscara de bits con la configuración por defecto
      */
-    public const CONFIGURACION_POR_DEFECTO = 0;
+    public const CONFIGURACION_POR_DEFECTO = Configuracion::LIMPIAR_ERRORES_CAMPOS_OPCIONALES;
 
     /**
      * @var Sistema Sistema principal
