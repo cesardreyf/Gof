@@ -4,6 +4,7 @@ namespace Gof\Sistema\Formulario\Validar;
 
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Errores;
+use Gof\Sistema\Formulario\Mediador\Campo\Error;
 
 /**
  * Valida si un campo existe dentro de los datos recibidos del formulario
@@ -33,8 +34,7 @@ class ValidarExistencia
     public function __construct(Campo $campo, array $datos)
     {
         if( isset($datos[$campo->clave()]) === false ) {
-            $campo->error()->codigo(Errores::ERROR_CAMPO_INEXISTENTE);
-            $campo->error()->mensaje(self::ERROR_MENSAJE);
+            Error::reportar($campo, self::ERROR_MENSAJE, Errores::ERROR_CAMPO_INEXISTENTE);
             $this->existe = false;
         }
     }
