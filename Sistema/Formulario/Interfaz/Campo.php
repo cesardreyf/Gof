@@ -44,4 +44,11 @@ interface Campo extends Validable
      * @return string Devuelve el nombre del campo.
      */
     public function clave(): string;
+
+    /**
+     * Obtiene el estado de obligatoriedad del campo
+     *
+     * @return bool Devuelve **true** si el campo es obligatorio o **false** si es opcional.
+     */
+    public function obligatorio(): bool;
 }

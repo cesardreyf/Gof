@@ -41,6 +41,11 @@ class Campo implements ICampo
     public mixed $valor;
 
     /**
+     * @var bool Indica si el campo es obligatorio
+     */
+    public bool $obligatorio;
+
+    /**
      * @var array<string, Validable> Lista de validaciones extra.
      */
     protected array $vextra = [];
@@ -57,6 +62,7 @@ class Campo implements ICampo
         $this->tipo  = $tipo;
         $this->clave = $clave;
         $this->error = new Error();
+        $this->obligatorio = false;
     }
 
     /**
@@ -104,6 +110,16 @@ class Campo implements ICampo
     public function validar(): ?bool
     {
         return false;
+    }
+
+    /**
+     * Obtiene el estado de obligatoriedad del campo
+     *
+     * @return bool Devuelve **true** si el campo es obligatorio o **false** si es opcional.
+     */
+    public function obligatorio(): bool
+    {
+        return $this->obligatorio;
     }
 
     /**

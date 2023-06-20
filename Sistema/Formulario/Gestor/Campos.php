@@ -8,6 +8,7 @@ use Gof\Sistema\Formulario\Contratos\Campos as ICampos;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Configuracion;
+use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
 
@@ -91,6 +92,14 @@ class Campos implements ICampos
 
         array_walk($this->sistema->campos, function(Campo $campo) use (&$camposValidos) {
             if( $campo->validar() === false ) {
+                $error = $campo->error()->codigo();
+
+                if( $error === Errores::ERROR_CAMPO_INEXISTENTE || $error === Errores::ERROR_CAMPO_VACIO ) {
+                    if( $campo->obligatorio() === false ) {
+                        return;
+                    }
+                }
+
                 $camposValidos = false;
                 return;
             }
