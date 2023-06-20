@@ -8,6 +8,7 @@ use Gof\Sistema\Formulario\Datos\Campo\TipoString;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
+use Gof\Sistema\Formulario\Validar\ValidarExpresionRegular;
 use Gof\Sistema\Formulario\Validar\ValidarLongitud;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -98,5 +99,10 @@ class TipoStringTest extends TestCase
         $this->assertInstanceOf(ValidarLongitud::class, $cadena->longitud());
     }
 
+    public function testMetodoValidarRegex(): void
+    {
+        $cadena = new TipoString('');
+        $this->assertInstanceOf(ValidarExpresionRegular::class, $cadena->regex());
+    }
 
 }

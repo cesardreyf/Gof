@@ -16,6 +16,7 @@ use Gof\Sistema\Formulario\Mediador\Campo\Error;
 class TipoString extends Campo
 {
     use Validar\Longitud;
+    use Validar\Regex;
 
     /**
      * Constructor

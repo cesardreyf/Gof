@@ -73,6 +73,11 @@ interface Errores
     public const ERROR_LONGITUD_MAXIMO_EXCEDIDO = 1201;
 
     /**
+     * @var int Indica que el valor del campo no coincide con la expresión regular
+     */
+    public const ERROR_REGEX_CADENA_INVALIDA = 1300;
+
+    /**
      * @var int Error que indica que existen filas dentro de la tabla que no son arrays.
      */
     public const ERROR_FILAS_INVALIDAS = 10001;
