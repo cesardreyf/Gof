@@ -8,6 +8,7 @@ use Gof\Sistema\Formulario\Datos\Campo\TipoString;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
+use Gof\Sistema\Formulario\Validar\ValidarLongitud;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -90,5 +91,12 @@ class TipoStringTest extends TestCase
         $cadena->valor = new stdClass();
         $this->assertNull($cadena->validar());
     }
+
+    public function testMetodoValidarLongitud(): void
+    {
+        $cadena = new TipoString('');
+        $this->assertInstanceOf(ValidarLongitud::class, $cadena->longitud());
+    }
+
 
 }

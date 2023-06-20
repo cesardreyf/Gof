@@ -63,6 +63,16 @@ interface Errores
     public const ERROR_LIMITE_MAXIMO_EXCEDIDO = 1101;
 
     /**
+     * @var int Indica que la longitud de la cadena es menor al definido
+     */
+    public const ERROR_LONGITUD_MINIMO_NO_ALCANZADO = 1200;
+
+    /**
+     * @var int Indica que la longitud de la cadena es mayor al definido
+     */
+    public const ERROR_LONGITUD_MAXIMO_EXCEDIDO = 1201;
+
+    /**
      * @var int Error que indica que existen filas dentro de la tabla que no son arrays.
      */
     public const ERROR_FILAS_INVALIDAS = 10001;
