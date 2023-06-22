@@ -29,4 +29,13 @@ interface Configuracion
      * @var int
      */
     public const LIMPIAR_ERRORES_CAMPOS_OPCIONALES = 2;
+
+    /**
+     * Limpia cualquier error almacenado en un campo al revalidar
+     *
+     * @see GestorDeCampos::validar()
+     *
+     * @var int
+     */
+    public const LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS = 4;
 }

@@ -81,18 +81,6 @@ class TipoStringTest extends TestCase
         ];
     }
 
-    public function testValidarDevuelveNullSiHayErroresPrevios(): void
-    {
-        $cadena = new TipoString('campo_de_tipo_string_con_errores_previos');
-        $this->assertFalse($cadena->error()->hay());
-
-        $cadena->valor = [];
-        $this->assertFalse($cadena->validar());
-
-        $cadena->valor = new stdClass();
-        $this->assertNull($cadena->validar());
-    }
-
     public function testMetodoValidarLongitud(): void
     {
         $cadena = new TipoString('');
@@ -105,4 +93,26 @@ class TipoStringTest extends TestCase
         $this->assertInstanceOf(ValidarExpresionRegular::class, $cadena->regex());
     }
 
+    public function testRevalidarDatosDelCampo(): TipoString
+    {
+        $cadena = new TipoString('');
+        $noSoyUnString = new stdClass();
+        $siSoyUnString = 'Hola mundo cruel';
+
+        $cadena->valor = $noSoyUnString;
+        $this->assertFalse($cadena->validar());
+        $this->assertTrue($cadena->error()->hay());
+
+        $cadena->valor = $siSoyUnString;
+        $this->assertTrue($cadena->validar());
+        return $cadena;
+    }
+
+    /**
+     * @depends testRevalidarDatosDelCampo
+     */
+    public function testRevalidarDatosDelCampoNoLimpiaLosErrores(TipoString $cadena): void
+    {
+        $this->assertTrue($cadena->error()->hay());
+    }
 }

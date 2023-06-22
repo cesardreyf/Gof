@@ -33,10 +33,6 @@ class TipoArray extends Campo
      */
     public function validar(): ?bool
     {
-        if( $this->error->hay() ) {
-            return null;
-        }
-
         if( is_array($this->valor()) ) {
             return true;
         }

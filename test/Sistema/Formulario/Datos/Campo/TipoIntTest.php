@@ -96,22 +96,32 @@ class TipoIntTest extends TestCase
         ];
     }
 
-    public function testValidarDevuelveNullSiHayUnErrorPrevio(): void
-    {
-        $entero = new TipoInt('si_hay_errores_validar_devuelve_null');
-        $entero->valor = null;
-
-        $this->assertFalse($entero->error()->hay());
-        $this->assertFalse($entero->validar());
-
-        $this->assertTrue($entero->error()->hay());
-        $this->assertNull($entero->validar());
-    }
-
     public function testMetodoValidarLimite(): void
     {
         $entero = new TipoInt('');
         $this->assertInstanceOf(ValidarLimiteInt::class, $entero->limite());
     }
 
+    public function testRevalidarDatosDelCampo(): TipoInt
+    {
+        $entero = new TipoInt('');
+        $noSoyUnInt = PHP_FLOAT_MAX;
+        $siSoyUnInt = PHP_INT_MAX;
+
+        $entero->valor = $noSoyUnInt;
+        $this->assertFalse($entero->validar());
+        $this->assertTrue($entero->error()->hay());
+
+        $entero->valor = $siSoyUnInt;
+        $this->assertTrue($entero->validar());
+        return $entero;
+    }
+
+    /**
+     * @depends testRevalidarDatosDelCampo
+     */
+    public function testRevalidarDatosDelCampoNoLimpiaLosErrores(TipoInt $entero): void
+    {
+        $this->assertTrue($entero->error()->hay());
+    }
 }

@@ -36,10 +36,6 @@ class TipoInt extends Campo
      */
     public function validar(): ?bool
     {
-        if( $this->error()->hay() ) {
-            return null;
-        }
-
         if( is_int($this->valor()) ) {
             return true;
         }

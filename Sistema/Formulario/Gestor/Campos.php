@@ -84,13 +84,20 @@ class Campos implements ICampos
      * Recorre la lista de campos y valida cada uno de ellos. Si **todos**
      * los campos son válidos devuelve **true**.
      *
+     * Si en los campos existen errores previos y al volver a validar los datos
+     * el mismo devuelve **true**, y está activa la directiva **LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS**,
+     * cualquier error almacenado en el campo será eliminado.
+     *
      * @return bool Devuelve **true** en caso de éxito o **false** de lo contrario.
+     *
+     * @see Configuracion::LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS
      */
     public function validar(): bool
     {
         $todosLosCamposSonValidos = true;
+        $limpiarErroresDeLosCamposRevalidados = $this->sistema->configuracion->activados(Configuracion::LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS);
 
-        array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos) {
+        array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos, $limpiarErroresDeLosCamposRevalidados) {
             if( !$campo->validar() ) {
                 $error = $campo->error()->codigo();
 
@@ -107,11 +114,17 @@ class Campos implements ICampos
                 return;
             }
 
+            $elCampoEsValido = true;
             foreach( $campo->vextra() as $validacionesExtra ) {
                 if( !$validacionesExtra->validar() ) {
                     $todosLosCamposSonValidos = false;
+                    $elCampoEsValido = false;
                     break;
                 }
+            }
+
+            if( $elCampoEsValido && $limpiarErroresDeLosCamposRevalidados ) {
+                $campo->error()->limpiar();
             }
         });
 

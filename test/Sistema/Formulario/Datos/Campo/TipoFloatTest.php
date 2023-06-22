@@ -110,4 +110,25 @@ class TipoFloatTest extends TestCase
         $this->assertInstanceOf(ValidarLimiteFloat::class, $this->float->limite());
     }
 
+    public function testRevalidarDatosDelCampo(): TipoFloat
+    {
+        $noSoyUnFloat = PHP_INT_MAX;
+        $siSoyUnFloat = PHP_FLOAT_MAX;
+
+        $this->float->valor = $noSoyUnFloat;
+        $this->assertFalse($this->float->validar());
+        $this->assertTrue($this->float->error()->hay());
+
+        $this->float->valor = $siSoyUnFloat;
+        $this->assertTrue($this->float->validar());
+        return $this->float;
+    }
+
+    /**
+     * @depends testRevalidarDatosDelCampo
+     */
+    public function testRevalidarDatosDelCampoNoLimpiaLosErrores(TipoFloat $float): void
+    {
+        $this->assertTrue($float->error()->hay());
+    }
 }

@@ -69,16 +69,27 @@ class TipoArrayTest extends TestCase
         ];
     }
 
-    public function testValidarConErroresPreviosDevuelveNull(): void
+    public function testRevalidarDatosDelCampo(): TipoArray
     {
-        $vector = new TipoArray('campo_de_tipo_array');
-        $this->assertFalse($vector->error()->hay());
+        $vector = new TipoArray('');
+        $noSoyUnArray = PHP_INT_MAX;
+        $siSoyUnArray = [];
 
-        $vector->valor = PHP_INT_MAX;
+        $vector->valor = $noSoyUnArray;
         $this->assertFalse($vector->validar());
+        $this->assertTrue($vector->error()->hay());
 
-        $vector->valor = PHP_FLOAT_MAX;
-        $this->assertNull($vector->validar());
+        $vector->valor = $siSoyUnArray;
+        $this->assertTrue($vector->validar());
+        return $vector;
+    }
+
+    /**
+     * @depends testRevalidarDatosDelCampo
+     */
+    public function testRevalidarDatosDelCampoNoLimpiaLosErrores(TipoArray $vector): void
+    {
+        $this->assertTrue($vector->error()->hay());
     }
 
 }

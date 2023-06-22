@@ -334,4 +334,28 @@ class CamposTest extends TestCase
         $this->assertFalse($this->campos->validar());
     }
 
+    public function testLimpiarErroresDeCamposAlRevalidar(): void
+    {
+        $error = $this->createMock(Error::class);
+        $campo = $this->createMock(Campo::class);
+
+        $campo
+            ->method('validar')
+            ->will($this->onConsecutiveCalls(false, true));
+
+        $this->sistema->campos[] = $campo;
+        $this->assertFalse($this->campos->validar());
+
+        $error
+            ->expects($this->once())
+            ->method('limpiar');
+
+        $campo
+            ->method('error')
+            ->willReturn($error);
+
+        $this->sistema->configuracion->activar(Configuracion::LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS);
+        $this->assertTrue($this->campos->validar());
+    }
+
 }

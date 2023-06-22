@@ -35,10 +35,6 @@ class TipoString extends Campo
      */
     public function validar(): ?bool
     {
-        if( $this->error()->hay() ) {
-            return null;
-        }
-
         if( is_string($this->valor()) === false ) {
             Error::reportar($this, ErroresMensaje::NO_ES_STRING, Errores::ERROR_NO_ES_STRING);
             return false;
