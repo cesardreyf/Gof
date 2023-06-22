@@ -88,9 +88,9 @@ class Campos implements ICampos
      */
     public function validar(): bool
     {
-        $camposValidos = true;
+        $todosLosCamposSonValidos = true;
 
-        array_walk($this->sistema->campos, function(Campo $campo) use (&$camposValidos) {
+        array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos) {
             if( !$campo->validar() ) {
                 $error = $campo->error()->codigo();
 
@@ -103,23 +103,23 @@ class Campos implements ICampos
                     }
                 }
 
-                $camposValidos = false;
+                $todosLosCamposSonValidos = false;
                 return;
             }
 
             foreach( $campo->vextra() as $validacionesExtra ) {
                 if( !$validacionesExtra->validar() ) {
-                    $camposValidos = false;
+                    $todosLosCamposSonValidos = false;
                     break;
                 }
             }
         });
 
-        if( $camposValidos === false ) {
+        if( $todosLosCamposSonValidos === false ) {
             $this->sistema->actualizarCache = true;
         }
 
-        return $camposValidos;
+        return $todosLosCamposSonValidos;
     }
 
     /**
