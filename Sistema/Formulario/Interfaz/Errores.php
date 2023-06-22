@@ -48,6 +48,11 @@ interface Errores
     public const ERROR_NO_ES_SELECT = 205;
 
     /**
+     * @var int Indica que el valor del campo no es un bool
+     */
+    public const ERROR_NO_ES_BOOL = 206;
+
+    /**
      * @var int Indica que el campo está vacío y no contiene nada
      */
     public const ERROR_CAMPO_VACIO = 300;

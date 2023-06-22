@@ -78,6 +78,7 @@ class CamposTest extends TestCase
             ['campo_de_tipo_select', Tipos::TIPO_SELECT, Campo\TipoSelect::class],
             ['campo_de_tipo_string', Tipos::TIPO_STRING, Campo\TipoString::class],
             ['campo_de_tipo_tabla',  Tipos::TIPO_TABLA,  Campo\TipoTabla::class],
+            ['campo_de_tipo_bool',   Tipos::TIPO_BOOL,   Campo\TipoBool::class],
         ];
     }
 

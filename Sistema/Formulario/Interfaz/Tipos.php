@@ -38,5 +38,10 @@ interface Tipos
      * @var int Define que el tipo del campo debe ser un **select**.
      */
     public const TIPO_SELECT = 5;
+
+    /**
+     * @var int Define que el tipo del campo debe ser un **bool**.
+     */
+    public const TIPO_BOOL = 6;
 }
 
