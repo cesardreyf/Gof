@@ -30,7 +30,18 @@ class TipoTablaTest extends TestCase
     /**
      * @dataProvider dataNombreDeColumnasYTipos
      */
-    public function testAgregarYObtenerColumnasYSusTipos(array $columnasYTipos): void
+    public function testMetodoColumnaReservaUnCampoYDevuelveUnaInstanciaDeLaMisma(array $columnasYTipos): void
+    {
+        $tabla = new TipoTabla('');
+        foreach( $columnasYTipos as $nombreDeLaColumna => $tipoDeDato ) {
+            $this->assertInstanceOf(Campo::class, $tabla->columna($nombreDeLaColumna, $tipoDeDato));
+        }
+    }
+
+    /**
+     * @dataProvider dataNombreDeColumnasYTipos
+     */
+    public function testAgregarColumnasYObtenerListaDeCampos(array $columnasYTipos): void
     {
         $tabla = new TipoTabla('');
         $this->assertEmpty($tabla->obtenerColumnas());
@@ -39,13 +50,15 @@ class TipoTablaTest extends TestCase
             $tabla->columna($nombreDeLaColumna, $tipo);
         }
 
-        $this->assertSame($columnasYTipos, $tabla->obtenerColumnas());
+        $columnasDeLaTabla = $tabla->obtenerColumnas();
+        foreach( $columnasYTipos as $nombreDeLaColumna => $tipo ) {
+            $this->assertSame($tipo, $columnasDeLaTabla[$nombreDeLaColumna]->tipo());
+        }
     }
 
     public function dataNombreDeColumnasYTipos(): array
     {
         return [
-            [[]],
             [[
                 'columna_de_tipo_int' => Tipos::TIPO_INT,
                 'columna_de_tipo_array' => Tipos::TIPO_ARRAY,
@@ -54,28 +67,24 @@ class TipoTablaTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataNombreDeColumnaConTipoViejaYNueva
-     */
-    public function testReagregarUnCampoReemplazaElTipo(string $columna, int $tipoVieja, int $tipoNueva): void
+    public function testVolverACrearUnaColumnaSoloObtieneLaYaCreada(): void
     {
         $tabla = new TipoTabla('');
-        $this->assertEmpty($tabla->obtenerColumnas());
+        $nombreDeLaColumna = 'campo_de_tipo_int';
 
-        $tabla->columna($columna, $tipoVieja);
-        $this->assertSame([$columna => $tipoVieja], $tabla->obtenerColumnas());
+        $tipoDeDatoTenidoEnCuenta = Tipos::TIPO_INT;
+        $tipoDeDatoIgnorado = Tipos::TIPO_ARRAY;
 
-        $tabla->columna($columna, $tipoNueva);
-        $this->assertNotSame($tipoVieja, $tipoNueva);
-        $this->assertCount(1, $tabla->obtenerColumnas());
-        $this->assertSame([$columna => $tipoNueva], $tabla->obtenerColumnas());
-    }
+        $columnaCreada = $tabla->columna($nombreDeLaColumna, $tipoDeDatoTenidoEnCuenta);
+        $this->assertInstanceOf(Campo\TipoInt::class, $columnaCreada);
+        $this->assertSame(Tipos::TIPO_INT, $columnaCreada->tipo());
 
-    public function dataNombreDeColumnaConTipoViejaYNueva(): array
-    {
-        return [
-            ['columna_que_cambia_de_tipo_int_a_tipo_string', Tipos::TIPO_INT, Tipos::TIPO_STRING],
-        ];
+        $columnaCreada->valor = PHP_INT_MAX;
+        $columnaObtenida = $tabla->columna($nombreDeLaColumna, $tipoDeDatoIgnorado);
+
+        $this->assertSame($columnaCreada, $columnaObtenida);
+        $this->assertNotSame($tipoDeDatoIgnorado, $columnaObtenida->tipo());
+        $this->assertSame(PHP_INT_MAX, $columnaObtenida->valor());
     }
 
     /**
