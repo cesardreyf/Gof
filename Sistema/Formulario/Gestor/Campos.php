@@ -11,6 +11,7 @@ use Gof\Sistema\Formulario\Interfaz\Configuracion;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
 use Gof\Sistema\Formulario\Validar\ValidarExistencia;
+use Gof\Sistema\Formulario\Gestor\Campos\Validar;
 
 /**
  * Gestor de campos
@@ -95,50 +96,13 @@ class Campos implements ICampos
     public function validar(): bool
     {
         $todosLosCamposSonValidos = true;
-        $limpiarErroresDeLosCamposRevalidados = $this->sistema->configuracion->activados(Configuracion::LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS);
 
-        array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos, $limpiarErroresDeLosCamposRevalidados) {
-            if( $this->sistema->configuracion->activados(Configuracion::VALIDAR_EXISTENCIA_SIEMPRE) ) {
-                $siElCampo = new ValidarExistencia($campo, $this->sistema->datos);
-
-                if( !$siElCampo->existe() ) {
-                    $todosLosCamposSonValidos = false;
-                    return;
-                }
-            }
-
-            if( $this->sistema->configuracion->activados(Configuracion::DEFINIR_VALORES_AL_VALIDAR) ) {
-                $campo->valor = $this->sistema->datos[$campo->clave()] ?? null;
-            }
-
-            if( !$campo->validar() ) {
-                $error = $campo->error()->codigo();
-
-                if( $error === Errores::ERROR_CAMPO_INEXISTENTE || $error === Errores::ERROR_CAMPO_VACIO ) {
-                    if( $campo->obligatorio() === false ) {
-                        if( $this->sistema->configuracion->activados(Configuracion::LIMPIAR_ERRORES_CAMPOS_OPCIONALES) ) {
-                            $campo->error()->limpiar();
-                        }
-                        return;
-                    }
-                }
-
-                $todosLosCamposSonValidos = false;
-                return;
-            }
-
-            $elCampoEsValido = true;
-            foreach( $campo->vextra() as $validacionesExtra ) {
-                if( !$validacionesExtra->validar() ) {
-                    $todosLosCamposSonValidos = false;
-                    $elCampoEsValido = false;
-                    break;
-                }
-            }
-
-            if( $elCampoEsValido && $limpiarErroresDeLosCamposRevalidados ) {
-                $campo->error()->limpiar();
-            }
+        array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos) {
+            $validacion = new Validar($campo, $todosLosCamposSonValidos, $this->sistema);
+            $validacion->validarExistencia();
+            $validacion->establecerValor();
+            $validacion->validarCampo();
+            $validacion->validarExtras();
         });
 
         if( $todosLosCamposSonValidos === false ) {
