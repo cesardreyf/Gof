@@ -98,6 +98,19 @@ class Campos implements ICampos
         $limpiarErroresDeLosCamposRevalidados = $this->sistema->configuracion->activados(Configuracion::LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS);
 
         array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos, $limpiarErroresDeLosCamposRevalidados) {
+            if( $this->sistema->configuracion->activados(Configuracion::VALIDAR_EXISTENCIA_SIEMPRE) ) {
+                $siElCampo = new ValidarExistencia($campo, $this->sistema->datos);
+
+                if( !$siElCampo->existe() ) {
+                    $todosLosCamposSonValidos = false;
+                    return;
+                }
+            }
+
+            if( $this->sistema->configuracion->activados(Configuracion::DEFINIR_VALORES_AL_VALIDAR) ) {
+                $campo->valor = $this->sistema->datos[$campo->clave()] ?? null;
+            }
+
             if( !$campo->validar() ) {
                 $error = $campo->error()->codigo();
 

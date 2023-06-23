@@ -38,4 +38,25 @@ interface Configuracion
      * @var int
      */
     public const LIMPIAR_ERRORES_DE_CAMPOS_VALIDOS = 4;
+
+    /**
+     * Valida la existencia siempre
+     *
+     * Valida la existencia de los campos siempre que se llame a la función
+     * validar del gestor de campos.
+     *
+     * @var int
+     */
+    public const VALIDAR_EXISTENCIA_SIEMPRE = 8;
+
+    /**
+     * Define el valor de los campos al validarlos
+     *
+     * Al validar los campos vuelve a definir su valor con los datos del formulario.
+     *
+     * @var int
+     *
+     * @see GestorDeCampos::validar()
+     */
+    public const DEFINIR_VALORES_AL_VALIDAR = 16;
 }
