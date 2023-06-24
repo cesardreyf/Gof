@@ -98,11 +98,7 @@ class Campos implements ICampos
         $todosLosCamposSonValidos = true;
 
         array_walk($this->sistema->campos, function(Campo $campo) use (&$todosLosCamposSonValidos) {
-            $validacion = new Validar($campo, $todosLosCamposSonValidos, $this->sistema);
-            $validacion->validarExistencia();
-            $validacion->establecerValor();
-            $validacion->validarCampo();
-            $validacion->validarExtras();
+            new Validar($campo, $todosLosCamposSonValidos, $this->sistema);
         });
 
         if( $todosLosCamposSonValidos === false ) {
