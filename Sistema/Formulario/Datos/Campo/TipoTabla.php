@@ -4,6 +4,8 @@ namespace Gof\Sistema\Formulario\Datos\Campo;
 
 use Gof\Sistema\Formulario\Datos\Campo;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
+use Gof\Sistema\Formulario\Gestor\Campos\ValidarCampo;
+use Gof\Sistema\Formulario\Gestor\Campos\ValidarExtras;
 use Gof\Sistema\Formulario\Interfaz\Errores;
 use Gof\Sistema\Formulario\Interfaz\ErroresMensaje;
 use Gof\Sistema\Formulario\Interfaz\Tipos;
@@ -121,9 +123,15 @@ class TipoTabla extends Campo
                 return true;
             }
 
-            $columnasInvalidas = array_filter($this->columnas, function(Campo $campo, string $columna) use ($fila) {
+            $validarCampo = new ValidarCampo();
+            $columnasInvalidas = array_filter($this->columnas, function(Campo $campo, string $columna) use ($fila, $validarCampo) {
                 $campo->valor = $fila[$columna];
-                return !$campo->validar();
+
+                if( $validarCampo->validar($campo) && ValidarExtras::validar($campo) ) {
+                    return false;
+                }
+
+                return true;
             }, ARRAY_FILTER_USE_BOTH);
 
             if( empty($columnasInvalidas) === false ) {
