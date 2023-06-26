@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Formulario\Datos;
 
 use Gof\Datos\Errores\Mensajes\Error;
+use Gof\Interfaz\Errores\Mensajes\Error as IError;
 use Gof\Sistema\Formulario\Interfaz\Campo as ICampo;
 use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
 
@@ -31,9 +32,9 @@ class Campo implements ICampo
     public int $tipo;
 
     /**
-     * @var Error Almacena el o los errores asociados al campo.
+     * @var IError Almacena el o los errores asociados al campo.
      */
-    public Error $error;
+    public IError $error;
 
     /**
      * @var mixed Valor del campo
@@ -102,7 +103,7 @@ class Campo implements ICampo
      *
      * @return Error Devuelve una instancia de la lista interna de errores.
      */
-    public function error(): Error
+    public function error(): IError
     {
         return $this->error;
     }
