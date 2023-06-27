@@ -2,7 +2,7 @@
 
 namespace Gof\Sistema\Formulario\Interfaz;
 
-use Gof\Interfaz\Errores\Mensajes\Error;
+use Gof\Sistema\Formulario\Interfaz\Campo\Error;
 use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
 
 /**

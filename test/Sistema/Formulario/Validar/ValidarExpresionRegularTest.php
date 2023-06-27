@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Sistema\Formulario\Validar;
 
-use Gof\Interfaz\Errores\Mensajes\Error;
+use Gof\Sistema\Formulario\Datos\Campo\Error;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
 use Gof\Sistema\Formulario\Interfaz\Errores;

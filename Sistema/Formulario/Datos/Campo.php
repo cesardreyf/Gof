@@ -2,9 +2,9 @@
 
 namespace Gof\Sistema\Formulario\Datos;
 
-use Gof\Datos\Errores\Mensajes\Error;
-use Gof\Interfaz\Errores\Mensajes\Error as IError;
+use Gof\Sistema\Formulario\Datos\Campo\Error;
 use Gof\Sistema\Formulario\Interfaz\Campo as ICampo;
+use Gof\Sistema\Formulario\Interfaz\Campo\Error as IError;
 use Gof\Sistema\Formulario\Interfaz\Campo\Validable;
 
 /**

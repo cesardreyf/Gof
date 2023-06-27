@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Sistema\Formulario\Mediador\Campo;
 
-use Gof\Datos\Errores\Mensajes\Error as ErrorDeCampo;
+use Gof\Sistema\Formulario\Datos\Campo\Error as ErrorDeCampo;
 use Gof\Sistema\Formulario\Interfaz\Campo;
 use Gof\Sistema\Formulario\Mediador\Campo\Error;
 use PHPUnit\Framework\TestCase;
