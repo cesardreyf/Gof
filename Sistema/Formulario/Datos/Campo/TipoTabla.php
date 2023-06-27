@@ -109,7 +109,11 @@ class TipoTabla extends Campo
             return false;
         }
 
-        $filasQueNoSonValidas = array_filter($this->valor(), function($fila, $nFila) {
+        $columnasObligatorias = array_filter($this->columnas, function(Campo $campo) {
+            return $campo->obligatorio();
+        });
+
+        $filasQueNoSonValidas = array_filter($this->valor(), function($fila, $nFila) use ($columnasObligatorias) {
             if( is_array($fila) === false ) {
                 $this->reportarError($nFila, self::FILAS_INVALIDAS, Errores::ERROR_FILAS_INVALIDAS);
                 return true;
@@ -120,7 +124,7 @@ class TipoTabla extends Campo
                 return false;
             }
 
-            if( empty(array_diff_key($this->columnas, $fila)) === false ) {
+            if( empty(array_diff_key($columnasObligatorias, $fila)) === false ) {
                 $this->reportarError($nFila, self::COLUMNAS_FALTAN, Errores::ERROR_COLUMNAS_FALTAN);
                 return true;
             }
