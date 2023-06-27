@@ -149,10 +149,9 @@ class TipoTabla extends Campo
                     continue;
                 }
 
-                $this->reportarError($nFila, $campo->error()->mensaje(), $campo->error()->codigo());
+                $this->reportarError($nFila, $campo->error()->mensaje(), $campo->error()->codigo(), $nombreDeLaColumna);
                 $campo->error()->limpiar();
                 $columnasInvalidas = true;
-                break;
             }
 
             return $columnasInvalidas;
@@ -161,11 +160,21 @@ class TipoTabla extends Campo
         return empty($filasQueNoSonValidas);
     }
 
-    private function reportarError(string $clave, string $mensaje, int $codigo)
+    /**
+     * Agrega un error a la lista de errores del campo
+     *
+     * @param string $clave     Clave al que se asociará el error.
+     * @param string $mensaje   Mensaje de error.
+     * @param int    $codigo    Código de error.
+     * @param string ...$claves
+     *
+     * @access private
+     */
+    private function reportarError(string $clave, string $mensaje, int $codigo, string ...$claves)
     {
-        $this->error->clave($clave);
-        $this->error->mensaje($mensaje);
+        $this->error->clave($clave, ...$claves);
         $this->error->codigo($codigo);
+        $this->error->mensaje($mensaje);
     }
 
 }
