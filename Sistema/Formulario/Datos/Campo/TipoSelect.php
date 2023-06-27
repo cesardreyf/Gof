@@ -92,7 +92,7 @@ class TipoSelect extends Campo
             return false;
         }
 
-        if( empty($this->valor()) && $this->valor() !== '0' ) {
+        if( $this->valor() === '' && !$this->opcionEsValida('') ) {
             Error::reportar($this, ErroresMensaje::CAMPO_VACIO, Errores::ERROR_CAMPO_VACIO);
             return false;
         }

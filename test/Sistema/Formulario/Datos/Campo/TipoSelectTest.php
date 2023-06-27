@@ -122,6 +122,14 @@ class TipoSelectTest extends TestCase
         $this->assertSame(Errores::ERROR_CAMPO_VACIO, $this->select->error()->codigo());
     }
 
+    public function testValidarDevuelveTrueSiElCampoEstaVacioYExisteUnaColumnaVacia(): void
+    {
+        $this->select->opcion('');
+        $this->select->valor = '';
+        $this->assertTrue($this->select->validar());
+        $this->assertFalse($this->select->error()->hay());
+    }
+
     /**
      * @dataProvider dataValorYOpcionesValidas
      */
