@@ -231,8 +231,8 @@ class TipoTablaTest extends TestCase
                 [
                     'columnas_de_tipo_int' => Tipos::TIPO_INT
                 ],
-                Errores::ERROR_COLUMNAS_INVALIDAS,
-                TipoTabla::COLUMNAS_INVALIDAS
+                Errores::ERROR_NO_ES_INT,
+                ErroresMensaje::NO_ES_INT
             ],
         ];
     }

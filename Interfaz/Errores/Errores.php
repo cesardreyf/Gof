@@ -2,12 +2,14 @@
 
 namespace Gof\Interfaz\Errores;
 
+use Gof\Interfaz\Lista;
+
 /**
  * Interfaz para clases que representen una pila de mensajes de errores
  *
  * @package Gof\Interfaz\Errores
  */
-interface Errores
+interface Errores extends Lista
 {
     /**
      * Valida si existen errores o no
@@ -22,13 +24,6 @@ interface Errores
      * @return int Devuelve el útlimo error
      */
     public function error(): int;
-
-    /**
-     * Obtiene el array con todos los errores
-     *
-     * @return array Devuelve una lista de todos los errores registrados
-     */
-    public function lista(): array;
 
     /**
      * Limpia los errores registrados

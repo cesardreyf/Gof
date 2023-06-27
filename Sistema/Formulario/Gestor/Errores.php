@@ -74,11 +74,13 @@ class Errores implements ErroresInterfaz
         if( $this->sistema->actualizarCache ) {
             $this->sistema->actualizarCache = false;
 
-            $this->errores = array_map(function(Campo $campo) {
-                return $campo->error()->mensaje();
-            }, array_filter($this->sistema->campos, function(Campo $campo) {
+            $camposConErrores = array_filter($this->sistema->campos, function(Campo $campo) {
                 return $campo->error()->hay();
-            }));
+            });
+
+            $this->errores = array_map(function(Campo $campo) {
+                return $campo->error()->obtener();
+            }, $camposConErrores);
         }
 
         return $this->errores;

@@ -2,27 +2,15 @@
 
 namespace Gof\Interfaz\Errores\Mensajes;
 
-use Gof\Interfaz\Lista;
+use Gof\Interfaz\Errores\Errores;
 
 /**
  * Interfaz para mensajes de errores
  *
  * @package Gof\Interfaz\Errores\Mensajes
  */
-interface Error extends Lista
+interface Error extends Errores
 {
-    /**
-     * Limpia los errores
-     */
-    public function limpiar();
-
-    /**
-     * Indica si hay errores
-     *
-     * @return bool Devuelve **true** si existen errores o **false** de lo contrario.
-     */
-    public function hay(): bool;
-
     /**
      * Obtiene o define el código de error
      *

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Test\Sistema\Formulario\Gestor;
 
-use Gof\Interfaz\Errores\Mensajes\Error;
 use Gof\Sistema\Formulario\Contratos\Errores as ErroresInterfaz;
+use Gof\Sistema\Formulario\Datos\Campo\Error;
 use Gof\Sistema\Formulario\Gestor\Errores;
 use Gof\Sistema\Formulario\Gestor\Sistema;
 use Gof\Sistema\Formulario\Interfaz\Campo;
@@ -86,7 +86,7 @@ class ErroresTest extends TestCase
 
         $error
             ->expects($this->any())
-            ->method('mensaje')
+            ->method('obtener')
             ->will(
                 $this->onConsecutiveCalls(
                     self::ERROR_MENSAJE_1,

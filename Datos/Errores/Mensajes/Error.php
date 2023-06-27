@@ -61,6 +61,18 @@ class Error implements IError
     }
 
     /**
+     * Alias de codigo()
+     *
+     * @return int
+     *
+     * @see Error::codigo()
+     */
+    public function error(): int
+    {
+        return $this->codigo();
+    }
+
+    /**
      * Obtiene último mensaje o define uno nuevo
      *
      * Si se pasa un mensaje como argumento se agregará un nuevo mensaje a la

@@ -3,6 +3,7 @@
 namespace Gof\Sistema\Formulario\Datos\Campo;
 
 use Gof\Sistema\Formulario\Datos\Campo;
+use Gof\Sistema\Formulario\Datos\Campo\TipoTabla\ErrorAsociativo;
 use Gof\Sistema\Formulario\Gestor\Asignar\AsignarCampo;
 use Gof\Sistema\Formulario\Gestor\Campos\ValidarCampo;
 use Gof\Sistema\Formulario\Gestor\Campos\ValidarExtras;
@@ -52,6 +53,7 @@ class TipoTabla extends Campo
     public function __construct(string $clave)
     {
         parent::__construct($clave, Tipos::TIPO_TABLA);
+        $this->error = new ErrorAsociativo();
     }
 
     /**
@@ -107,9 +109,13 @@ class TipoTabla extends Campo
             return false;
         }
 
-        $filasQueNoSonValidas = array_filter($this->valor(), function($fila) {
+        $columnasObligatorias = array_filter($this->columnas, function(Campo $campo) {
+            return $campo->obligatorio();
+        });
+
+        $filasQueNoSonValidas = array_filter($this->valor(), function($fila, $nFila) use ($columnasObligatorias) {
             if( is_array($fila) === false ) {
-                Error::reportar($this, self::FILAS_INVALIDAS, Errores::ERROR_FILAS_INVALIDAS);
+                $this->reportarError($nFila, self::FILAS_INVALIDAS, Errores::ERROR_FILAS_INVALIDAS);
                 return true;
             }
 
@@ -118,31 +124,57 @@ class TipoTabla extends Campo
                 return false;
             }
 
-            if( empty(array_diff_key($this->columnas, $fila)) === false ) {
-                Error::reportar($this, self::COLUMNAS_FALTAN, Errores::ERROR_COLUMNAS_FALTAN);
+            if( empty(array_diff_key($columnasObligatorias, $fila)) === false ) {
+                $this->reportarError($nFila, self::COLUMNAS_FALTAN, Errores::ERROR_COLUMNAS_FALTAN);
                 return true;
             }
 
+            $columnasInvalidas = false;
             $validarCampo = new ValidarCampo();
-            $columnasInvalidas = array_filter($this->columnas, function(Campo $campo, string $columna) use ($fila, $validarCampo) {
-                $campo->valor = $fila[$columna];
+
+            foreach( $this->columnas as $nombreDeLaColumna => $campo ) {
+                $campo->valor = $fila[$nombreDeLaColumna];
 
                 if( $validarCampo->validar($campo) && ValidarExtras::validar($campo) ) {
-                    return false;
+                    continue;
                 }
 
-                return true;
-            }, ARRAY_FILTER_USE_BOTH);
+                $codigoDelError = $campo->error()->codigo();
 
-            if( empty($columnasInvalidas) === false ) {
-                Error::reportar($this, self::COLUMNAS_INVALIDAS, Errores::ERROR_COLUMNAS_INVALIDAS);
-                return true;
+                // Si el campo es opcional y el error es de tipo campo vacío o
+                // campo inexistente ignora el error y continúa con las
+                // siguientes validaciones
+                if( !$campo->obligatorio() && ($codigoDelError === Errores::ERROR_CAMPO_VACIO || $codigoDelError === Errores::ERROR_CAMPO_INEXISTENTE) ) {
+                    $campo->error()->limpiar();
+                    continue;
+                }
+
+                $this->reportarError($nFila, $campo->error()->mensaje(), $campo->error()->codigo(), $nombreDeLaColumna);
+                $campo->error()->limpiar();
+                $columnasInvalidas = true;
             }
 
-            return false;
-        });
+            return $columnasInvalidas;
+        }, ARRAY_FILTER_USE_BOTH);
 
         return empty($filasQueNoSonValidas);
+    }
+
+    /**
+     * Agrega un error a la lista de errores del campo
+     *
+     * @param string $clave     Clave al que se asociará el error.
+     * @param string $mensaje   Mensaje de error.
+     * @param int    $codigo    Código de error.
+     * @param string ...$claves
+     *
+     * @access private
+     */
+    private function reportarError(string $clave, string $mensaje, int $codigo, string ...$claves)
+    {
+        $this->error->clave($clave, ...$claves);
+        $this->error->codigo($codigo);
+        $this->error->mensaje($mensaje);
     }
 
 }
