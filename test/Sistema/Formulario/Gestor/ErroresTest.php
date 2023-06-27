@@ -86,7 +86,7 @@ class ErroresTest extends TestCase
 
         $error
             ->expects($this->any())
-            ->method('mensaje')
+            ->method('obtener')
             ->will(
                 $this->onConsecutiveCalls(
                     self::ERROR_MENSAJE_1,

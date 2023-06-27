@@ -79,7 +79,7 @@ class Errores implements ErroresInterfaz
             });
 
             $this->errores = array_map(function(Campo $campo) {
-                return $campo->error()->mensaje();
+                return $campo->error()->obtener();
             }, $camposConErrores);
         }
 
