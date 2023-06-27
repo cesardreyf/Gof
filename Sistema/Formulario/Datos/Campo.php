@@ -63,7 +63,7 @@ class Campo implements ICampo
         $this->tipo  = $tipo;
         $this->clave = $clave;
         $this->error = new Error();
-        $this->obligatorio = false;
+        $this->obligatorio = true;
     }
 
     /**
