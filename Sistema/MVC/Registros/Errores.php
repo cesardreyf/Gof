@@ -4,6 +4,7 @@ namespace Gof\Sistema\MVC\Registros;
 
 use Gof\Gestor\Propiedades\Propiedad;
 use Gof\Sistema\MVC\Registros\Datos\Error;
+use Gof\Sistema\MVC\Registros\Errores\Simple;
 use Gof\Sistema\MVC\Registros\Interfaz\ErrorGuardable;
 use Gof\Sistema\MVC\Registros\Interfaz\ErrorImprimible;
 use Gof\Sistema\MVC\Registros\Modulo\Operacion;
@@ -21,6 +22,10 @@ use Gof\Sistema\MVC\Registros\Modulo\Operacion;
  */
 class Errores extends Operacion
 {
+    /**
+     * @var ?Simple
+     */
+    private ?Simple $simplificacion = null;
 
     /**
      * Constructor
@@ -84,6 +89,26 @@ class Errores extends Operacion
     public function obtenerUltimoError(): array
     {
         return error_get_last() ?? [];
+    }
+
+    /**
+     * Simplifica la gestión de errores
+     *
+     * Agrega el gestor de guardado e impresión simple para almacenar los
+     * errores en archivos e imprimir los errores con **echo**.
+     *
+     * Si no se llama a esta función no se agregará ningún gestor y habrá que
+     * hacerlo manualmente.
+     *
+     * @return Simple
+     */
+    public function simple(): Simple
+    {
+        if( is_null($this->simplificacion) ) {
+            $this->simplificacion = new Simple($this->guardado(), $this->impresion());
+        }
+
+        return $this->simplificacion;
     }
 
 }

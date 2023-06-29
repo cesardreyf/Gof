@@ -3,6 +3,7 @@
 namespace Gof\Sistema\MVC\Registros;
 
 use Gof\Gestor\Propiedades\Propiedad;
+use Gof\Sistema\MVC\Registros\Excepciones\Simple;
 use Gof\Sistema\MVC\Registros\Interfaz\ExcepcionGuardable;
 use Gof\Sistema\MVC\Registros\Interfaz\ExcepcionImprimible;
 use Gof\Sistema\MVC\Registros\Modulo\Operacion;
@@ -17,6 +18,7 @@ use Throwable;
  */
 class Excepciones extends Operacion
 {
+    private ?Simple $simplificacion = null;
 
     /**
      * Constructor
@@ -56,6 +58,26 @@ class Excepciones extends Operacion
                 $impresion->imprimir($excepcion);
             });
         }
+    }
+
+    /**
+     * Simplifica la gestión de excepciones
+     *
+     * Agrega el gestor de guardado e impresión simple para almacenar las
+     * excepciones en archivos e imprimir los excepciones con **echo**.
+     *
+     * Si no se llama a esta función no se agregará ningún gestor y habrá que
+     * hacerlo manualmente.
+     *
+     * @return Simple
+     */
+    public function simple(): Simple
+    {
+        if( is_null($this->simplificacion) ) {
+            $this->simplificacion = new Simple($this->guardado(), $this->impresion());
+        }
+
+        return $this->simplificacion;
     }
 
 }
