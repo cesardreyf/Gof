@@ -8,6 +8,7 @@ use Gof\Interfaz\Lista\Datos;
 use Gof\Sistema\MVC\Registros\Datos\Error;
 use Gof\Sistema\MVC\Registros\Errores;
 use Gof\Sistema\MVC\Registros\Interfaz\ErrorGuardable;
+use Gof\Sistema\MVC\Registros\Interfaz\ErrorImprimible;
 use Gof\Sistema\MVC\Registros\Modulo\Operacion;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +26,7 @@ class ErroresTest extends TestCase
         $this->assertInstanceOf(Operacion::class, $this->errores);
     }
 
-    public function testRegistrarRecorreLaListaDeGestoresDeGuardadoYLesPasaElError(): void
+    public function testRegistrarRecorreLaListaDeGestoresDeGuardadoEImpresionYLesPasaElError(): void
     {
         // Caótico, pero funciona...
         $registroDeErrores = $this->getMockBuilder(Errores::class)
@@ -57,6 +58,12 @@ class ErroresTest extends TestCase
             ->method('guardar')
             ->with($datoError);
 
+        $gestorDeImpresion = $this->createMock(ErrorImprimible::class);
+        $gestorDeImpresion
+            ->expects($this->once())
+            ->method('imprimir')
+            ->with($datoError);
+
         $gestoresDeGuardado = $this->createMock(Datos::class);
         $gestoresDeGuardado
             ->expects($this->once())
@@ -65,9 +72,21 @@ class ErroresTest extends TestCase
                 [$gestorDeGuardado]
             );
 
+        $gestoresDeImpresion = $this->createMock(Datos::class);
+        $gestoresDeImpresion
+            ->expects($this->once())
+            ->method('lista')
+            ->willReturn(
+                [$gestorDeImpresion]
+            );
+
         $registroDeErrores
             ->method('guardado')
             ->willReturn($gestoresDeGuardado);
+
+        $registroDeErrores
+            ->method('impresion')
+            ->willReturn($gestoresDeImpresion);
 
         $registroDeErrores->registrar();
     }

@@ -14,8 +14,11 @@ class OperacionTest extends TestCase
     public function testMetodoGuardadoDevuelveLoPasadoPorElConstructor(): void
     {
         $listaDeGestoresDeGuardado = $this->createMock(Datos::class);
-        $operacion = new Operacion($listaDeGestoresDeGuardado);
+        $listaDeGestoresDeImpresion = $this->createMock(Datos::class);
+
+        $operacion = new Operacion($listaDeGestoresDeGuardado, $listaDeGestoresDeImpresion);
         $this->assertSame($listaDeGestoresDeGuardado, $operacion->guardado());
+        $this->assertSame($listaDeGestoresDeImpresion, $operacion->impresion());
     }
 
 }

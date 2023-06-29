@@ -5,6 +5,7 @@ namespace Gof\Sistema\MVC\Registros;
 use Gof\Gestor\Propiedades\Propiedad;
 use Gof\Sistema\MVC\Registros\Datos\Error;
 use Gof\Sistema\MVC\Registros\Interfaz\ErrorGuardable;
+use Gof\Sistema\MVC\Registros\Interfaz\ErrorImprimible;
 use Gof\Sistema\MVC\Registros\Modulo\Operacion;
 
 /**
@@ -27,7 +28,8 @@ class Errores extends Operacion
     public function __construct()
     {
         parent::__construct(
-            new Propiedad(ErrorGuardable::class)
+            new Propiedad(ErrorGuardable::class), 
+            new Propiedad(ErrorImprimible::class)
         );
     }
 
@@ -54,10 +56,15 @@ class Errores extends Operacion
             $ultimoError['line']
         );
 
-        $gestoresDeGuardado = $this->guardado()->lista();
+        $gestoresDeGuardado  = $this->guardado()->lista();
+        $gestoresDeImpresion = $this->impresion()->lista();
 
         array_walk($gestoresDeGuardado, function(ErrorGuardable $error) use ($ultimoError) {
             $error->guardar($ultimoError);
+        });
+
+        array_walk($gestoresDeImpresion, function(ErrorImprimible $error) use ($ultimoError) {
+            $error->imprimir($ultimoError);
         });
     }
 
