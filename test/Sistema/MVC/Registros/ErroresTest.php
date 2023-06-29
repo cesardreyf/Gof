@@ -88,6 +88,8 @@ class ErroresTest extends TestCase
             ->method('impresion')
             ->willReturn($gestoresDeImpresion);
 
+        $registroDeErrores->guardar = true;
+        $registroDeErrores->imprimir = true;
         $registroDeErrores->registrar();
     }
 

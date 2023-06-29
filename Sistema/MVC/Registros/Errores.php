@@ -56,16 +56,21 @@ class Errores extends Operacion
             $ultimoError['line']
         );
 
-        $gestoresDeGuardado  = $this->guardado()->lista();
-        $gestoresDeImpresion = $this->impresion()->lista();
+        if( $this->guardar ) {
+            $gestoresDeGuardado  = $this->guardado()->lista();
 
-        array_walk($gestoresDeGuardado, function(ErrorGuardable $error) use ($ultimoError) {
-            $error->guardar($ultimoError);
-        });
+            array_walk($gestoresDeGuardado, function(ErrorGuardable $error) use ($ultimoError) {
+                $error->guardar($ultimoError);
+            });
+        }
 
-        array_walk($gestoresDeImpresion, function(ErrorImprimible $error) use ($ultimoError) {
-            $error->imprimir($ultimoError);
-        });
+        if( $this->imprimir ) {
+            $gestoresDeImpresion = $this->impresion()->lista();
+
+            array_walk($gestoresDeImpresion, function(ErrorImprimible $error) use ($ultimoError) {
+                $error->imprimir($ultimoError);
+            });
+        }
     }
 
     /**

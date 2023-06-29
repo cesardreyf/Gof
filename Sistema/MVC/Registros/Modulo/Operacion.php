@@ -22,6 +22,20 @@ class Operacion
     private Datos $impresion;
 
     /**
+     * Establece si guardar los errores o no
+     *
+     * @var bool
+     */
+    public bool $guardar = false;
+
+    /**
+     * Establece si imprimir los errores o no
+     *
+     * @var bool
+     */
+    public bool $imprimir = false;
+
+    /**
      * Constructor
      *
      * @param Datos Lista de gestores encargados de guardar el error
