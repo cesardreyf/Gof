@@ -2,8 +2,6 @@
 
 namespace Gof\Sistema\MVC\Registros;
 
-use Gof\Sistema\MVC\Registros\Modulo\Operacion;
-
 /**
  * Gestor de registros de errores
  *
@@ -19,11 +17,17 @@ class Registros
     private Errores $errores;
 
     /**
+     * @var Excepciones Gestor de excepciones
+     */
+    private Excepciones $excepciones;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->errores = new Errores();
+        $this->excepciones = new Excepciones();
     }
 
     /**
@@ -34,6 +38,16 @@ class Registros
     public function errores(): Errores
     {
         return $this->errores;
+    }
+
+    /**
+     * Obtiene el gestor de errores
+     *
+     * @return Excepciones
+     */
+    public function excepciones(): Excepciones
+    {
+        return $this->excepciones;
     }
 
 }
