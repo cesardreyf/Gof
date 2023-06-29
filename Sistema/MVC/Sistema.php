@@ -2,6 +2,9 @@
 
 namespace Gof\Sistema\MVC;
 
+use Gof\Gestor\Autoload\Autoload;
+use Gof\Gestor\Autoload\Cargador\Archivos;
+use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
 use Gof\Sistema\MVC\Registros\Registros;
 
 /**
@@ -20,11 +23,23 @@ class Sistema
     private Registros $registros;
 
     /**
+     * @var Autoload Instancia del gestor de autoload
+     */
+    private Autoload $autoload;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->registros = new Registros();
+
+        // Autoload
+        $cargadorDeArchivos = new Archivos();
+        $cargadorDeArchivos->configuracion()->activar(Archivos::INCLUIR_EXTENSION);
+
+        $this->autoload = new Autoload($cargadorDeArchivos, new FiltroPSR4());
+        $this->autoload->registrar();
     }
 
     /**
@@ -35,6 +50,16 @@ class Sistema
     public function registros(): Registros
     {
         return $this->registros;
+    }
+
+    /**
+     * Obtiene el gestor de autoload
+     *
+     * @return Autoload
+     */
+    public function autoload(): Autoload
+    {
+        return $this->autoload;
     }
 
 }
