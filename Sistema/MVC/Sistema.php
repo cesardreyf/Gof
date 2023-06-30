@@ -5,7 +5,9 @@ namespace Gof\Sistema\MVC;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Cargador\Archivos;
 use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
+use Gof\Sistema\MVC\Datos\Info;
 use Gof\Sistema\MVC\Registros\Registros;
+use Gof\Sistema\MVC\Rutas\Rutas;
 
 /**
  * Sistema MVC
@@ -28,18 +30,35 @@ class Sistema
     private Autoload $autoload;
 
     /**
+     * @var Rutas Instancia del gestor de rutas
+     */
+    private Rutas $rutas;
+
+    /**
+     * @var Info Datos importantes
+     */
+    private Info $info;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        // Gestor de registros
         $this->registros = new Registros();
 
-        // Autoload
+        // Gestor de autoload
         $cargadorDeArchivos = new Archivos();
         $cargadorDeArchivos->configuracion()->activar(Archivos::INCLUIR_EXTENSION);
 
         $this->autoload = new Autoload($cargadorDeArchivos, new FiltroPSR4());
         $this->autoload->registrar();
+
+        // Datos compartidos
+        $this->info = new Info();
+
+        // Gestor de rutas
+        $this->rutas = new Rutas($this->info);
     }
 
     /**
@@ -60,6 +79,16 @@ class Sistema
     public function autoload(): Autoload
     {
         return $this->autoload;
+    }
+
+    /**
+     * Obtiene el gestor de rutas
+     *
+     * @return Rutas
+     */
+    public function rutas(): Rutas
+    {
+        return $this->rutas;
     }
 
 }

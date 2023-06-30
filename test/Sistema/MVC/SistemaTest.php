@@ -6,6 +6,7 @@ namespace Test\Sistema\MVC;
 
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Registros\Registros;
+use Gof\Sistema\MVC\Rutas\Rutas;
 use Gof\Sistema\MVC\Sistema;
 use PHPUnit\Framework\TestCase;
 
@@ -26,6 +27,11 @@ class SistemaTest extends TestCase
     public function testMetodoAutoloadDevuelveUnaInstanciaDelGestorDeAutoload(): void
     {
         $this->assertInstanceOf(Autoload::class, $this->sistema->autoload());
+    }
+
+    public function testMetodoRutasDevuelveUnaInstanciaDelGestorDeRutas(): void
+    {
+        $this->assertInstanceOf(Rutas::class, $this->sistema->rutas());
     }
 
 }
