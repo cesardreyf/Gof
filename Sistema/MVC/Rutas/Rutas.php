@@ -5,6 +5,7 @@ namespace Gof\Sistema\MVC\Rutas;
 use Exception;
 use Gof\Interfaz\Enrutador\Enrutador;
 use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Rutas\Nodos\Gestor as GestorPorNodos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
 
 /**
@@ -20,9 +21,9 @@ class Rutas
     private ?Enrutador $enrutador = null;
 
     /**
-     * @var ?GestorSimple Gestor por defecto
+     * @var mixed Simplificador de gestor por defecto
      */
-    private ?GestorSimple $gpd = null;
+    private mixed $gpd = null;
 
     /**
      * @var Info
@@ -51,15 +52,13 @@ class Rutas
         return is_null($enrutador) ? $this->enrutador : $this->enrutador = $enrutador;
     }
 
-    public function simple(): GestorSimple
-    {
-        if( is_null($this->gpd) ) {
-            $this->gpd = new GestorSimple($this->enrutador);
-        }
-
-        return $this->gpd;
-    }
-
+    /**
+     * Procesa la solicitud y genera el controlador
+     *
+     * Obtiene el nombre del controlador y los parámetros del enrutador.
+     *
+     * @throws Exception si no se definió el enrutador.
+     */
     public function procesar()
     {
         if( is_null($this->enrutador) ) {
@@ -68,6 +67,40 @@ class Rutas
 
         $this->info->controlador = $this->enrutador->nombreClase();
         $this->info->parametros  = $this->enrutador->resto();
+    }
+
+    /**
+     * Simplificador del enrutador simple
+     *
+     * Simplifica la configuración y definición del enrutador simple como predeterminado.
+     *
+     * @return GestorSimple
+     */
+    public function simple(): GestorSimple
+    {
+        if( is_null($this->gpd) || !$this->gpd instanceof GestorSimple ) {
+            $this->gpd = new GestorSimple($this->enrutador);
+            $this->gpd->lanzarExcepcion = true;
+        }
+
+        return $this->gpd;
+    }
+
+    /**
+     * Simplificador del enrutador por nodos
+     *
+     * Simplifica la configuración y definición del enrutador por nodos como predeterminado.
+     *
+     * @return GestorPorNodos
+     */
+    public function nodos(): GestorPorNodos
+    {
+        if( is_null($this->gpd) || !$this->gpd instanceof GestorPorNodos ) {
+            $this->gpd = new GestorPorNodos($this->enrutador);
+            $this->gpd->lanzarExcepcion = true;
+        }
+
+        return $this->gpd;
     }
 
 }
