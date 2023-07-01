@@ -65,7 +65,7 @@ class Rutas
             throw new Exception('No existe ningún enrutador registrado');
         }
 
-        $this->info->controlador = $this->enrutador->nombreClase();
+        $this->info->controlador = ucfirst($this->enrutador->nombreClase());
         $this->info->parametros  = $this->enrutador->resto();
     }
 

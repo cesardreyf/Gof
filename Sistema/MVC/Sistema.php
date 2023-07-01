@@ -5,6 +5,7 @@ namespace Gof\Sistema\MVC;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Cargador\Archivos;
 use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
+use Gof\Sistema\MVC\Aplicacion\Aplicacion;
 use Gof\Sistema\MVC\Datos\Info;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
@@ -40,6 +41,11 @@ class Sistema
     private Info $info;
 
     /**
+     * @var Aplicacion Instancia del gestor de aplicación.
+     */
+    private Aplicacion $aplicacion;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -59,6 +65,9 @@ class Sistema
 
         // Gestor de rutas
         $this->rutas = new Rutas($this->info);
+
+        // Gestor de aplicación y ejecución del controlador
+        $this->aplicacion = new Aplicacion($this->info, $this->autoload);
     }
 
     /**
@@ -89,6 +98,16 @@ class Sistema
     public function rutas(): Rutas
     {
         return $this->rutas;
+    }
+
+    /**
+     * Obtiene el gestor de aplicación
+     *
+     * @return Aplicacion
+     */
+    public function aplicacion(): Aplicacion
+    {
+        return $this->aplicacion;
     }
 
 }
