@@ -74,6 +74,8 @@ class Enrutador implements IEnrutador
 
             $nombreDeLaClase = ucfirst($inexistente);
             $espacioDeNombre = '';
+
+            array_unshift($recursos, $objetivo);
             break;
         }
 
