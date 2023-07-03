@@ -65,6 +65,10 @@ class Ipiperf implements Criterio
 
         if( !$registro->error ) {
             $controlador->indice();
+        }
+
+        if( $registro->error ) {
+            $controlador->error();
             $limpiarError();
         }
 
