@@ -10,6 +10,7 @@ use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
+use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 use Gof\Sistema\MVC\Datos\Info;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -155,6 +156,11 @@ class AplicacionTest extends TestCase
                 ['algo' => 'bobo'],
             ]],
         ];
+    }
+
+    public function testMetodoProcesosDevuelveUnaInstanciaDelGestorDeProcesos(): void
+    {
+        $this->assertInstanceOf(Procesos::class, $this->aplicacion->procesos());
     }
 
 }
