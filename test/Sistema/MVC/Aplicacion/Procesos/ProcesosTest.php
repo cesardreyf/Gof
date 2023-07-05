@@ -43,8 +43,8 @@ class ProcesosTest extends TestCase
             });
 
         $procesos->agregar($procesoDePrioridadAlta, Prioridad::Alta);
-        $procesos->agregar($procesoDePrioridadMedia, Prioridad::Alta);
-        $procesos->agregar($procesoDePrioridadBaja, Prioridad::Alta);
+        $procesos->agregar($procesoDePrioridadMedia, Prioridad::Media);
+        $procesos->agregar($procesoDePrioridadBaja, Prioridad::Baja);
 
         $procesos->ejecutar();
         $ordenDeEjecucionEsperado = [0, 1, 2];
