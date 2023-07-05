@@ -16,6 +16,12 @@ use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
  */
 class Ipiperf implements Criterio
 {
+    /**
+     * Instancia del controlador recibido por la aplicación
+     *
+     * @var IControlador
+     */
+    private IControlador $controlador;
 
     /**
      * Ejecuta el controlador
@@ -37,15 +43,27 @@ class Ipiperf implements Criterio
      *
      * @param IControlador $controlador
      */
-    public function ejecutar(IControlador $controlador)
+    public function ejecutar()
     {
-        $this->ejecutarElControlador($controlador);
+        $this->ejecutarControlador($this->controlador);
     }
 
     /**
-     * @see Ipiperf::ejecutar()
+     * Define el controlador a ejecutar
+     *
+     * @param IControlador $controlador Instancia del controlador
      */
-    public function ejecutarElControlador(Controlador $controlador)
+    public function controlador(IControlador $controlador)
+    {
+        $this->controlador = $controlador;
+    }
+
+    /**
+     * Ejecuta el controlador según un criterio
+     *
+     * @param Controlador $controlador Instancia del controlador que implementa la interfaz esperada
+     */
+    public function ejecutarControlador(Controlador $controlador)
     {
         $controlador->iniciar();
         $controlador->preindice();

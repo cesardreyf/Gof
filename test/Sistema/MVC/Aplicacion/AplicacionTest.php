@@ -64,8 +64,12 @@ class AplicacionTest extends TestCase
 
         $criterioQueEjecutaraElControlador
             ->expects($this->once())
-            ->method('ejecutar')
+            ->method('controlador')
             ->with($instanciaDelControlador);
+
+        $criterioQueEjecutaraElControlador
+            ->expects($this->once())
+            ->method('ejecutar');
 
         $this->aplicacion->criterio = $criterioQueEjecutaraElControlador;
         $this->assertSame($instanciaDelControlador, $this->aplicacion->ejecutar());

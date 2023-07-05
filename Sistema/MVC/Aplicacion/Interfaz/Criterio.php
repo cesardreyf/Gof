@@ -7,7 +7,14 @@ namespace Gof\Sistema\MVC\Aplicacion\Interfaz;
  *
  * @package Gof\Sistema\MVC\Aplicacion\Interfaz
  */
-interface Criterio
+interface Criterio extends Ejecutable
 {
-    public function ejecutar(Controlador $controlador);
+    /**
+     * Establece el controlador
+     *
+     * Define el controlador que deberá ser ejecutado según el criterio.
+     *
+     * @param Controlador $controlador Instancia del controlador.
+     */
+    public function controlador(Controlador $controlador);
 }

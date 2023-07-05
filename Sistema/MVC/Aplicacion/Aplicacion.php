@@ -89,7 +89,8 @@ class Aplicacion
         $controlador->parametros($this->info->parametros);
 
         if( !is_null($this->criterio) ) {
-            $this->criterio->ejecutar($controlador);
+            $this->criterio->controlador($controlador);
+            $this->criterio->ejecutar();
         }
 
         return $controlador;
