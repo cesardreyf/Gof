@@ -117,4 +117,39 @@ class AplicacionTest extends TestCase
         $this->assertSame($controlador, $this->aplicacion->ejecutar());
     }
 
+    /**
+     * @dataProvider dataArgumentosParaElControlador
+     */
+    public function testPasarArgumentosAlControladorAlMomentoDeInstanciarlo(array $argumentosEsperados)
+    {
+        $this->info->controlador = 'Cualquiera';
+        $this->info->argumentos = $argumentosEsperados;
+
+        $controlador = $this->createMock(Controlador::class);
+        $this->aplicacion->namespaceDelControlador = 'Controlador\\';
+        $nombreDelControlador = $this->aplicacion->namespaceDelControlador . $this->info->controlador;
+
+        $this->autoload
+            ->expects($this->once())
+            ->method('instanciar')
+            ->with($nombreDelControlador, ...$argumentosEsperados)
+            ->willReturn($controlador);
+
+        $this->assertSame($controlador, $this->aplicacion->ejecutar());
+    }
+
+    public function dataARgumentosParaElControlador(): array
+    {
+        return [
+            [[
+                'argumento1',
+                'argumento2',
+                PHP_INT_MAX,
+                PHP_FLOAT_MAX,
+                new stdClass(),
+                ['algo' => 'bobo'],
+            ]],
+        ];
+    }
+
 }
