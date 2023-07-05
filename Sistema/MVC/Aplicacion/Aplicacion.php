@@ -4,6 +4,8 @@ namespace Gof\Sistema\MVC\Aplicacion;
 
 use Exception;
 use Gof\Gestor\Autoload\Autoload;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInexistente;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
 use Gof\Sistema\MVC\Datos\Info;
@@ -76,11 +78,11 @@ class Aplicacion
         $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->info->controlador, ...$this->info->argumentos);
 
         if( is_null($controlador) ) {
-            throw new Exception("No existe ningún controlador o clase llamado: {$this->info->controlador}");
+            throw new ControladorInexistente($this->info->controlador);
         }
 
         if( !$controlador instanceof Controlador ) {
-            throw new Exception("La clase '{$this->info->controlador}' no implementa la interfaz " . Controlador::class);
+            throw new ControladorInvalido($this->info->controlador, Controlador::class);
         }
 
         // Le pasa los parámetros al controlador

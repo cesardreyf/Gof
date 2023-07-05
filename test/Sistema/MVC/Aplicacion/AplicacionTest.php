@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Test\Sistema\MVC\Aplicacion;
 
-use Exception;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInexistente;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador;
+use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
 use Gof\Sistema\MVC\Datos\Info;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -72,7 +73,7 @@ class AplicacionTest extends TestCase
 
     public function testLanzarExcepcionSiElControladorEsNullAlEjecutarLaAplicacion(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ControladorInexistente::class);
         $this->autoload
             ->expects($this->once())
             ->method('instanciar')
@@ -82,7 +83,7 @@ class AplicacionTest extends TestCase
 
     public function testLanzarExcepcionSiLaInstanciaDelObjetoNoImplementaLaInterfazControlador(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ControladorInvalido::class);
         $noImplementoLaInterfazControlador = $this->createMock(stdClass::class);
 
         $this->autoload
