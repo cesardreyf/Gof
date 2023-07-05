@@ -73,7 +73,7 @@ class Aplicacion
      */
     public function ejecutar(): Controlador
     {
-        $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->info->controlador);
+        $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->info->controlador, ...$this->info->argumentos);
 
         if( is_null($controlador) ) {
             throw new Exception("No existe ningún controlador o clase llamado: {$this->info->controlador}");

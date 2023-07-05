@@ -26,4 +26,14 @@ class Info
      * @var array
      */
     public array $parametros = [];
+
+    /**
+     * Conjunto de argumentos para pasar al constructor del controlador
+     *
+     * Almacena en un array los argumentos que serán pasados
+     * al controlador al momento de instanciarlo.
+     *
+     * @var array
+     */
+    public array $argumentos = [];
 }
