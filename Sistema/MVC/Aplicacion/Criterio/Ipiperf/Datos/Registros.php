@@ -29,6 +29,16 @@ class Registros
     public bool $continuar = false;
 
     /**
+     * Determina si saltar las funciones básicas
+     *
+     * Si este estado es establecido a **true** el criterio saltará las
+     * funciones indice y/o posindice.
+     *
+     * @var bool
+     */
+    public bool $saltar = false;
+
+    /**
      * Determina que se debe renderizar la vista
      *
      * Si el estado es **true** se llamará al método renderizar antes de

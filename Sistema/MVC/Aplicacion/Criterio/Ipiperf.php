@@ -81,7 +81,7 @@ class Ipiperf implements Criterio
             $limpiarError();
         }
 
-        if( !$registro->error ) {
+        if( !$registro->error && !$registro->saltar ) {
             $controlador->indice();
         }
 
@@ -90,7 +90,7 @@ class Ipiperf implements Criterio
             $limpiarError();
         }
 
-        if( !$registro->error ) {
+        if( !$registro->error && !$registro->saltar ) {
             $controlador->posindice();
         }
 
