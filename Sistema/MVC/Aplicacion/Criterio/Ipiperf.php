@@ -29,17 +29,19 @@ class Ipiperf implements Criterio
      * Ejecuta los siguientes métodos del controlador en orden: iniciar,
      * preindice, indice, posindice, renderizar y finalizar.
      *
-     * Si al ejecutarse preindice o indice el estado Error del registro se
-     * activa, el siguiente método del controlador que será llamado es
-     * **error**.
+     * Si al ejecutarse preindice o indice el registro ERROR se activa, el
+     * siguiente método del controlador que será llamado es **error**.
      *
-     * Si al ocurrir un error en preindice o indice el estado Continuar del
-     * registro se activa, luego de llamarse al método **error** continuará el
+     * Si al ocurrir un error en las funciones preindice o indice el registro
+     * CONTINUAR se activa, luego de llamarse al método **error** continuará el
      * flujo en el orden esperado.
      *
-     * Si el estado Renderizar del registro está activo el método
-     * **renderizar** será llamado antes de finalizar, caso contrario se
-     * finalizará el controlador.
+     * Si el registro SALTAR se activa se saltarán la siguiente función: indice
+     * y/o posindice. El registro CONTINUAR no tiene efecto si el registro
+     * SALTAR se encuentra activo.
+     *
+     * Si el registro RENDERIZAR está activo el método **renderizar** será
+     * llamado antes de finalizar, caso contrario se finalizará el controlador.
      *
      * @param IControlador $controlador
      */
