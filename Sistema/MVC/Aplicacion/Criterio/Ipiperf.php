@@ -76,36 +76,42 @@ class Ipiperf implements Criterio
      */
     public function ejecutarControlador(Controlador $controlador)
     {
-        $controlador->iniciar();
-        $controlador->preindice();
+        // Volver A LLamar Error
+        $vale = false;
 
-        $registro = $controlador->registros();
-        $limpiarError = function() use (&$registro) {
-            if( $registro->error && $registro->continuar ) {
-                $registro->continuar = false;
-                $registro->error = false;
+        $limpiarError = function() use (&$controlador) {
+            if( $controlador->registros()->error && $controlador->registros()->continuar ) {
+                $controlador->registros()->continuar = false;
+                $controlador->registros()->error = false;
             }
         };
 
-        if( $registro->error ) {
+        $controlador->iniciar();
+        $controlador->preindice();
+
+        if( $controlador->registros()->error ) {
             $controlador->error();
             $limpiarError();
         }
 
-        if( !$registro->error && !$registro->saltar ) {
+        if( !$controlador->registros()->error && !$controlador->registros()->saltar ) {
             $controlador->indice();
+
+            if( $controlador->registros()->error ) {
+                $this->vale = true;
+            }
         }
 
-        if( $registro->error ) {
+        if( $controlador->registros()->error && $vale ) {
             $controlador->error();
             $limpiarError();
         }
 
-        if( !$registro->error && !$registro->saltar ) {
+        if( !$controlador->registros()->error && !$controlador->registros()->saltar ) {
             $controlador->posindice();
         }
 
-        if( $registro->renderizar ) {
+        if( $controlador->registros()->renderizar ) {
             $controlador->renderizar();
         }
 
