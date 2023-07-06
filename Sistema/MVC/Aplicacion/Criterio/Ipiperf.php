@@ -3,6 +3,7 @@
 namespace Gof\Sistema\MVC\Aplicacion\Criterio;
 
 use Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Interfaz\Controlador;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador as IControlador;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
 
@@ -54,9 +55,17 @@ class Ipiperf implements Criterio
      * Define el controlador a ejecutar
      *
      * @param IControlador $controlador Instancia del controlador
+     *
+     * @throws ControladorInvalido si el controlador no implementa la interfaz Controlador
+     *
+     * @see Controlador
      */
     public function controlador(IControlador $controlador)
     {
+        if( !$controlador instanceof Controlador) {
+            throw new ControladorInvalido(get_class($controlador), Controlador::class);
+        }
+
         $this->controlador = $controlador;
     }
 
