@@ -2,7 +2,6 @@
 
 namespace Gof\Sistema\MVC\Aplicacion;
 
-use Exception;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
@@ -75,8 +74,8 @@ class Aplicacion
      *
      * @return Controlador Devuelve la instancia del controlador creado.
      *
-     * @throws Exception si no se pudo crear el controlador por que no existe.
-     * @throws Exception si la instancia del objeto creado no implementa la interfaz Controlador.
+     * @throws ControladorInexistente si no se pudo crear el controlador por que no existe.
+     * @throws ControladorInvalido si la instancia del objeto creado no implementa la interfaz Controlador.
      *
      * @see Controlador
      * @see Criterio
