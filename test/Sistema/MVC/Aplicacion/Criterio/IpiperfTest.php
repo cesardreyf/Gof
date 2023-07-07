@@ -10,6 +10,7 @@ use Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Interfaz\Controlador;
 use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador as ControladorBasico;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use PHPUnit\Framework\TestCase;
 
 class IpiperfTest extends TestCase
@@ -24,6 +25,11 @@ class IpiperfTest extends TestCase
     public function testImplementarInterfazCriterioDeLaAplicacion(): void
     {
         $this->assertInstanceOf(Criterio::class, $this->criterio);
+    }
+
+    public function testEsUnEjecutable(): void
+    {
+        $this->assertInstanceOf(Ejecutable::class, $this->criterio);
     }
 
     public function testLanzarExcepcionSiElControladorRecibidoNoImplementaLaInterfazControlador(): void
