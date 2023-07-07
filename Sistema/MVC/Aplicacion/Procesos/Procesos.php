@@ -2,7 +2,7 @@
 
 namespace Gof\Sistema\MVC\Aplicacion\Procesos;
 
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Ejecutable;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
  * Gestor de procesos

@@ -2,6 +2,8 @@
 
 namespace Gof\Sistema\MVC\Aplicacion\Interfaz;
 
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
+
 /**
  * Interfaz para los criterios de la aplicación
  *

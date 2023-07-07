@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Sistema\MVC\Aplicacion\Procesos;
 
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Ejecutable;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 use PHPUnit\Framework\TestCase;
