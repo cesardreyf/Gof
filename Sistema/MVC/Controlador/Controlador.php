@@ -101,7 +101,7 @@ class Controlador implements Ejecutable
             $this->criterio->controlador($controlador);
 
             // Agrega el criterio a la lista de procesos de la aplicación
-            $this->procesos->agregar($this->criterio, Prioridad::Media);
+            $this->procesos->agregar($this->criterio, Prioridad::Baja);
         }
     }
 
