@@ -54,11 +54,6 @@ class Controlador implements Ejecutable
     private ?IControlador $instancia = null;
 
     /**
-     * @var string Almacena el espacio de nombre por defecto para instanciar el controlador
-     */
-    public string $namespaceDelControlador = '';
-
-    /**
      * Constructor
      *
      * @param DAP      &$dap      DAP del sistema
@@ -89,7 +84,7 @@ class Controlador implements Ejecutable
      */
     public function ejecutar()
     {
-        $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->dap->controlador, ...$this->dap->argumentos);
+        $controlador = $this->autoload->instanciar($this->dap->edn . $this->dap->controlador, ...$this->dap->argumentos);
 
         if( is_null($controlador) ) {
             throw new ControladorInexistente($this->dap->controlador);
@@ -118,6 +113,16 @@ class Controlador implements Ejecutable
     public function criterio(Criterio $criterio)
     {
         $this->criterio = $criterio;
+    }
+
+    /**
+     * Define el espacio de nombre por defecto para el controlador
+     *
+     * @param string $edn Espacio de nombre
+     */
+    public function espacioDeNombre(string $edn)
+    {
+        $this->dap->edn = $edn;
     }
 
     /**
