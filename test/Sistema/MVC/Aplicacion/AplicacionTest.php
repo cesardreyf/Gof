@@ -11,7 +11,7 @@ use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Datos\DAP;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -19,19 +19,19 @@ class AplicacionTest extends TestCase
 {
     private Aplicacion $aplicacion;
     private Autoload $autoload;
-    private Info $info;
+    private DAP $dap;
 
     public function setUp(): void
     {
-        $this->info = new Info();
+        $this->dap = new DAP();
         $this->autoload = $this->createMock(Autoload::class);
-        $this->aplicacion = new Aplicacion($this->info, $this->autoload);
+        $this->aplicacion = new Aplicacion($this->dap, $this->autoload);
     }
 
     public function testEjecutarCreaUnaInstanciaTeniendoEnCuentaElNombreDelControladorEnInfo(): void
     {
         $nombreCompletoDelControlador = 'Controlador\Index';
-        $this->info->controlador = $nombreCompletoDelControlador;
+        $this->dap->controlador = $nombreCompletoDelControlador;
         $instanciaDelControlador = $this->createMock(Controlador::class);
 
         $this->autoload
@@ -46,8 +46,8 @@ class AplicacionTest extends TestCase
     public function testEjecutarPasaElControladorAlCriterio(): void
     {
         $nombreCompletoDelControlador = 'Controlador\Perfil\Editar';
-        $this->info->controlador = $nombreCompletoDelControlador;
-        $this->info->parametros = ['nombre', 'genero', 'edad'];
+        $this->dap->controlador = $nombreCompletoDelControlador;
+        $this->dap->parametros = ['nombre', 'genero', 'edad'];
 
         $instanciaDelControlador = $this->createMock(Controlador::class);
         $criterioQueEjecutaraElControlador = $this->createMock(Criterio::class);
@@ -61,7 +61,7 @@ class AplicacionTest extends TestCase
         $instanciaDelControlador
             ->expects($this->once())
             ->method('parametros')
-            ->with($this->info->parametros);
+            ->with($this->dap->parametros);
 
         $criterioQueEjecutaraElControlador
             ->expects($this->once())
@@ -128,12 +128,12 @@ class AplicacionTest extends TestCase
      */
     public function testPasarArgumentosAlControladorAlMomentoDeInstanciarlo(array $argumentosEsperados)
     {
-        $this->info->controlador = 'Cualquiera';
-        $this->info->argumentos = $argumentosEsperados;
+        $this->dap->controlador = 'Cualquiera';
+        $this->dap->argumentos = $argumentosEsperados;
 
         $controlador = $this->createMock(Controlador::class);
         $this->aplicacion->namespaceDelControlador = 'Controlador\\';
-        $nombreDelControlador = $this->aplicacion->namespaceDelControlador . $this->info->controlador;
+        $nombreDelControlador = $this->aplicacion->namespaceDelControlador . $this->dap->controlador;
 
         $this->autoload
             ->expects($this->once())

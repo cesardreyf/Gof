@@ -3,7 +3,7 @@
 namespace Gof\Sistema\MVC\Rutas;
 
 use Gof\Interfaz\Enrutador\Enrutador;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Nodos\Gestor as GestorPorNodos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
@@ -26,18 +26,18 @@ class Rutas
     private mixed $gpd = null;
 
     /**
-     * @var Info
+     * @var DAP Referencia al DAP del sistema
      */
-    private Info $info;
+    private DAP $dap;
 
     /**
      * Constructor
      *
-     * @param Info &$info Datos compartidos del sistema.
+     * @param DAP &$dap Datos compartidos del sistema.
      */
-    public function __construct(Info &$info)
+    public function __construct(DAP &$dap)
     {
-        $this->info =& $info;
+        $this->dap =& $dap;
     }
 
     /**
@@ -68,8 +68,8 @@ class Rutas
         // NOTA
         // Debería el gestor convertirlo en minúsculas?
         // Creo que esto debería ser trabajo del enrutador no del gestor.
-        $this->info->controlador = ucfirst($this->enrutador->nombreClase());
-        $this->info->parametros  = $this->enrutador->resto();
+        $this->dap->controlador = ucfirst($this->enrutador->nombreClase());
+        $this->dap->parametros  = $this->enrutador->resto();
     }
 
     /**

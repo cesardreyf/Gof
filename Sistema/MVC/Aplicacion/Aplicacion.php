@@ -10,7 +10,7 @@ use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador;
 use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Datos\DAP;
 
 /**
  * Gestor de Aplicacion
@@ -37,9 +37,9 @@ class Aplicacion
     private Autoload $autoload;
 
     /**
-     * @var Info Referencia a los datos compartidos del sistema
+     * @var DAP Referencia al DAP del sistema
      */
-    private Info $info;
+    private DAP $dap;
 
     /**
      * @var Procesos Instancia del gestor de procesos
@@ -54,14 +54,14 @@ class Aplicacion
     /**
      * Constructor
      *
-     * @param Info     &$info     Datos compartidos
+     * @param DAP      &$dap      DAP del sistema
      * @param Autoload  $autoload Instancia del gestor de autoload
      */
-    public function __construct(Info &$info, Autoload $autoload)
+    public function __construct(DAP &$dap, Autoload $autoload)
     {
-        $this->info     =& $info;
-        $this->autoload =  $autoload;
-        $this->procesos =  new Procesos();
+        $this->dap =& $dap;
+        $this->autoload = $autoload;
+        $this->procesos = new Procesos();
     }
 
     /**
@@ -83,18 +83,18 @@ class Aplicacion
      */
     public function ejecutar(): Controlador
     {
-        $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->info->controlador, ...$this->info->argumentos);
+        $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->dap->controlador, ...$this->dap->argumentos);
 
         if( is_null($controlador) ) {
-            throw new ControladorInexistente($this->info->controlador);
+            throw new ControladorInexistente($this->dap->controlador);
         }
 
         if( !$controlador instanceof Controlador ) {
-            throw new ControladorInvalido($this->info->controlador, Controlador::class);
+            throw new ControladorInvalido($this->dap->controlador, Controlador::class);
         }
 
         // Le pasa los parámetros al controlador
-        $controlador->parametros($this->info->parametros);
+        $controlador->parametros($this->dap->parametros);
 
         if( !is_null($this->criterio) ) {
             $this->criterio->controlador($controlador);

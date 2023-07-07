@@ -3,13 +3,13 @@
 namespace Gof\Sistema\MVC\Datos;
 
 /**
- * Datos compartidos del Sistema MVC
+ * Datos de Acceso Público del Sistema MVC
  *
  * Datos compartidos entre gestores del sistema MVC.
  *
  * @package Gof\Sistema\MVC\Datos
  */
-class Info
+class DAP
 {
     /**
      * Nombre completo del controlador

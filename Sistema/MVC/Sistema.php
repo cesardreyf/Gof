@@ -6,7 +6,7 @@ use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Cargador\Archivos;
 use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
 
@@ -36,9 +36,9 @@ class Sistema
     private Rutas $rutas;
 
     /**
-     * @var Info Datos importantes
+     * @var DAP Datos de Acceso Público
      */
-    private Info $info;
+    private DAP $dap;
 
     /**
      * @var Aplicacion Instancia del gestor de aplicación.
@@ -61,13 +61,13 @@ class Sistema
         $this->autoload->registrar();
 
         // Datos compartidos
-        $this->info = new Info();
+        $this->dap = new DAP();
 
         // Gestor de rutas
-        $this->rutas = new Rutas($this->info);
+        $this->rutas = new Rutas($this->dap);
 
         // Gestor de aplicación y ejecución del controlador
-        $this->aplicacion = new Aplicacion($this->info, $this->autoload);
+        $this->aplicacion = new Aplicacion($this->dap, $this->autoload);
     }
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Rutas;
 
 use Gof\Interfaz\Enrutador\Enrutador;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Rutas;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
@@ -13,13 +13,13 @@ use PHPUnit\Framework\TestCase;
 
 class RutasTest extends TestCase
 {
-    private Info $info;
+    private DAP $dap;
     private Rutas $rutas;
 
     public function setUp(): void
     {
-        $this->info = new Info();
-        $this->rutas = new Rutas($this->info);
+        $this->dap = new DAP();
+        $this->rutas = new Rutas($this->dap);
     }
 
     public function testAlInstanciarLaClaseNoExisteNingunEnrutador(): void
@@ -63,8 +63,8 @@ class RutasTest extends TestCase
             ->willReturn($resto);
 
         $this->rutas->procesar();
-        $this->assertSame($clase, $this->info->controlador);
-        $this->assertSame($resto, $this->info->parametros);
+        $this->assertSame($clase, $this->dap->controlador);
+        $this->assertSame($resto, $this->dap->parametros);
     }
 
     public function testMetodoSimpleDevuelveUnaInstanciaDelGestorSimple(): void
