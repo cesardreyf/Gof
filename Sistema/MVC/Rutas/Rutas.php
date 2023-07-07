@@ -4,6 +4,7 @@ namespace Gof\Sistema\MVC\Rutas;
 
 use Gof\Interfaz\Enrutador\Enrutador;
 use Gof\Sistema\MVC\Datos\DAP;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Nodos\Gestor as GestorPorNodos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
@@ -13,7 +14,7 @@ use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
  *
  * @package Gof\Sistema\MVC\Rutas
  */
-class Rutas
+class Rutas implements Ejecutable
 {
     /**
      * @var ?Enrutador Instancia del enrutador
@@ -53,13 +54,13 @@ class Rutas
     }
 
     /**
-     * Procesa la solicitud y genera el controlador
+     * Procesa la solicitud y genera el nombre del controlador
      *
      * Obtiene el nombre del controlador y los parámetros del enrutador.
      *
      * @throws EnrutadorInexistente si no se definió el enrutador.
      */
-    public function procesar()
+    public function ejecutar()
     {
         if( is_null($this->enrutador) ) {
             throw new EnrutadorInexistente();

@@ -80,6 +80,7 @@ class Sistema
         $this->controlador = new Controlador($this->dap, $this->autoload, $this->aplicacion->procesos());
 
         // Agregando los primeros procesos
+        $this->aplicacion->procesos()->agregar($this->rutas,       Prioridad::Alta);
         $this->aplicacion->procesos()->agregar($this->controlador, Prioridad::Alta);
     }
 
