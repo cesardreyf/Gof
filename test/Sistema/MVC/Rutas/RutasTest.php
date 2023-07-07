@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Test\Sistema\MVC\Rutas;
 
-use Exception;
 use Gof\Interfaz\Enrutador\Enrutador;
 use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Rutas;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class RutasTest extends TestCase
 
     public function testProcesarSinUnEnrutadorLanzaUnaExcepcion(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(EnrutadorInexistente::class);
         $this->rutas->procesar();
     }
 

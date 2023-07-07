@@ -2,9 +2,9 @@
 
 namespace Gof\Sistema\MVC\Rutas;
 
-use Exception;
 use Gof\Interfaz\Enrutador\Enrutador;
 use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Nodos\Gestor as GestorPorNodos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
 
@@ -57,14 +57,17 @@ class Rutas
      *
      * Obtiene el nombre del controlador y los parámetros del enrutador.
      *
-     * @throws Exception si no se definió el enrutador.
+     * @throws EnrutadorInexistente si no se definió el enrutador.
      */
     public function procesar()
     {
         if( is_null($this->enrutador) ) {
-            throw new Exception('No existe ningún enrutador registrado');
+            throw new EnrutadorInexistente();
         }
 
+        // NOTA
+        // Debería el gestor convertirlo en minúsculas?
+        // Creo que esto debería ser trabajo del enrutador no del gestor.
         $this->info->controlador = ucfirst($this->enrutador->nombreClase());
         $this->info->parametros  = $this->enrutador->resto();
     }
