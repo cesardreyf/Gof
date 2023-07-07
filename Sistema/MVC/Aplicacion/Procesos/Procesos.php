@@ -50,6 +50,16 @@ class Procesos implements Lista
     }
 
     /**
+     * Obtiene un módulo que solo puede agregar procesos a una única prioridad
+     *
+     * @return Agregable
+     */
+    public function agregable(Prioridad $prioridad): Agregable
+    {
+        return new Agregable($this->lp[$prioridad->value]);
+    }
+
+    /**
      * Obtiene la lista de procesos almacenados
      *
      * @return array
