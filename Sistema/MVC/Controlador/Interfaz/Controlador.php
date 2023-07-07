@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Interfaz;
+namespace Gof\Sistema\MVC\Controlador\Interfaz;
 
 /**
  * Contrato para los controladores
  *
- * @package Gof\Sistema\MVC\Aplicacion\Interfaz
+ * @package Gof\Sistema\MVC\Controlador\Interfaz
  */
 interface Controlador
 {

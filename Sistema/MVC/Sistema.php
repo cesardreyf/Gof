@@ -6,6 +6,8 @@ use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Autoload\Cargador\Archivos;
 use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
+use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
+use Gof\Sistema\MVC\Controlador\Controlador;
 use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
@@ -46,6 +48,11 @@ class Sistema
     private Aplicacion $aplicacion;
 
     /**
+     * @var Controlador Instancia del gestor del controlador.
+     */
+    private Controlador $controlador;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -66,8 +73,14 @@ class Sistema
         // Gestor de rutas
         $this->rutas = new Rutas($this->dap);
 
-        // Gestor de aplicación y ejecución del controlador
-        $this->aplicacion = new Aplicacion($this->dap, $this->autoload);
+        // Gestor de aplicación
+        $this->aplicacion = new Aplicacion();
+
+        // Gestor del controlador
+        $this->controlador = new Controlador($this->dap, $this->autoload, $this->aplicacion->procesos());
+
+        // Agregando los primeros procesos
+        $this->aplicacion->procesos()->agregar($this->controlador, Prioridad::Alta);
     }
 
     /**
@@ -108,6 +121,16 @@ class Sistema
     public function aplicacion(): Aplicacion
     {
         return $this->aplicacion;
+    }
+
+    /**
+     * Obtiene el gestor de controlador
+     *
+     * @return Controlador
+     */
+    public function controlador(): Controlador
+    {
+        return $this->controlador;
     }
 
 }

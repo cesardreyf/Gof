@@ -1,14 +1,14 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Interfaz;
+namespace Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz;
 
-use Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Datos\Registros;
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador as IControlador;
+use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Datos\Registros;
+use Gof\Sistema\MVC\Controlador\Interfaz\Controlador as IControlador;
 
 /**
  * Interfaz que deben implementar los controladores para ser ejecutados por el criterio Ipiperf
  *
- * @package Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Interfaz
+ * @package Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz
  */
 interface Controlador extends IControlador
 {
