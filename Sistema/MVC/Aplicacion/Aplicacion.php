@@ -4,6 +4,7 @@ namespace Gof\Sistema\MVC\Aplicacion;
 
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
  * Gestor de Aplicacion
@@ -16,6 +17,13 @@ use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 class Aplicacion
 {
     /**
+     * Lista de procesos
+     *
+     * @var array
+     */
+    private array $lp = [];
+
+    /**
      * @var Procesos Instancia del gestor de procesos
      */
     private Procesos $procesos;
@@ -25,17 +33,39 @@ class Aplicacion
      */
     public function __construct()
     {
-        $this->procesos = new Procesos();
+        $this->procesos = new Procesos($this->lp);
     }
 
     /**
      * Ejecuta la aplicación
      *
      * Ejecuta todos los procesos de la aplicación.
+     *
+     * Los procesos se ejecutan por orden de prioridad: Alta, Media y Baja.
+     * Primero se ejecutan todos los procesos de la más alta prioridad, una vez
+     * terminado continúa con la siguiente y así hasta terminar. Cada proceso
+     * se ejecuta en el órden en el que se agregaron.
      */
     public function ejecutar()
     {
-        $this->procesos->ejecutar();
+        $hayProcesos = true;
+        $prioridad = Prioridad::Alta->value;
+
+        while( $hayProcesos ) {
+            $proceso = current($this->lp[$prioridad]);
+
+            if( $proceso === false ) {
+                if( ++$prioridad > Prioridad::Baja->value ) {
+                    $hayProcesos = false;
+                }
+
+                reset($this->lp[$prioridad-1]);
+                continue;
+            }
+
+            $proceso->ejecutar();
+            next($this->lp[$prioridad]);
+        }
     }
 
     /**

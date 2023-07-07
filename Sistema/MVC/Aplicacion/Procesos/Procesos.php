@@ -2,6 +2,7 @@
 
 namespace Gof\Sistema\MVC\Aplicacion\Procesos;
 
+use Gof\Interfaz\Lista;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
@@ -12,7 +13,7 @@ use Gof\Sistema\MVC\Interfaz\Ejecutable;
  *
  * @package Gof\Sistema\MVC\Aplicacion\Procesos
  */
-class Procesos
+class Procesos implements Lista
 {
     /**
      * Lista de procesos
@@ -25,9 +26,13 @@ class Procesos
 
     /**
      * Constructor
+     *
+     * @param array &$lp Referencia a la lista de procesos
      */
-    public function __construct()
+    public function __construct(array &$lp)
     {
+        $this->procesos =& $lp;
+
         foreach( Prioridad::cases() as $prioridad ) {
             $this->procesos[$prioridad->value] = [];
         }
@@ -45,18 +50,13 @@ class Procesos
     }
 
     /**
-     * Ejecuta todos los procesos por orden de prioridad
+     * Obtiene la lista de procesos almacenados
      *
-     * Los procesos se ejecutan por orden de prioridad: Alta, Media y Baja.
-     * Primero se ejecutan todos los procesos de la más alta prioridad, una vez
-     * terminado continúa con la siguiente y así hasta terminar. Cada proceso
-     * se ejecuta en el órden en el que se agregaron.
+     * @return array
      */
-    public function ejecutar()
+    public function lista(): array
     {
-        array_walk_recursive($this->procesos, function(Ejecutable $proceso) {
-            $proceso->ejecutar();
-        });
+        return $this->procesos;
     }
 
 }
