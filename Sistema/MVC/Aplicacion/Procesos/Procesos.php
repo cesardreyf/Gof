@@ -3,6 +3,8 @@
 namespace Gof\Sistema\MVC\Aplicacion\Procesos;
 
 use Gof\Interfaz\Lista;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\PermisosInsuficientes;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\PrioridadIlegal;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
@@ -25,17 +27,26 @@ class Procesos implements Lista
     private array $procesos;
 
     /**
+     * Lista de prioridades habilitadas
+     *
+     * Almacena las prioridades habilitadas como claves.
+     *
+     * @var array
+     */
+    private array $prioridades;
+
+    /**
      * Constructor
      *
-     * @param array &$lp Referencia a la lista de procesos
+     * @param array       &$lp          Referencia a la lista de procesos
+     * @param Prioridad    $prioridad   Prioridad habilitada
+     * @param Prioridad ...$prioridades Lista de prioridades habilitadas (Opcional)
      */
-    public function __construct(array &$lp)
+    public function __construct(array &$lp, Prioridad $prioridad, Prioridad ...$prioridades)
     {
         $this->procesos =& $lp;
-
-        foreach( Prioridad::cases() as $prioridad ) {
-            $this->procesos[$prioridad->value] = [];
-        }
+        array_unshift($prioridades, $prioridad);
+        $this->prioridades = $prioridades;
     }
 
     /**
@@ -46,17 +57,45 @@ class Procesos implements Lista
      */
     public function agregar(Ejecutable $proceso, Prioridad $prioridad)
     {
+        if( !in_array($prioridad, $this->prioridades) ) {
+            throw new PrioridadIlegal($prioridad);
+        }
+
         $this->procesos[$prioridad->value][] = $proceso;
     }
 
     /**
-     * Obtiene un módulo que solo puede agregar procesos a una única prioridad
+     * Genera una instancia de la misma clase con nuevas prioridades
      *
-     * @return Agregable
+     * @return Procesos
      */
-    public function agregable(Prioridad $prioridad): Agregable
+    public function agregable(Prioridad $prioridad, Prioridad ...$prioridades): self
     {
-        return new Agregable($this->lp[$prioridad->value]);
+        array_unshift($prioridades, $prioridad);
+
+        if( !$this->tienePermisos(...$prioridades) ) {
+            throw new PermisosInsuficientes($this->prioridades);
+        }
+
+        return new self($this->procesos, ...$prioridades);
+    }
+
+    /**
+     * Verifica si esta instancia tiene permisos para dar prioridades
+     *
+     * Valida que la instancia de esta clase tenga la misma prioridad que
+     * quiere otorgar. Si es válido la función devuelve **true**.
+     *
+     * @return bool Devuelve **true** si tiene permisos.
+     */
+    public function tienePermisos(Prioridad ...$prioridades): bool
+    {
+        foreach( $prioridades as $prioridadSolicitada ) {
+            if( !in_array($prioridadSolicitada, $this->prioridades) ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

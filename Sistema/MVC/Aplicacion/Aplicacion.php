@@ -33,7 +33,8 @@ class Aplicacion
      */
     public function __construct()
     {
-        $this->procesos = new Procesos($this->lp);
+        $this->lp = array_map(function() { return []; }, Prioridad::cases());
+        $this->procesos = new Procesos($this->lp, ...Prioridad::cases());
     }
 
     /**
