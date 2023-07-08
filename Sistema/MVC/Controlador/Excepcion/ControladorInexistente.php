@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Excepcion;
+namespace Gof\Sistema\MVC\Controlador\Excepcion;
 
 /**
  * Excepción lanzada cuando el controlador no existe
  *
- * @package Gof\Sistema\MVC\Aplicacion\Excepcion
+ * @package Gof\Sistema\MVC\Controlador\Excepcion
  */
 class ControladorInexistente extends Excepcion
 {

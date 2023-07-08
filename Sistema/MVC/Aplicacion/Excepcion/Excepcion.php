@@ -5,7 +5,7 @@ namespace Gof\Sistema\MVC\Aplicacion\Excepcion;
 use Gof\Sistema\MVC\Excepcion\Excepcion as IExcepcion;
 
 /**
- * Excepción padre de todas las excepciones lanzadas por la aplicación
+ * Excepción del que heredan todas las excepciones de la aplicación
  *
  * @package Gof\Sistema\MVC\Aplicacion\Excepcion
  */

@@ -1,13 +1,13 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Datos;
+namespace Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Datos;
 
 /**
  * Registros de datos
  *
  * Almacena datos que alteran el comportamiento del controlador.
  *
- * @package Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Datos
+ * @package Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Datos
  */
 class Registros
 {

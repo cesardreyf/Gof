@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Rutas;
 
 use Gof\Interfaz\Enrutador\Enrutador;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Datos\DAP;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Rutas;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
@@ -13,13 +14,13 @@ use PHPUnit\Framework\TestCase;
 
 class RutasTest extends TestCase
 {
-    private Info $info;
+    private DAP $dap;
     private Rutas $rutas;
 
     public function setUp(): void
     {
-        $this->info = new Info();
-        $this->rutas = new Rutas($this->info);
+        $this->dap = new DAP();
+        $this->rutas = new Rutas($this->dap);
     }
 
     public function testAlInstanciarLaClaseNoExisteNingunEnrutador(): void
@@ -27,10 +28,15 @@ class RutasTest extends TestCase
         $this->assertNull($this->rutas->gestor());
     }
 
-    public function testProcesarSinUnEnrutadorLanzaUnaExcepcion(): void
+    public function testEsUnProcesoEjecutablePorLaAplicacion(): void
+    {
+        $this->assertInstanceOf(Ejecutable::class, $this->rutas);
+    }
+
+    public function testEjecutarSinUnEnrutadorLanzaUnaExcepcion(): void
     {
         $this->expectException(EnrutadorInexistente::class);
-        $this->rutas->procesar();
+        $this->rutas->ejecutar();
     }
 
     public function testMetodoGestorCambiaElGestorDeRutas(): void
@@ -44,7 +50,7 @@ class RutasTest extends TestCase
         $this->assertNotSame($primero, $this->rutas->gestor());
     }
 
-    public function testProcesarObtieneInformacionDelEnrutador(): void
+    public function testEjecutarObtieneInformacionDelEnrutador(): void
     {
         $enrutador = $this->createMock(Enrutador::class);
         $this->rutas->gestor($enrutador);
@@ -62,9 +68,9 @@ class RutasTest extends TestCase
             ->method('resto')
             ->willReturn($resto);
 
-        $this->rutas->procesar();
-        $this->assertSame($clase, $this->info->controlador);
-        $this->assertSame($resto, $this->info->parametros);
+        $this->rutas->ejecutar();
+        $this->assertSame($clase, $this->dap->controlador);
+        $this->assertSame($resto, $this->dap->parametros);
     }
 
     public function testMetodoSimpleDevuelveUnaInstanciaDelGestorSimple(): void

@@ -2,7 +2,10 @@
 
 namespace Gof\Sistema\MVC\Aplicacion\Procesos;
 
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Ejecutable;
+use Gof\Interfaz\Lista;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\PermisosInsuficientes;
+use Gof\Sistema\MVC\Aplicacion\Excepcion\PrioridadIlegal;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
  * Gestor de procesos
@@ -12,7 +15,7 @@ use Gof\Sistema\MVC\Aplicacion\Interfaz\Ejecutable;
  *
  * @package Gof\Sistema\MVC\Aplicacion\Procesos
  */
-class Procesos
+class Procesos implements Lista
 {
     /**
      * Lista de procesos
@@ -24,13 +27,26 @@ class Procesos
     private array $procesos;
 
     /**
-     * Constructor
+     * Lista de prioridades habilitadas
+     *
+     * Almacena las prioridades habilitadas como claves.
+     *
+     * @var array
      */
-    public function __construct()
+    private array $prioridades;
+
+    /**
+     * Constructor
+     *
+     * @param array       &$lp          Referencia a la lista de procesos
+     * @param Prioridad    $prioridad   Prioridad habilitada
+     * @param Prioridad ...$prioridades Lista de prioridades habilitadas (Opcional)
+     */
+    public function __construct(array &$lp, Prioridad $prioridad, Prioridad ...$prioridades)
     {
-        foreach( Prioridad::cases() as $prioridad ) {
-            $this->procesos[$prioridad->value] = [];
-        }
+        $this->procesos =& $lp;
+        array_unshift($prioridades, $prioridad);
+        $this->prioridades = $prioridades;
     }
 
     /**
@@ -41,22 +57,55 @@ class Procesos
      */
     public function agregar(Ejecutable $proceso, Prioridad $prioridad)
     {
+        if( !in_array($prioridad, $this->prioridades) ) {
+            throw new PrioridadIlegal($prioridad);
+        }
+
         $this->procesos[$prioridad->value][] = $proceso;
     }
 
     /**
-     * Ejecuta todos los procesos por orden de prioridad
+     * Genera una instancia de la misma clase con nuevas prioridades
      *
-     * Los procesos se ejecutan por orden de prioridad: Alta, Media y Baja.
-     * Primero se ejecutan todos los procesos de la más alta prioridad, una vez
-     * terminado continúa con la siguiente y así hasta terminar. Cada proceso
-     * se ejecuta en el órden en el que se agregaron.
+     * @return Procesos
      */
-    public function ejecutar()
+    public function agregable(Prioridad $prioridad, Prioridad ...$prioridades): self
     {
-        array_walk_recursive($this->procesos, function(Ejecutable $proceso) {
-            $proceso->ejecutar();
-        });
+        array_unshift($prioridades, $prioridad);
+
+        if( !$this->tienePermisos(...$prioridades) ) {
+            throw new PermisosInsuficientes($this->prioridades);
+        }
+
+        return new self($this->procesos, ...$prioridades);
+    }
+
+    /**
+     * Verifica si esta instancia tiene permisos para dar prioridades
+     *
+     * Valida que la instancia de esta clase tenga la misma prioridad que
+     * quiere otorgar. Si es válido la función devuelve **true**.
+     *
+     * @return bool Devuelve **true** si tiene permisos.
+     */
+    public function tienePermisos(Prioridad ...$prioridades): bool
+    {
+        foreach( $prioridades as $prioridadSolicitada ) {
+            if( !in_array($prioridadSolicitada, $this->prioridades) ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Obtiene la lista de procesos almacenados
+     *
+     * @return array
+     */
+    public function lista(): array
+    {
+        return $this->procesos;
     }
 
 }

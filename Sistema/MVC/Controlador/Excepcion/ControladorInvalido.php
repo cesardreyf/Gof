@@ -1,13 +1,13 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Excepcion;
+namespace Gof\Sistema\MVC\Controlador\Excepcion;
 
 /**
  * Excepción lanzada cuando el controlador no es válido
  * 
  * Excepción lanzada cuando el controlador instanciado no implementa la interfaz esperada
  *
- * @package Gof\Sistema\MVC\Aplicacion\Excepcion
+ * @package Gof\Sistema\MVC\Controlador\Excepcion
  */
 class ControladorInvalido extends Excepcion
 {

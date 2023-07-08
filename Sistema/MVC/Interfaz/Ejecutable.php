@@ -1,16 +1,16 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Interfaz;
+namespace Gof\Sistema\MVC\Interfaz;
 
 /**
  * Interfaz para los procesos de la aplicación
  *
- * @package Gof\Sistema\MVC\Aplicacion\Interfaz
+ * @package Gof\Sistema\MVC\Interfaz
  */
 interface Ejecutable
 {
     /**
-     * Ejecuta el proceso
+     * Ejecuta la tarea que le corresponde
      */
     public function ejecutar();
 }

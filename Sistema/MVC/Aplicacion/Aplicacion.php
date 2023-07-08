@@ -2,44 +2,26 @@
 
 namespace Gof\Sistema\MVC\Aplicacion;
 
-use Exception;
-use Gof\Gestor\Autoload\Autoload;
-use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInexistente;
-use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador;
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
-use Gof\Sistema\MVC\Datos\Info;
+use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
  * Gestor de Aplicacion
  *
- * Gestor encargado de ejecutar el controlador, pasarle los parámetros y
- * aplicarle un criterio.
- *
- * El criterio se delega a un agente externo el cual estaría a cargo de
- * ejecutar los métodos necesarios en el controlador, según lo requiera el
- * criterio.
+ * Módulo encargado de almacenar y ejecutar los procesos
+ * vitales de la aplicación.
  *
  * @package Gof\Sistema\MVC\Aplicacion
  */
 class Aplicacion
 {
     /**
-     * @var ?Criterio Instancia del criterio a aplicar al controlador
+     * Lista de procesos
+     *
+     * @var array
      */
-    public ?Criterio $criterio = null;
-
-    /**
-     * @var Autoload Instancia del gestor de autoload
-     */
-    private Autoload $autoload;
-
-    /**
-     * @var Info Referencia a los datos compartidos del sistema
-     */
-    private Info $info;
+    private array $lp = [];
 
     /**
      * @var Procesos Instancia del gestor de procesos
@@ -47,62 +29,44 @@ class Aplicacion
     private Procesos $procesos;
 
     /**
-     * @var string Almacena el espacio de nombre por defecto para instanciar el controlador
-     */
-    public string $namespaceDelControlador = '';
-
-    /**
      * Constructor
-     *
-     * @param Info     &$info     Datos compartidos
-     * @param Autoload  $autoload Instancia del gestor de autoload
      */
-    public function __construct(Info &$info, Autoload $autoload)
+    public function __construct()
     {
-        $this->info     =& $info;
-        $this->autoload =  $autoload;
-        $this->procesos =  new Procesos();
+        $this->lp = array_map(function() { return []; }, Prioridad::cases());
+        $this->procesos = new Procesos($this->lp, ...Prioridad::cases());
     }
 
     /**
-     * Ejecuta el controlador
+     * Ejecuta la aplicación
      *
-     * Crea la instancia del controlador, le pasa los parámetros y ejecuta un
-     * criterio en el mismo.
+     * Ejecuta todos los procesos de la aplicación.
      *
-     * Si existe un criterio registrado este recibirá el controlador para
-     * ejecutar los métodos que requiera.
-     *
-     * @return Controlador Devuelve la instancia del controlador creado.
-     *
-     * @throws Exception si no se pudo crear el controlador por que no existe.
-     * @throws Exception si la instancia del objeto creado no implementa la interfaz Controlador.
-     *
-     * @see Controlador
-     * @see Criterio
+     * Los procesos se ejecutan por orden de prioridad: Alta, Media y Baja.
+     * Primero se ejecutan todos los procesos de la más alta prioridad, una vez
+     * terminado continúa con la siguiente y así hasta terminar. Cada proceso
+     * se ejecuta en el órden en el que se agregaron.
      */
-    public function ejecutar(): Controlador
+    public function ejecutar()
     {
-        $controlador = $this->autoload->instanciar($this->namespaceDelControlador . $this->info->controlador, ...$this->info->argumentos);
+        $hayProcesos = true;
+        $prioridad = Prioridad::Alta->value;
 
-        if( is_null($controlador) ) {
-            throw new ControladorInexistente($this->info->controlador);
+        while( $hayProcesos ) {
+            $proceso = current($this->lp[$prioridad]);
+
+            if( $proceso === false ) {
+                if( ++$prioridad > Prioridad::Baja->value ) {
+                    $hayProcesos = false;
+                }
+
+                reset($this->lp[$prioridad-1]);
+                continue;
+            }
+
+            $proceso->ejecutar();
+            next($this->lp[$prioridad]);
         }
-
-        if( !$controlador instanceof Controlador ) {
-            throw new ControladorInvalido($this->info->controlador, Controlador::class);
-        }
-
-        // Le pasa los parámetros al controlador
-        $controlador->parametros($this->info->parametros);
-
-        if( !is_null($this->criterio) ) {
-            $this->criterio->controlador($controlador);
-            $this->procesos->agregar($this->criterio, Prioridad::Media);
-        }
-
-        $this->procesos->ejecutar();
-        return $controlador;
     }
 
     /**

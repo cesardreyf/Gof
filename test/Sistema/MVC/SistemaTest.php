@@ -6,6 +6,7 @@ namespace Test\Sistema\MVC;
 
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
+use Gof\Sistema\MVC\Controlador\Controlador;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
 use Gof\Sistema\MVC\Sistema;
@@ -35,9 +36,14 @@ class SistemaTest extends TestCase
         $this->assertInstanceOf(Rutas::class, $this->sistema->rutas());
     }
 
-    public function testMetodoAplicaiconDevuelveUnaInstanciaDelGestorDeAplicacio(): void
+    public function testMetodoAplicacionDevuelveUnaInstanciaDelGestorDeAplicacion(): void
     {
         $this->assertInstanceOf(Aplicacion::class, $this->sistema->aplicacion());
+    }
+
+    public function testMetodoControladorDevuelveUnaInstanciaDelGestorDeControlador(): void
+    {
+        $this->assertInstanceOf(Controlador::class, $this->sistema->controlador());
     }
 
 }

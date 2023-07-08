@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Sistema\MVC\Aplicacion\Criterio;
+namespace Gof\Sistema\MVC\Controlador\Criterio;
 
-use Gof\Sistema\MVC\Aplicacion\Criterio\Ipiperf\Interfaz\Controlador;
-use Gof\Sistema\MVC\Aplicacion\Excepcion\ControladorInvalido;
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Controlador as IControlador;
-use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
+use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz\Controlador;
+use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
+use Gof\Sistema\MVC\Controlador\Interfaz\Controlador as IControlador;
+use Gof\Sistema\MVC\Controlador\Interfaz\Criterio;
 
 /**
  * Criterio encargado de ejecutar un conjunto de métodos en el controlador
@@ -13,7 +13,7 @@ use Gof\Sistema\MVC\Aplicacion\Interfaz\Criterio;
  * Ejecuta las siguientes funciones al controlador: Iniciar, Preindice, Indice,
  * Posindice, Error y Finalizar.
  *
- * @package Gof\Sistema\MVC\Aplicacion\Criterio
+ * @package Gof\Sistema\MVC\Controlador\Criterio
  */
 class Ipiperf implements Criterio
 {
