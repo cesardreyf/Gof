@@ -1,7 +1,7 @@
 {
     "name": "gof/gof",
     "description": "Framework Web en Español",
-    "keywords": ["framework"],
+    "keywords": ["framework", "español"],
     "type": "library",
     "license": "MIT",
     "authors": [
