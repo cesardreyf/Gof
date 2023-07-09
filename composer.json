@@ -1,7 +1,9 @@
 {
     "name": "gof/gof",
+    "description": "Framework Web en Español",
+    "keywords": ["framework"],
     "type": "library",
-    "description": "",
+    "license": "MIT",
     "authors": [
         {
             "name": "Cesar Dreyf",
