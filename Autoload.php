@@ -2,10 +2,18 @@
 
 namespace Gof;
 
-class AutoloadGof
+/**
+ * Autoload de gof
+ *
+ * Esta clase solo sirve para cargar automáticamente las clases de Gof. Solo sirve en caso
+ * de no usar composer.
+ *
+ * @package Gof
+ */
+class Autoload
 {
     /**
-     *  @var string Nombre de espacio raíz reservado para mini framework este...
+     *  @var string Espacio de nombre raíz reservado para el mini framework este...
      */
     const ESPACIO_DE_NOMBRE = 'Gof';
 
