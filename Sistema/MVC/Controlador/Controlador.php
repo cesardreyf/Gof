@@ -103,26 +103,32 @@ class Controlador implements Ejecutable
             // Agrega el criterio a la lista de procesos de la aplicación
             $this->procesos->agregar($this->criterio, Prioridad::Baja);
         }
+
+        $this->instancia = $controlador;
     }
 
     /**
-     * Define el criterio con el que se ejecutará el controlador
+     * Obtiene o define el criterio con el que se ejecutará el controlador
      *
-     * @param Criterio $criterio Instancia del criterio
+     * @param ?Criterio $criterio Instancia del criterio o **null** para obtener el actual.
+     *
+     * @return ?Criterio Devuelve la instancia del criterio o **null** si no existe ninguno registrado.
      */
-    public function criterio(Criterio $criterio)
+    public function criterio(?Criterio $criterio): ?Criterio
     {
-        $this->criterio = $criterio;
+        return $this->criterio = $criterio ?? $this->criterio;
     }
 
     /**
-     * Define el espacio de nombre por defecto para el controlador
+     * Obtiene o define el espacio de nombre por defecto para el controlador
      *
-     * @param string $edn Espacio de nombre
+     * @param ?string $edn Espacio de nombre o **null** para obtener el actual.
+     *
+     * @return string Devuelve el espacio de nombre del controlador.
      */
-    public function espacioDeNombre(string $edn)
+    public function espacioDeNombre(?string $edn = null)
     {
-        $this->dap->edn = $edn;
+        return $this->dap->edn = $edn ?? $this->dap->edn;
     }
 
     /**
