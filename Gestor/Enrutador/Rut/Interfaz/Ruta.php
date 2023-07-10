@@ -17,16 +17,16 @@ interface Ruta
     public function clase(): string;
 
     /**
-     * Obtiene una lista de páginas asociadas a la clase
+     * Obtiene el nombre de la ruta
      *
-     * @return string[] Devuelve una lista de páginas asociadas a la clase.
+     * @return string
      */
-    public function paginas(): array;
+    public function ruta(): string;
 
     /**
      * Obtiene una lista de nodos hijos
      *
      * @return array<int, Ruta> Devuelve un conjunto de nodos.
      */
-    public function hijos(): array;
+    public function hijos(): ?array;
 }

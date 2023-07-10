@@ -82,7 +82,7 @@ class Enrutador implements IEnrutador
 
         while( $recurso = array_shift($recursos) ) {
             foreach( $rutas as $ruta ) {
-                if( in_array($recurso, $ruta->paginas()) ) {
+                if( $recurso === $ruta->ruta() ) {
                     $this->clase = $ruta->clase();
                     $rutas = $ruta->hijos();
                     $rutaPadre = $ruta;

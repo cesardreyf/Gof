@@ -12,61 +12,57 @@ use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 class Ruta implements IRuta
 {
     /**
-     * @var array<int, IRuta> Lista de nodos hijos.
+     * Nombre del recurso
+     *
+     * @var string
      */
-    private array $nodos;
+    private string $ruta;
 
     /**
-     * @var string[] Lista de páginas asociadas a la clase.
+     * Nombre completo de la clase
+     *
+     * @var string
      */
-    private array $paginas;
+    private string $clase;
 
     /**
-     * @var bool Indica si la ruta contempla parámetros o no.
+     * Lista de rutas hijas
+     *
+     * @var array<int, IRuta>
+     */
+    private ?array $hijos = null;
+
+    /**
+     * Indica si la ruta contempla parámetros o no
+     *
+     * @var bool
      */
     private bool $parametros;
 
     /**
-     * @var string Nombre completo de la clase.
-     */
-    private string $nombreClase;
-
-    /**
      * Constructor
      *
-     * @param string $pagina Nombre del recurso (URL) que apuntará a la clase.
-     * @param string $clase  Nombre de la clase a la que apuntará.
+     * @param string $recurso Nombre del recurso que apuntará a la clase.
+     * @param string $clase   Nombre de la clase a la que apuntará.
      */
-    public function __construct(string $pagina, string $nombreClase)
+    public function __construct(string $recurso, string $clase)
     {
-        $this->nodos = [];
-        $this->alias($pagina);
+        $this->clase = $clase;
+        $this->ruta = $recurso;
         $this->parametros = false;
-        $this->nombreClase = $nombreClase;
     }
 
     /**
-     * Agrega una nueva ruta hijo al array interno
+     * Crea una nueva ruta y lo agrega como ruta hijo
      *
-     * @param IRuta $nodo Nuevo nodo hijo.
+     * @param string $recurso Nombre del recurso
+     * @param string $clase   Nombre de la clase
      *
-     * @return IRuta Devuelve una instancia del mismo nodo recibido por parámetro.
+     * @return IRuta Devuelve una instancia de la nueva ruta hija
      */
-    public function agregar(IRuta $nodo): IRuta
+    public function agregar(string $recurso, string $clase): IRuta
     {
-        return $this->nodos[] = $nodo;
-    }
-
-    /**
-     * Crea un nuevo alias para la clase
-     *
-     * Agrega un nuevo recurso que apuntará a la misma clase.
-     *
-     * @param string $pagina Nombre del recurso que apuntará a la clase.
-     */
-    public function alias(string $pagina)
-    {
-        $this->paginas[] = $pagina;
+        return $this->hijos[] = new self($recurso, $clase);
     }
 
     /**
@@ -76,27 +72,27 @@ class Ruta implements IRuta
      */
     public function clase(): string
     {
-        return $this->nombreClase;
+        return $this->clase;
     }
 
     /**
-     * Obtiene una lista con los recursos asociados a la clase
+     * Obtiene el nombre de la ruta
      *
-     * @return array Devuelve una lista de páginas asociadas a la clase
+     * @return string
      */
-    public function paginas(): array
+    public function ruta(): string
     {
-        return $this->paginas;
+        return $this->ruta;
     }
 
     /**
-     * Obtiene los nodos hijos
+     * Obtiene las rutas hijas
      *
-     * @return array Devuelve el conjunto de nodos hijos
+     * @return array
      */
-    public function hijos(): array
+    public function hijos(): ?array
     {
-        return $this->nodos;
+        return $this->hijos;
     }
 
     /**
