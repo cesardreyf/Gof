@@ -37,7 +37,14 @@ class Ruta implements IRuta
      *
      * @var bool
      */
-    private bool $parametros;
+    private bool $parametros = false;
+
+    /**
+     * Almacena alias asociadas a la ruta
+     *
+     * @var ?array
+     */
+    private ?array $alias = null;
 
     /**
      * Constructor
@@ -49,7 +56,6 @@ class Ruta implements IRuta
     {
         $this->clase = $clase;
         $this->ruta = $recurso;
-        $this->parametros = false;
     }
 
     /**
@@ -102,7 +108,24 @@ class Ruta implements IRuta
      */
     public function parametros(?bool $tiene = null): bool
     {
-        return $tiene === null ? $this->parametros : $this->parametros = $tiene;
+        return $this->parametros = $tiene ?? $this->parametros;
+    }
+
+    /**
+     * Obtiene o agrega un alias asociado a la ruta
+     *
+     * Si no se recibe nada por parámetro se devolverá la
+     * lista de alias o **null** si no existen alias. Caso
+     * contrario se agregará un nuevo alias a la lista.
+     *
+     * @return ?array
+     */
+    public function alias(?string $alias = null): ?array
+    {
+        if( !is_null($alias) ) {
+            $this->alias[] = $alias;
+        }
+        return $this->alias;
     }
 
 }

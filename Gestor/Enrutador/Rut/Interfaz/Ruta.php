@@ -29,4 +29,11 @@ interface Ruta
      * @return array<int, Ruta> Devuelve un conjunto de nodos.
      */
     public function hijos(): ?array;
+
+    /**
+     * Obtiene los alias asociados a la ruta
+     *
+     * @return ?array
+     */
+    public function alias(): ?array;
 }
