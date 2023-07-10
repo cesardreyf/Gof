@@ -1,13 +1,13 @@
 <?php
 
-namespace Gof\Gestor\Enrutador\Nodos\Datos;
+namespace Gof\Gestor\Enrutador\Rut\Datos;
 
-use Gof\Gestor\Enrutador\Nodos\Interfaz\Nodo as INodo;
+use Gof\Gestor\Enrutador\Rut\Interfaz\Nodo as INodo;
 
 /**
  * Nodo con datos para el gestor de rutas por nodo
  *
- * @package Gof\Gestor\Enrutador\Nodos\Datos
+ * @package Gof\Gestor\Enrutador\Rut\Datos
  */
 class Nodo implements INodo
 {

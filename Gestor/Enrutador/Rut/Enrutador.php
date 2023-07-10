@@ -1,9 +1,9 @@
 <?php
 
-namespace Gof\Gestor\Enrutador\Nodos;
+namespace Gof\Gestor\Enrutador\Rut;
 
 use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
-use Gof\Gestor\Enrutador\Nodos\Datos\Nodo;
+use Gof\Gestor\Enrutador\Rut\Datos\Nodo;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
@@ -19,7 +19,7 @@ use Gof\Interfaz\Lista\Textos as Lista;
  * dentro del árbol de nodos, osea que no se considera una página accesible, el
  * nombre de la clase será **clase inexistente**.
  *
- * @package Gof\Gestor\Enrutador\Nodos
+ * @package Gof\Gestor\Enrutador\Rut
  */
 class Enrutador implements IEnrutador
 {

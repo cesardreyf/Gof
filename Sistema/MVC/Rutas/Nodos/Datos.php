@@ -2,8 +2,8 @@
 
 namespace Gof\Sistema\MVC\Rutas\Nodos;
 
-use Gof\Gestor\Enrutador\Nodos\Datos\NodoRaiz;
-use Gof\Gestor\Enrutador\Nodos\Interfaz\Nodo;
+use Gof\Gestor\Enrutador\Rut\Datos\NodoRaiz;
+use Gof\Gestor\Enrutador\Rut\Interfaz\Nodo;
 
 /**
  * Datos para el gestor de rutas por nodos

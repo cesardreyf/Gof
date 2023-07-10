@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Gestor\Enrutador\Nodos\Interfaz;
+namespace Gof\Gestor\Enrutador\Rut\Interfaz;
 
 /**
  * Interfaz para los nodos del enrutador por nodos
  *
- * @package Gof\Gestor\Enrutador\Nodos\Interfaz
+ * @package Gof\Gestor\Enrutador\Rut\Interfaz
  */
 interface Nodo
 {
