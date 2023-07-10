@@ -2,8 +2,8 @@
 
 namespace Gof\Gestor\Enrutador\Nodos;
 
+use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
 use Gof\Gestor\Enrutador\Nodos\Datos\Nodo;
-use Gof\Interfaz\Enrutador\Enrutador as IEnrutador;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**

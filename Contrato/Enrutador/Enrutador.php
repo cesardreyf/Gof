@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Interfaz\Enrutador;
+namespace Gof\Contrato\Enrutador;
 
 /**
  * Interfaz para clases que devuelvan el nombre de una clase válido para instanciar
  *
- * @package Gof\Interfaz\Enrutador
+ * @package Gof\Contrato\Enrutador
  */
 interface Enrutador
 {

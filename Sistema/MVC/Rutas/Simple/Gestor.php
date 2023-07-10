@@ -3,9 +3,9 @@
 namespace Gof\Sistema\MVC\Rutas\Simple;
 
 use Exception;
+use Gof\Contrato\Enrutador\Enrutador;
 use Gof\Gestor\Enrutador\Simple\Enrutador as EnrutadorSimple;
 use Gof\Gestor\Url\Amigable\GestorUrl;
-use Gof\Interfaz\Enrutador\Enrutador;
 
 /**
  * Gestiona la instanciación de un gestor de rutas simple

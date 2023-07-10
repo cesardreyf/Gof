@@ -3,9 +3,9 @@
 namespace Gof\Sistema\MVC\Rutas\Nodos;
 
 use Exception;
+use Gof\Contrato\Enrutador\Enrutador;
 use Gof\Gestor\Enrutador\Nodos\Enrutador as EnrutadorNodos;
 use Gof\Gestor\Url\Amigable\GestorUrl;
-use Gof\Interfaz\Enrutador\Enrutador;
 
 /**
  * Gestiona la instanciación de un gestor de rutas por nodos

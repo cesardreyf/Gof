@@ -2,7 +2,7 @@
 
 namespace Gof\Gestor\Enrutador\Simple;
 
-use Gof\Interfaz\Enrutador\Enrutador as IEnrutador;
+use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
