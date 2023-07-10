@@ -3,7 +3,7 @@
 namespace Gof\Gestor\Enrutador\Rut;
 
 use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
-use Gof\Gestor\Enrutador\Rut\Datos\Nodo;
+use Gof\Gestor\Enrutador\Rut\Datos\Ruta;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
@@ -37,28 +37,28 @@ class Enrutador implements IEnrutador
      * Constructor
      *
      * @param Lista  $objetivos   Lista de recursos a buscar en el árbol de nodos.
-     * @param Nodo   $nodoPadre   Nodo raíz que contenga las páginas accesibles.
+     * @param Ruta   $rutaPadre   Ruta raíz que contenga las páginas accesibles.
      * @param string $principal   Clase a asociar al recurso principal (en caso de ausencia de recursos).
-     * @param string $inexistente Clase a asociar en caso de que el recurso solicitado no coincida con ningún nodo.
+     * @param string $inexistente Clase a asociar en caso de que el recurso solicitado no coincida con ninguna ruta.
      */
-    public function __construct(Lista $solicitud, Nodo $nodoPadre, string $principal, string $inexistente)
+    public function __construct(Lista $solicitud, Ruta $rutaPadre, string $principal, string $inexistente)
     {
         $this->clase = $principal;
-        $nodos = $nodoPadre->hijos();
+        $rutas = $rutaPadre->hijos();
         $recursos = $solicitud->lista();
 
         while( $recurso = array_shift($recursos) ) {
-            foreach( $nodos as $nodo ) {
-                if( in_array($recurso, $nodo->paginas()) ) {
-                    $this->clase = $nodo->clase();
-                    $nodos = $nodo->hijos();
-                    $nodoPadre = $nodo;
+            foreach( $rutas as $ruta ) {
+                if( in_array($recurso, $ruta->paginas()) ) {
+                    $this->clase = $ruta->clase();
+                    $rutas = $ruta->hijos();
+                    $rutaPadre = $ruta;
                     continue 2;
                 }
             }
 
             array_unshift($recursos, $recurso);
-            if( $nodoPadre->parametros() === true ) {
+            if( $rutaPadre->parametros() === true ) {
                 break;
             }
 

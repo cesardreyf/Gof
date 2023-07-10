@@ -2,14 +2,14 @@
 
 namespace Gof\Gestor\Enrutador\Rut\Datos;
 
-use Gof\Gestor\Enrutador\Rut\Interfaz\Nodo as INodo;
+use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 
 /**
- * Nodo con datos para el gestor de rutas por nodo
+ * Ruta con datos para el gestor de rutas
  *
  * @package Gof\Gestor\Enrutador\Rut\Datos
  */
-class Nodo implements INodo
+class Ruta implements IRuta
 {
     /**
      * @var array<int, INodo> Lista de nodos hijos.
@@ -22,7 +22,7 @@ class Nodo implements INodo
     private array $paginas;
 
     /**
-     * @var bool Indica si el nodo contempla parámetros o no.
+     * @var bool Indica si la ruta contempla parámetros o no.
      */
     private bool $parametros;
 
@@ -46,13 +46,13 @@ class Nodo implements INodo
     }
 
     /**
-     * Agrega un nuevo nodo hijo al array interno de nodos hijos
+     * Agrega una nueva ruta hijo al array interno
      *
-     * @param INodo $nodo Nuevo nodo hijo.
+     * @param IRuta $nodo Nuevo nodo hijo.
      *
-     * @return INodo Devuelve una instancia del mismo nodo recibido por parámetro.
+     * @return IRuta Devuelve una instancia del mismo nodo recibido por parámetro.
      */
-    public function agregar(INodo $nodo): INodo
+    public function agregar(IRuta $nodo): IRuta
     {
         return $this->nodos[] = $nodo;
     }

@@ -4,7 +4,7 @@ namespace Gof\Sistema\MVC\Rutas\Nodos;
 
 use Exception;
 use Gof\Contrato\Enrutador\Enrutador;
-use Gof\Gestor\Enrutador\Rut\Enrutador as EnrutadorNodos;
+use Gof\Gestor\Enrutador\Rut\Enrutador as Rut;
 use Gof\Gestor\Url\Amigable\GestorUrl;
 
 /**
@@ -59,7 +59,7 @@ class Gestor
         // Procesa la consulta, la divide y la convierte en una lista
         $peticion = new GestorUrl($consulta, $this->datos->separador);
 
-        $this->enrutador = new EnrutadorNodos(
+        $this->enrutador = new Rut(
             $peticion->lista(),
             $this->datos->paginasDisponibles,
             $this->datos->paginaPrincipal,

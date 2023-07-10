@@ -7,7 +7,7 @@ namespace Gof\Gestor\Enrutador\Rut\Interfaz;
  *
  * @package Gof\Gestor\Enrutador\Rut\Interfaz
  */
-interface Nodo
+interface Ruta
 {
     /**
      * Obtiene el nombre completo de la clase
@@ -26,7 +26,7 @@ interface Nodo
     /**
      * Obtiene una lista de nodos hijos
      *
-     * @return array<int, Nodo> Devuelve un conjunto de nodos.
+     * @return array<int, Ruta> Devuelve un conjunto de nodos.
      */
     public function hijos(): array;
 }

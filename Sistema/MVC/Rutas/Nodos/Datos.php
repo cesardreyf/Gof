@@ -2,8 +2,8 @@
 
 namespace Gof\Sistema\MVC\Rutas\Nodos;
 
-use Gof\Gestor\Enrutador\Rut\Datos\NodoRaiz;
-use Gof\Gestor\Enrutador\Rut\Interfaz\Nodo;
+use Gof\Gestor\Enrutador\Rut\Datos\RutaRaiz;
+use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta;
 
 /**
  * Datos para el gestor de rutas por nodos
@@ -48,13 +48,13 @@ class Datos
     /**
      * Conjunto de nodos que representan los controladores accesibles
      *
-     * @var Nodo Nodo raíz.
+     * @var Ruta Ruta padre.
      */
-    public Nodo $paginasDisponibles;
+    public Ruta $paginasDisponibles;
 
     public function __construct()
     {
-        $this->paginasDisponibles = new NodoRaiz();
+        $this->paginasDisponibles = new RutaRaiz();
     }
 
 }

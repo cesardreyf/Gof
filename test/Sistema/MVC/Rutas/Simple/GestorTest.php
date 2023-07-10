@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Rutas\Simple;
 
 use Exception;
+use Gof\Contrato\Enrutador\Enrutador;
 use Gof\Gestor\Enrutador\Simple\Enrutador as EnrutadorSimple;
-use Gof\Interfaz\Enrutador\Enrutador;
 use Gof\Sistema\MVC\Rutas\Simple\Datos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor;
 use PHPUnit\Framework\TestCase;

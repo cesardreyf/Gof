@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Sistema\MVC\Rutas;
 
-use Gof\Interfaz\Enrutador\Enrutador;
+use Gof\Contrato\Enrutador\Enrutador;
 use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;

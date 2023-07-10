@@ -3,13 +3,13 @@
 namespace Gof\Gestor\Enrutador\Rut\Datos;
 
 /**
- * Nodo raíz
+ * Ruta raíz
  *
- * Clase que representa un nodo raíz y solo contiene una lista de nodos hijos.
+ * Clase que representa una ruta raíz y solo contiene una lista de nodos hijos.
  *
  * @package Gof\Gestor\Enrutador\Rut\Datos
  */
-class NodoRaiz extends Nodo
+class RutaRaiz extends Ruta
 {
 
     /**
