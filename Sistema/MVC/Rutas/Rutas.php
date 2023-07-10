@@ -3,8 +3,10 @@
 namespace Gof\Sistema\MVC\Rutas;
 
 use Gof\Contrato\Enrutador\Enrutador;
+use Gof\Gestor\Url\Amigable\GestorUrl;
 use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
+use Gof\Sistema\MVC\Rutas\Excepcion\ConfiguracionInexistente;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Nodos\Gestor as GestorPorNodos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
@@ -17,19 +19,14 @@ use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
 class Rutas implements Ejecutable
 {
     /**
-     * @var ?Enrutador Instancia del enrutador
-     */
-    private ?Enrutador $enrutador = null;
-
-    /**
-     * @var mixed Simplificador de gestor por defecto
-     */
-    private mixed $gpd = null;
-
-    /**
      * @var DAP Referencia al DAP del sistema
      */
     private DAP $dap;
+
+    /**
+     * @var Configuracion Almacena los datos de configuración
+     */
+    private ?Configuracion $configuracion = null;
 
     /**
      * Constructor
@@ -48,63 +45,76 @@ class Rutas implements Ejecutable
      *
      * @return ?Enrutador Devuelve una instancia del gestor de rutas actual.
      */
-    public function gestor(?Enrutador $enrutador = null): ?Enrutador
+    public function gestor(): ?Enrutador
     {
-        return is_null($enrutador) ? $this->enrutador : $this->enrutador = $enrutador;
+        return $this->configuracion?->enrutador;
     }
 
     /**
      * Procesa la solicitud y genera el nombre del controlador
      *
-     * Obtiene el nombre del controlador y los parámetros del enrutador.
+     * Obtiene el nombre del controlador y los parámetros del enrutador y los
+     * coloca en el DAP.
      *
      * @throws EnrutadorInexistente si no se definió el enrutador.
      */
     public function ejecutar()
     {
-        if( is_null($this->enrutador) ) {
+        $enrutador = $this->obtenerEnrutador();
+        $peticion  = $this->obtenerSolicitud();
+
+        $enrutador->procesar($peticion->lista());
+        $this->dap->parametros  = $enrutador->resto();
+        $this->dap->controlador = $enrutador->nombreClase();
+    }
+
+    /**
+     * Obtiene o define la configuración del gestor de rutas
+     *
+     * @return Configuracion
+     */
+    public function configuracion(?Configuracion $configuracion): Configuracion
+    {
+        return $this->configuracion = $configuracion ?? $this->configuracion;
+    }
+
+    /**
+     * Obtiene el enrutador o lanza una excepción si no existe ninguna
+     *
+     * @return Enrutador Devuelve la instancia del enrutador.
+     *
+     * @throws EnrutadorInexistente si no se registró ningún enrutador.
+     *
+     * @access private
+     */
+    private function obtenerEnrutador(): Enrutador
+    {
+        $configuracion = $this->configuracion;
+        if( is_null($configuracion) ) {
+            throw new ConfiguracionInexistente();
+        }
+
+        $enrutador = $configuracion->enrutador;
+        if( is_null($enrutador) ) {
             throw new EnrutadorInexistente();
         }
 
-        // NOTA
-        // Debería el gestor convertirlo en minúsculas?
-        // Creo que esto debería ser trabajo del enrutador no del gestor.
-        $this->dap->controlador = ucfirst($this->enrutador->nombreClase());
-        $this->dap->parametros  = $this->enrutador->resto();
+        return $enrutador;
     }
 
     /**
-     * Simplificador del enrutador simple
+     * Obtiene la solicitud para ser procesada por el enrutador
      *
-     * Simplifica la configuración y definición del enrutador simple como predeterminado.
+     * @return GestorUrl
      *
-     * @return GestorSimple
+     * @access private
      */
-    public function simple(): GestorSimple
+    private function obtenerSolicitud()
     {
-        if( is_null($this->gpd) || !$this->gpd instanceof GestorSimple ) {
-            $this->gpd = new GestorSimple($this->enrutador);
-            $this->gpd->lanzarExcepcion = true;
-        }
-
-        return $this->gpd;
-    }
-
-    /**
-     * Simplificador del enrutador por nodos
-     *
-     * Simplifica la configuración y definición del enrutador por nodos como predeterminado.
-     *
-     * @return GestorPorNodos
-     */
-    public function nodos(): GestorPorNodos
-    {
-        if( is_null($this->gpd) || !$this->gpd instanceof GestorPorNodos ) {
-            $this->gpd = new GestorPorNodos($this->enrutador);
-            $this->gpd->lanzarExcepcion = true;
-        }
-
-        return $this->gpd;
+        return new GestorUrl(
+            $_GET[$this->configuracion->urlClave] ?? '',
+            $this->configuracion->separador
+        );
     }
 
 }

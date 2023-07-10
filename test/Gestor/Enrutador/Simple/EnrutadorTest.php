@@ -36,7 +36,8 @@ class EnrutadorTest extends TestCase
     public function test_enrutadorSinObjetivos(): void
     {
         $paginasObjetivos = new ListaDeTextos([]);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
+        $enrutador = new Enrutador($this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
+        $this->assertTrue($enrutador->procesar($paginasObjetivos));
         $this->assertStringContainsStringIgnoringCase($this->paginaPrincipal, $enrutador->nombreClase(), 'Si la lista de objetivos está vacía el nombre de la clase debería ser igual a la página principal');
     }
 
@@ -48,7 +49,8 @@ class EnrutadorTest extends TestCase
     public function test_enrutadorConMultiplesDatas(string $nombreDeLaClase, array $objetivos): void
     {
         $paginasObjetivos = new ListaDeTextos($objetivos);
-        $enrutador = new Enrutador($paginasObjetivos, $this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
+        $enrutador = new Enrutador($this->paginasDisponibles, $this->paginaPrincipal, $this->paginaInexistente);
+        $this->assertTrue($enrutador->procesar($paginasObjetivos));
         $this->assertStringContainsStringIgnoringCase($nombreDeLaClase, $enrutador->nombreClase());
     }
 

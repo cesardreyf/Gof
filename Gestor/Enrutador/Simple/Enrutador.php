@@ -20,10 +20,42 @@ class Enrutador implements IEnrutador
      */
     private string $nombreClase = '';
 
+    /**
+     * @var array Resto de la solicitud
+     */
     private array $resto = [];
+
+    /** 
+     * @var array Lista de páginas disponibles
+     */
+    private array $disponibles;
+
+    /**
+     * @var string Nombre del controlador principal
+     */
+    private string $principal;
+
+    /**
+     * @var string Nombre del controlador que será usado en caso de no encontrar el recurso solicitado
+     */
+    private string $inexistente;
 
     /**
      * Constructor
+     *
+     * @param string[]|array<string, array> $disponibles Array con los elementos disponibles y accesibles
+     * @param string                        $principal   Nombre de los archivos considerados principales
+     * @param string                        $inexistente Nombre del archivo utilizado en caso de inexistencia
+     */
+    public function __construct(array $disponibles, string $principal, string $inexistente)
+    {
+        $this->principal   = $principal;
+        $this->disponibles = $disponibles;
+        $this->inexistente = $inexistente;
+    }
+
+    /**
+     * Procesa la solicitud
      *
      * En base a una lista de objetivos busca en una determinada carpeta de forma
      * secuencial los archivos o carpetas correspondientes. Una vez encontrado el
@@ -46,18 +78,16 @@ class Enrutador implements IEnrutador
      * por el parámetro $principal, sin ningún namespace.
      *
      * @param Lista $objetivos Lista con elementos de tipo texto con los objetivos
-     * @param string[]|array<string, array> $disponibles Array con los elementos disponibles y accesibles
-     * @param string $carpeta Carpeta donde se buscarán los archivos/clase
-     * @param string $principal Nombre de los archivos considerados principales
-     * @param string $inexistente Nombre del archivo utilizado en caso de inexistencia
      *
      * @throws Exception Si no existe ningún archivo que coincida con $principal o $inexistente
      */
-    public function __construct(Lista $objetivos, array $disponibles, string $principal, string $inexistente)
+    public function procesar(Lista $objetivos): bool
     {
         $espacioDeNombre = '';
-        $recursos = $objetivos->lista();
-        $nombreDeLaClase = ucfirst($principal);
+        $disponibles     = $this->disponibles;
+        $inexistente     = $this->inexistente;
+        $recursos        = $objetivos->lista();
+        $nombreDeLaClase = ucfirst($this->principal);
 
         while( $objetivo = array_shift($recursos) ) {
             if( in_array($objetivo, $disponibles) ) {
@@ -67,7 +97,7 @@ class Enrutador implements IEnrutador
 
             if( isset($disponibles[$objetivo]) && is_array($disponibles[$objetivo]) ) {
                 $espacioDeNombre .= ucfirst($objetivo) . '\\';
-                $nombreDeLaClase = ucfirst($principal);
+                $nombreDeLaClase = ucfirst($this->principal);
                 $disponibles = $disponibles[$objetivo];
                 continue;
             }
@@ -81,6 +111,7 @@ class Enrutador implements IEnrutador
 
         $this->resto = $recursos;
         $this->nombreClase = $espacioDeNombre . $nombreDeLaClase;
+        return true;
     }
 
     /**

@@ -12,7 +12,7 @@ use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 class Ruta implements IRuta
 {
     /**
-     * @var array<int, INodo> Lista de nodos hijos.
+     * @var array<int, IRuta> Lista de nodos hijos.
      */
     private array $nodos;
 
