@@ -1,14 +1,25 @@
 <?php
 
-namespace Gof\Interfaz\Enrutador;
+namespace Gof\Contrato\Enrutador;
+
+use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
  * Interfaz para clases que devuelvan el nombre de una clase válido para instanciar
  *
- * @package Gof\Interfaz\Enrutador
+ * @package Gof\Contrato\Enrutador
  */
 interface Enrutador
 {
+    /**
+     * Procesa la solicitud
+     *
+     * @param Lista $solicitud Solicitud a procesar
+     *
+     * @return bool Devuelve el estado del procesamiento.
+     */
+    public function procesar(Lista $solicitud): bool;
+
     /**
      * Devuelve el nombre completo de la clase
      *
