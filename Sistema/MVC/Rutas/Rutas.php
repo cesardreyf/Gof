@@ -73,7 +73,7 @@ class Rutas implements Ejecutable
      *
      * @return Configuracion
      */
-    public function configuracion(?Configuracion $configuracion): Configuracion
+    public function configuracion(?Configuracion $configuracion = null): ?Configuracion
     {
         return $this->configuracion = $configuracion ?? $this->configuracion;
     }
@@ -94,12 +94,13 @@ class Rutas implements Ejecutable
             throw new ConfiguracionInexistente();
         }
 
-        $enrutador = $configuracion->enrutador;
-        if( is_null($enrutador) ) {
-            throw new EnrutadorInexistente();
-        }
+        // $enrutador = $configuracion->enrutador;
+        // if( is_null($enrutador) ) {
+        //     throw new EnrutadorInexistente();
+        // }
 
-        return $enrutador;
+        // return $enrutador;
+        return $configuracion->enrutador;
     }
 
     /**

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Rutas;
 
 use Gof\Contrato\Enrutador\Enrutador;
+use Gof\Gestor\Url\Amigable\GestorUrl;
 use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
+use Gof\Sistema\MVC\Rutas\Configuracion;
+use Gof\Sistema\MVC\Rutas\Excepcion\ConfiguracionInexistente;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Rutas;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
@@ -16,67 +19,81 @@ class RutasTest extends TestCase
 {
     private DAP $dap;
     private Rutas $rutas;
+    private Configuracion $configuracion;
 
     public function setUp(): void
     {
         $this->dap = new DAP();
         $this->rutas = new Rutas($this->dap);
+        $this->configuracion = new Configuracion();
+        $this->rutas->configuracion($this->configuracion);
     }
 
-    public function testAlInstanciarLaClaseNoExisteNingunEnrutador(): void
-    {
-        $this->assertNull($this->rutas->gestor());
-    }
-
-    public function testEsUnProcesoEjecutablePorLaAplicacion(): void
-    {
-        $this->assertInstanceOf(Ejecutable::class, $this->rutas);
-    }
-
-    public function testEjecutarSinUnEnrutadorLanzaUnaExcepcion(): void
-    {
-        $this->expectException(EnrutadorInexistente::class);
-        $this->rutas->ejecutar();
-    }
-
-    public function testMetodoGestorCambiaElGestorDeRutas(): void
-    {
-        $primero = $this->createMock(Enrutador::class);
-        $segundo = $this->createMock(Enrutador::class);
-
-        $this->assertSame($primero, $this->rutas->gestor($primero));
-        $this->assertSame($segundo, $this->rutas->gestor($segundo));
-
-        $this->assertNotSame($primero, $this->rutas->gestor());
-    }
-
-    public function testEjecutarObtieneInformacionDelEnrutador(): void
+    public function testMetodoGestorReflejaLaInstanciaDelEnrutadorEnConfiguracion(): void
     {
         $enrutador = $this->createMock(Enrutador::class);
-        $this->rutas->gestor($enrutador);
+        $this->configuracion->enrutador = $enrutador;
+        $this->assertSame($enrutador, $this->rutas->gestor());
+    }
 
-        $clase = 'Nombre\Completo\De\La\Clase';
-        $resto = ['parametro1', 'parametro2'];
+    public function testMetodoConfiguracionDevuelveNullAlInstanciar(): void
+    {
+        $rutas = new Rutas($this->dap);
+        $this->assertNull($rutas->configuracion());
+    }
+
+    public function testDefinirConfiguracion(): void
+    {
+        $rutas = new Rutas($this->dap);
+        $nuevaConfiguracion = new Configuracion();
+        $this->assertNull($rutas->configuracion());
+        $rutas->configuracion($nuevaConfiguracion);
+        $this->assertSame($nuevaConfiguracion, $rutas->configuracion());
+    }
+
+    public function testEjecutarSinUnaConfiguracionLanzaExcepcion(): void
+    {
+        $this->expectException(ConfiguracionInexistente::class);
+        $rutas = new Rutas($this->dap);
+        $this->assertNull($rutas->configuracion());
+        $rutas->ejecutar();
+    }
+
+    public function testFuncionamientoEsperado()
+    {
+        $this->configuracion->separador = '/';
+        $this->configuracion->urlClave = '__peticion';
+        $_GET[$this->configuracion->urlClave] = 'recurso1/recurso2';
+
+        $enrutador = $this->createMock(Enrutador::class);
+        $this->configuracion->enrutador = $enrutador;
+
+        $separador = $this->configuracion->separador;
+        $solicitud = $_GET[$this->configuracion->urlClave];
+        $solicitudProcesado = new GestorUrl($solicitud, $separador);
+
+        $resto = ['param1', 'param2'];
+        $nombreClase = 'Controlador\Index';
+
+        $this->assertEmpty($this->dap->parametros);
+        $this->assertEmpty($this->dap->controlador);
 
         $enrutador
             ->expects($this->once())
-            ->method('nombreClase')
-            ->willReturn($clase);
-
+            ->method('procesar')
+            ->with($solicitudProcesado->lista());
         $enrutador
             ->expects($this->once())
             ->method('resto')
             ->willReturn($resto);
+        $enrutador
+            ->expects($this->once())
+            ->method('nombreClase')
+            ->willReturn($nombreClase);
 
         $this->rutas->ejecutar();
-        $this->assertSame($clase, $this->dap->controlador);
         $this->assertSame($resto, $this->dap->parametros);
-    }
-
-    public function testMetodoSimpleDevuelveUnaInstanciaDelGestorSimple(): void
-    {
-        $this->assertNull($this->rutas->gestor());
-        $this->assertInstanceOf(GestorSimple::class, $this->rutas->simple());
+        $this->assertSame($nombreClase, $this->dap->controlador);
     }
 
 }
