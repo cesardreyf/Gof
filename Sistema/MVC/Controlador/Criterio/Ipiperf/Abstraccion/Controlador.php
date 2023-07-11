@@ -5,6 +5,7 @@ namespace Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Abstraccion;
 use Gof\Sistema\MVC\Controlador\Abstraccion\Controlador as ControladorAbstracto;
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Datos\Registros;
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz\Controlador as ControladorInterfaz;
+use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Inter\Gestor as Inter;
 
 /**
  * Clase abstracta para un controlador según el criterio Ipiperf
@@ -16,9 +17,16 @@ abstract class Controlador extends ControladorAbstracto implements ControladorIn
     /**
      * Almacena los registros que alteran la ejecución del controlador
      *
-     * @return Registros
+     * @var Registros
      */
-    public Registros $registros;
+    private Registros $registros;
+
+    /**
+     * Gestor de Inters
+     *
+     * @var Inter
+     */
+    private Inter $inter;
 
     /**
      * Constructor
@@ -26,6 +34,7 @@ abstract class Controlador extends ControladorAbstracto implements ControladorIn
     public function __construct()
     {
         $this->registros = new Registros();
+        $this->inter = new Inter($this->registros);
     }
 
     /**
@@ -36,6 +45,16 @@ abstract class Controlador extends ControladorAbstracto implements ControladorIn
     public function registros(): Registros
     {
         return $this->registros;
+    }
+
+    /**
+     * Obtiene la instancia del gestor de inters
+     *
+     * @return Inter
+     */
+    public function inter(): Inter
+    {
+        return $this->inter;
     }
 
 }

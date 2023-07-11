@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Test\Sistema\MVC\Controlador;
 
-use Gof\Sistema\MVC\Controlador\Controlador;
-use PHPUnit\Framework\TestCase;
-use stdClass;
-
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
+use Gof\Sistema\MVC\Controlador\Controlador;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Controlador\Interfaz\Controlador as IControlador;
 use Gof\Sistema\MVC\Controlador\Interfaz\Criterio;
 use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 
 class ControladorTest extends TestCase
