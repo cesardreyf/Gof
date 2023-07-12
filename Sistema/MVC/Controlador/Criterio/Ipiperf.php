@@ -3,6 +3,7 @@
 namespace Gof\Sistema\MVC\Controlador\Criterio;
 
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz\Controlador;
+use Gof\Sistema\MVC\Controlador\Excepcion\ControladorIndefinido;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Controlador\Interfaz\Controlador as IControlador;
 use Gof\Sistema\MVC\Controlador\Interfaz\Criterio;
@@ -22,7 +23,7 @@ class Ipiperf implements Criterio
      *
      * @var IControlador
      */
-    private IControlador $controlador;
+    private ?IControlador $controlador = null;
 
     /**
      * Ejecuta el controlador
@@ -44,11 +45,54 @@ class Ipiperf implements Criterio
      * Si el registro RENDERIZAR está activo el método **renderizar** será
      * llamado antes de finalizar, caso contrario se finalizará el controlador.
      *
-     * @param IControlador $controlador
+     * @throws ControladorIndefinido si el controlador no se definió.
+     * @throws ControladorInvalido si el controlador no es válido.
      */
     public function ejecutar()
     {
-        $this->ejecutarControlador($this->controlador);
+        $controlador = $this->obtenerControlador();
+        $registros = $controlador->registros();
+        $vale = false; //< Volver A LLamar Error
+        $limpiarError = function() use (&$controlador, &$registros) {
+            if( $registros->error && $registros->continuar ) {
+                $registros->continuar = false;
+                $registros->error = false;
+            }
+        };
+
+        $controlador->iniciar();
+
+        if( !$registros->saltar ) {
+            $controlador->preindice();
+        }
+
+        if( $registros->error ) {
+            $controlador->error();
+            $limpiarError();
+        }
+
+        if( !$registros->error && !$registros->saltar ) {
+            $controlador->indice();
+
+            if( $registros->error ) {
+                $vale = true;
+            }
+        }
+
+        if( $registros->error && $vale ) {
+            $controlador->error();
+            $limpiarError();
+        }
+
+        if( !$registros->error && !$registros->saltar ) {
+            $controlador->posindice();
+        }
+
+        if( $registros->renderizar ) {
+            $controlador->renderizar();
+        }
+
+        $controlador->finalizar();
     }
 
     /**
@@ -62,60 +106,30 @@ class Ipiperf implements Criterio
      */
     public function controlador(IControlador $controlador)
     {
-        if( !$controlador instanceof Controlador) {
-            throw new ControladorInvalido(get_class($controlador), Controlador::class);
-        }
-
         $this->controlador = $controlador;
     }
 
     /**
-     * Ejecuta el controlador según un criterio
+     * Valida la instancia del controlador y devuelve la instancia
      *
-     * @param Controlador $controlador Instancia del controlador que implementa la interfaz esperada
+     * @return Controlador
+     *
+     * @throws ControladorIndefinido si el controlador no se definió.
+     * @throws ControladorInvalido si el controlador no es válido.
+     *
+     * @access private
      */
-    public function ejecutarControlador(Controlador $controlador)
+    private function obtenerControlador(): Controlador
     {
-        // Volver A LLamar Error
-        $vale = false;
-
-        $limpiarError = function() use (&$controlador) {
-            if( $controlador->registros()->error && $controlador->registros()->continuar ) {
-                $controlador->registros()->continuar = false;
-                $controlador->registros()->error = false;
-            }
-        };
-
-        $controlador->iniciar();
-        $controlador->preindice();
-
-        if( $controlador->registros()->error ) {
-            $controlador->error();
-            $limpiarError();
+        if( is_null($this->controlador) ) {
+            throw new ControladorIndefinido();
         }
 
-        if( !$controlador->registros()->error && !$controlador->registros()->saltar ) {
-            $controlador->indice();
-
-            if( $controlador->registros()->error ) {
-                $this->vale = true;
-            }
+        if( !$this->controlador instanceof Controlador) {
+            throw new ControladorInvalido(get_class($this->controlador), Controlador::class);
         }
 
-        if( $controlador->registros()->error && $vale ) {
-            $controlador->error();
-            $limpiarError();
-        }
-
-        if( !$controlador->registros()->error && !$controlador->registros()->saltar ) {
-            $controlador->posindice();
-        }
-
-        if( $controlador->registros()->renderizar ) {
-            $controlador->renderizar();
-        }
-
-        $controlador->finalizar();
+        return $this->controlador;
     }
 
 }
