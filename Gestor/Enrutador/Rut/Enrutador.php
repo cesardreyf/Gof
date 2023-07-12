@@ -75,10 +75,10 @@ class Enrutador implements IEnrutador
      */
     public function procesar(Lista $solicitud): bool
     {
+        $rutaPadre   = $this->rutas;
         $this->clase = $this->principal;
-        $rutaPadre = $this->rutas;
-        $rutas = $rutaPadre->hijos();
-        $recursos = $solicitud->lista();
+        $recursos    = $solicitud->lista();
+        $rutas       = $rutaPadre->hijos() ?? [];
 
         while( $recurso = array_shift($recursos) ) {
             foreach( $rutas as $ruta ) {
