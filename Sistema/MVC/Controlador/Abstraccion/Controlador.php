@@ -16,14 +16,14 @@ abstract class Controlador implements IControlador
      *
      * @param array
      */
-    private array $parametros;
+    public readonly array $parametros;
 
     /**
      * Define los parámetros del controlador
      *
      * @param array $parametros
      */
-    /*final*/ public function parametros(array $parametros)
+    final public function parametros(array $parametros)
     {
         $this->parametros = $parametros;
     }
