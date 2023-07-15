@@ -4,7 +4,7 @@ namespace Gof\Sistema\MVC\Rutas;
 
 use Gof\Contrato\Enrutador\Enrutador;
 use Gof\Gestor\Url\Amigable\GestorUrl;
-use Gof\Sistema\MVC\Datos\DAP;
+use Gof\Sistema\MVC\Aplicacion\DAP\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use Gof\Sistema\MVC\Rutas\Excepcion\ConfiguracionInexistente;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
@@ -19,29 +19,12 @@ use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
 class Rutas implements Ejecutable
 {
     /**
-     * @var DAP Referencia al DAP del sistema
-     */
-    private DAP $dap;
-
-    /**
      * @var Configuracion Almacena los datos de configuración
      */
     private ?Configuracion $configuracion = null;
 
     /**
-     * Constructor
-     *
-     * @param DAP &$dap Datos compartidos del sistema.
-     */
-    public function __construct(DAP &$dap)
-    {
-        $this->dap =& $dap;
-    }
-
-    /**
-     * Obtiene o define el gestor de rutas
-     *
-     * @param ?Enrutador $enrutador Nuevo gestor de rutas o **null** para obtener el actual.
+     * Obtiene el gestor de rutas
      *
      * @return ?Enrutador Devuelve una instancia del gestor de rutas actual.
      */
@@ -56,16 +39,18 @@ class Rutas implements Ejecutable
      * Obtiene el nombre del controlador y los parámetros del enrutador y los
      * coloca en el DAP.
      *
+     * @param DAP $dap Datos de acceso público de nivel 1.
+     *
      * @throws EnrutadorInexistente si no se definió el enrutador.
      */
-    public function ejecutar()
+    public function ejecutar(DAP $dap)
     {
         $enrutador = $this->obtenerEnrutador();
         $peticion  = $this->obtenerSolicitud();
 
         $enrutador->procesar($peticion->lista());
-        $this->dap->parametros  = $enrutador->resto();
-        $this->dap->controlador = $enrutador->nombreClase();
+        $dap->parametros  = $enrutador->resto();
+        $dap->controlador = $enrutador->nombreClase();
     }
 
     /**

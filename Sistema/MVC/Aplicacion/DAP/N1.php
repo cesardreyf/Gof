@@ -1,15 +1,15 @@
 <?php
 
-namespace Gof\Sistema\MVC\Datos;
+namespace Gof\Sistema\MVC\Aplicacion\DAP;
 
 /**
  * Datos de Acceso Público del Sistema MVC
  *
  * Datos compartidos entre gestores del sistema MVC.
  *
- * @package Gof\Sistema\MVC\Datos
+ * @package Gof\Sistema\MVC\Aplicacion\DAP
  */
-class DAP
+class N1 implements DAP
 {
     /**
      * Espacio de nombre del controlador

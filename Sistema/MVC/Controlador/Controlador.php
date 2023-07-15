@@ -3,13 +3,13 @@
 namespace Gof\Sistema\MVC\Controlador;
 
 use Gof\Gestor\Autoload\Autoload;
+use Gof\Sistema\MVC\Aplicacion\DAP\DAP;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Controlador\Interfaz\Controlador as IControlador;
 use Gof\Sistema\MVC\Controlador\Interfaz\Criterio;
-use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 
 /**
@@ -39,11 +39,6 @@ class Controlador implements Ejecutable
     private ?Criterio $criterio = null;
 
     /**
-     * @var DAP Referencia al DAP del sistema
-     */
-    private DAP $dap;
-
-    /**
      * @var Procesos Gestor de procesos de la aplicación
      */
     private Procesos $procesos;
@@ -54,15 +49,18 @@ class Controlador implements Ejecutable
     private ?IControlador $instancia = null;
 
     /**
+     * @var string Espacio de nombre que se le dará al controlador por defecto
+     */
+    private string $espacioDeNombre = '';
+
+    /**
      * Constructor
      *
-     * @param DAP      &$dap      DAP del sistema
-     * @param Autoload  $autoload Instancia del gestor de autoload
-     * @param Procesos  $procesos Instancia del gestor de procesos de la aplicación
+     * @param Autoload $autoload Instancia del gestor de autoload
+     * @param Procesos $procesos Instancia del gestor de procesos de la aplicación
      */
-    public function __construct(DAP &$dap, Autoload $autoload, Procesos $procesos)
+    public function __construct(Autoload $autoload, Procesos $procesos)
     {
-        $this->dap =& $dap;
         $this->autoload = $autoload;
         $this->procesos = $procesos;
     }
@@ -76,26 +74,28 @@ class Controlador implements Ejecutable
      * Si existe un criterio registrado este recibirá el controlador para
      * ejecutar los métodos que requiera.
      *
+     * @param DAP $dap Datos de acceso público de nivel 1.
+     *
      * @throws ControladorInexistente si no se pudo crear el controlador por que no existe.
      * @throws ControladorInvalido si la instancia del objeto creado no implementa la interfaz Controlador.
      *
      * @see IControlador
      * @see Criterio
      */
-    public function ejecutar()
+    public function ejecutar(DAP $dap)
     {
-        $controlador = $this->autoload->instanciar($this->dap->edn . $this->dap->controlador, ...$this->dap->argumentos);
+        $controlador = $this->autoload->instanciar($this->espacioDeNombre . $dap->controlador, ...$dap->argumentos);
 
         if( is_null($controlador) ) {
-            throw new ControladorInexistente($this->dap->controlador);
+            throw new ControladorInexistente($dap->controlador);
         }
 
         if( !$controlador instanceof IControlador ) {
-            throw new ControladorInvalido($this->dap->controlador, IControlador::class);
+            throw new ControladorInvalido($dap->controlador, IControlador::class);
         }
 
         // Le pasa los parámetros al controlador
-        $controlador->parametros($this->dap->parametros);
+        $controlador->parametros($dap->parametros);
 
         if( !is_null($this->criterio) ) {
             $this->criterio->controlador($controlador);
@@ -128,7 +128,7 @@ class Controlador implements Ejecutable
      */
     public function espacioDeNombre(?string $edn = null)
     {
-        return $this->dap->edn = $edn ?? $this->dap->edn;
+        return $this->espacioDeNombre = $edn ?? $this->espacioDeNombre;
     }
 
     /**

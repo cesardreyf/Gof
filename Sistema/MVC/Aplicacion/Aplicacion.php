@@ -2,6 +2,7 @@
 
 namespace Gof\Sistema\MVC\Aplicacion;
 
+use Gof\Sistema\MVC\Aplicacion\DAP\Niveles;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
@@ -29,11 +30,17 @@ class Aplicacion
     private Procesos $procesos;
 
     /**
+     * @var Niveles Gestor de obtención de los diferentes DAP's
+     */
+    private Niveles $dap;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->lp = array_map(function() { return []; }, Prioridad::cases());
+        $this->dap = new Niveles();
+        $this->lp = array_fill(0, count(Prioridad::cases()), []);
         $this->procesos = new Procesos($this->lp, ...Prioridad::cases());
     }
 
@@ -51,26 +58,28 @@ class Aplicacion
     {
         $hayProcesos = true;
         $prioridades = Prioridad::cases();
-        $prioridad = current($prioridades)->value;
+        $prioridad = current($prioridades);
+        $datos = $this->dap->segunPrioridad($prioridad);
 
         while( $hayProcesos ) {
-            $proceso = current($this->lp[$prioridad]);
+            $proceso = current($this->lp[$prioridad->value]);
 
             if( $proceso === false ) {
-                $prioridadTmp = next($prioridades)->value ?? null;
+                $prioridadTmp = next($prioridades) ?? null;
 
-                if( is_null($prioridadTmp) ) {
+                if( $prioridadTmp === false ) {
                     $prioridadTmp = $prioridad;
                     $hayProcesos = false;
                 }
 
-                reset($this->lp[$prioridad]);
+                reset($this->lp[$prioridad->value]);
                 $prioridad = $prioridadTmp;
+                $datos = $this->dap->segunPrioridad($prioridad);
                 continue;
             }
 
-            $proceso->ejecutar();
-            next($this->lp[$prioridad]);
+            $proceso->ejecutar($datos);
+            next($this->lp[$prioridad->value]);
         }
     }
 

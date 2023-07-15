@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Controlador\Criterio;
 
 use Closure;
+use Gof\Sistema\MVC\Aplicacion\DAP\DAP;
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf;
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Datos\Registros;
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz\Controlador as ControladorDelCriterio;
@@ -15,12 +16,18 @@ use PHPUnit\Framework\TestCase;
 
 class IpiperfTest extends TestCase
 {
+    private DAP $dap;
+
+    public function setUp(): void
+    {
+        $this->dap = $this->createMock(DAP::class);
+    }
 
     public function testLanzarExcepcionSiSeEjecutaSinDefinirElControlador(): void
     {
         $this->expectException(ControladorIndefinido::class);
         $criterio = new Ipiperf();
-        $criterio->ejecutar();
+        $criterio->ejecutar($this->dap);
     }
 
     public function testLanzarExcepcionSiElControladorNoImplementaLaInterfazDelCriterio(): void
@@ -28,7 +35,7 @@ class IpiperfTest extends TestCase
         $this->expectException(ControladorInvalido::class);
         $criterio = new Ipiperf();
         $criterio->controlador($this->createMock(ControladorBase::class));
-        $criterio->ejecutar();
+        $criterio->ejecutar($this->dap);
     }
 
     /**
@@ -73,7 +80,7 @@ class IpiperfTest extends TestCase
                 ->method($metodo);
         }
         $criterio->controlador($controlador);
-        $criterio->ejecutar();
+        $criterio->ejecutar($this->dap);
         $this->assertSame($ordenEsperado, $orden);
     }
 

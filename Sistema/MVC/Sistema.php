@@ -8,7 +8,6 @@ use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Controlador\Controlador;
-use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
 
@@ -38,11 +37,6 @@ class Sistema
     private Rutas $rutas;
 
     /**
-     * @var DAP Datos de Acceso Público
-     */
-    private DAP $dap;
-
-    /**
      * @var Aplicacion Instancia del gestor de aplicación.
      */
     private Aplicacion $aplicacion;
@@ -67,17 +61,14 @@ class Sistema
         $this->autoload = new Autoload($cargadorDeArchivos, new FiltroPSR4());
         $this->autoload->registrar();
 
-        // Datos compartidos
-        $this->dap = new DAP();
-
         // Gestor de rutas
-        $this->rutas = new Rutas($this->dap);
+        $this->rutas = new Rutas();
 
         // Gestor de aplicación
         $this->aplicacion = new Aplicacion();
 
         // Gestor del controlador
-        $this->controlador = new Controlador($this->dap, $this->autoload, $this->aplicacion->procesos());
+        $this->controlador = new Controlador($this->autoload, $this->aplicacion->procesos());
 
         // Agregando los primeros procesos
         $this->aplicacion->procesos()->agregar($this->rutas,       Prioridad::Alta);

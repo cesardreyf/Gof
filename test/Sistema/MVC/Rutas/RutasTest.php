@@ -6,7 +6,7 @@ namespace Test\Sistema\MVC\Rutas;
 
 use Gof\Contrato\Enrutador\Enrutador;
 use Gof\Gestor\Url\Amigable\GestorUrl;
-use Gof\Sistema\MVC\Datos\DAP;
+use Gof\Sistema\MVC\Aplicacion\DAP\N1 as DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use Gof\Sistema\MVC\Rutas\Configuracion;
 use Gof\Sistema\MVC\Rutas\Excepcion\ConfiguracionInexistente;
@@ -24,7 +24,7 @@ class RutasTest extends TestCase
     public function setUp(): void
     {
         $this->dap = new DAP();
-        $this->rutas = new Rutas($this->dap);
+        $this->rutas = new Rutas();
         $this->configuracion = new Configuracion();
         $this->rutas->configuracion($this->configuracion);
     }
@@ -38,13 +38,13 @@ class RutasTest extends TestCase
 
     public function testMetodoConfiguracionDevuelveNullAlInstanciar(): void
     {
-        $rutas = new Rutas($this->dap);
+        $rutas = new Rutas();
         $this->assertNull($rutas->configuracion());
     }
 
     public function testDefinirConfiguracion(): void
     {
-        $rutas = new Rutas($this->dap);
+        $rutas = new Rutas();
         $nuevaConfiguracion = new Configuracion();
         $this->assertNull($rutas->configuracion());
         $rutas->configuracion($nuevaConfiguracion);
@@ -54,9 +54,9 @@ class RutasTest extends TestCase
     public function testEjecutarSinUnaConfiguracionLanzaExcepcion(): void
     {
         $this->expectException(ConfiguracionInexistente::class);
-        $rutas = new Rutas($this->dap);
+        $rutas = new Rutas();
         $this->assertNull($rutas->configuracion());
-        $rutas->ejecutar();
+        $rutas->ejecutar($this->dap);
     }
 
     public function testFuncionamientoEsperado()
@@ -91,7 +91,7 @@ class RutasTest extends TestCase
             ->method('nombreClase')
             ->willReturn($nombreClase);
 
-        $this->rutas->ejecutar();
+        $this->rutas->ejecutar($this->dap);
         $this->assertSame($resto, $this->dap->parametros);
         $this->assertSame($nombreClase, $this->dap->controlador);
     }

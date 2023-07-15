@@ -2,6 +2,7 @@
 
 namespace Gof\Sistema\MVC\Controlador\Criterio;
 
+use Gof\Sistema\MVC\Aplicacion\DAP\DAP;
 use Gof\Sistema\MVC\Controlador\Criterio\Ipiperf\Interfaz\Controlador;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorIndefinido;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
@@ -45,10 +46,12 @@ class Ipiperf implements Criterio
      * Si el registro RENDERIZAR está activo el método **renderizar** será
      * llamado antes de finalizar, caso contrario se finalizará el controlador.
      *
+     * @param DAP $dap Datos de acceso público de nivel 1.
+     *
      * @throws ControladorIndefinido si el controlador no se definió.
      * @throws ControladorInvalido si el controlador no es válido.
      */
-    public function ejecutar()
+    public function ejecutar(DAP $dap)
     {
         $controlador = $this->obtenerControlador();
         $registros = $controlador->registros();

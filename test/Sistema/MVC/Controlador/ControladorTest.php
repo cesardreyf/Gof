@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Controlador;
 
 use Gof\Gestor\Autoload\Autoload;
+use Gof\Sistema\MVC\Aplicacion\DAP\N1 as DAP;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 use Gof\Sistema\MVC\Controlador\Controlador;
@@ -12,7 +13,6 @@ use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Controlador\Interfaz\Controlador as IControlador;
 use Gof\Sistema\MVC\Controlador\Interfaz\Criterio;
-use Gof\Sistema\MVC\Datos\DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -30,7 +30,7 @@ class ControladorTest extends TestCase
         $this->dap = $this->createMock(DAP::class);
         $this->autoload = $this->createMock(Autoload::class);
         $this->procesos = $this->createMock(Procesos::class);
-        $this->controlador = new Controlador($this->dap, $this->autoload, $this->procesos);
+        $this->controlador = new Controlador($this->autoload, $this->procesos);
     }
 
     public function testImplementarEjecutable(): void
@@ -44,14 +44,14 @@ class ControladorTest extends TestCase
     public function testEjecutarCreaUnaInstanciaTeniendoEnCuentaElDAP(DAP $dap): void
     {
         $this->dap = $dap;
-        $nombreDeLaClase = $dap->edn . $dap->controlador;
+        $nombreDeLaClase = $dap->controlador;
         $instanciaDelControlador = $this->createMock(IControlador::class);
         $this->autoload
             ->expects($this->once())
             ->method('instanciar')
             ->with($nombreDeLaClase, ...$dap->argumentos)
             ->willReturn($instanciaDelControlador);
-        $this->controlador->ejecutar();
+        $this->controlador->ejecutar($this->dap);
         $this->assertSame($instanciaDelControlador, $this->controlador->instancia());
     }
 
@@ -72,7 +72,7 @@ class ControladorTest extends TestCase
             ->expects($this->once())
             ->method('instanciar')
             ->willReturn(null);
-        $this->controlador->ejecutar();
+        $this->controlador->ejecutar($this->dap);
     }
 
     public function testLanzarExcepcionAlEjecutarSiLaInstanciaNoImplementaLaInterfazRequerida(): void
@@ -82,7 +82,7 @@ class ControladorTest extends TestCase
             ->expects($this->once())
             ->method('instanciar')
             ->willReturn(new stdClass());
-        $this->controlador->ejecutar();
+        $this->controlador->ejecutar($this->dap);
     }
 
     public function testAlmacenarLaInstanciaAlEjecutarCorrectamente(): void
@@ -92,7 +92,7 @@ class ControladorTest extends TestCase
             ->expects($this->once())
             ->method('instanciar')
             ->willReturn($instanciaDelControlador);
-        $this->controlador->ejecutar();
+        $this->controlador->ejecutar($this->dap);
         $this->assertSame($instanciaDelControlador, $this->controlador->instancia());
     }
 
@@ -108,7 +108,7 @@ class ControladorTest extends TestCase
             ->expects($this->once())
             ->method('parametros')
             ->with($this->dap->parametros);
-        $this->controlador->ejecutar();
+        $this->controlador->ejecutar($this->dap);
     }
 
     public function testEjecutarPasaLaInstanciaDelControladorAlCriterio(): void
@@ -124,7 +124,7 @@ class ControladorTest extends TestCase
             ->method('controlador')
             ->with($instanciaDelControlador);
         $this->controlador->criterio($criterio);
-        $this->controlador->ejecutar();
+        $this->controlador->ejecutar($this->dap);
     }
 
     public function testEjecutarAgregaElCriterioALaListadeProcesos(): void
@@ -140,18 +140,7 @@ class ControladorTest extends TestCase
             ->method('agregar')
             ->with($criterio, Prioridad::Baja);
         $this->controlador->criterio($criterio);
-        $this->controlador->ejecutar();
-    }
-
-    public function testMetodoEspacioDeNombreObtieneOModificaElRegistroEdnDelDap(): void
-    {
-        $ednAntes = 'namespace_antes';
-        $ednDespues = 'namespace_despues';
-        $this->dap->edn = $ednAntes;
-        $this->assertSame($ednAntes, $this->controlador->espacioDeNombre());
-        $this->assertSame($ednDespues, $this->controlador->espacioDeNombre($ednDespues));
-        $this->assertNotSame($ednAntes, $this->controlador->espacioDeNombre());
-        $this->assertSame($ednDespues, $this->controlador->espacioDeNombre());
+        $this->controlador->ejecutar($this->dap);
     }
 
 }
