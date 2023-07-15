@@ -49,10 +49,14 @@ class Aplicacion
      *
      * Ejecuta todos los procesos de la aplicación.
      *
-     * Los procesos se ejecutan por orden de prioridad: Alta, Media y Baja.
-     * Primero se ejecutan todos los procesos de la más alta prioridad, una vez
-     * terminado continúa con la siguiente y así hasta terminar. Cada proceso
+     * Los procesos se ejecutan por orden de prioridad.
+     * Primero se ejecutan todos los procesos de la más alta prioridad. Una vez
+     * terminado continúa con la siguiente, y así hasta terminar. Cada proceso
      * se ejecuta en el órden en el que se agregaron.
+     *
+     * Por cada proceso se ejecuta el método 'ejecutar' y se le pasa como
+     * argumento un D.A.P (Datos de Acceso Público) según la prioridad del
+     * proceso.
      */
     public function ejecutar()
     {
@@ -65,7 +69,7 @@ class Aplicacion
             $proceso = current($this->lp[$prioridad->value]);
 
             if( $proceso === false ) {
-                $prioridadTmp = next($prioridades) ?? null;
+                $prioridadTmp = next($prioridades);
 
                 if( $prioridadTmp === false ) {
                     $prioridadTmp = $prioridad;
