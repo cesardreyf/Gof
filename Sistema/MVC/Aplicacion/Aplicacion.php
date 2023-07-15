@@ -50,17 +50,22 @@ class Aplicacion
     public function ejecutar()
     {
         $hayProcesos = true;
-        $prioridad = Prioridad::Alta->value;
+        $prioridades = Prioridad::cases();
+        $prioridad = current($prioridades)->value;
 
         while( $hayProcesos ) {
             $proceso = current($this->lp[$prioridad]);
 
             if( $proceso === false ) {
-                if( ++$prioridad > Prioridad::Baja->value ) {
+                $prioridadTmp = next($prioridades)->value ?? null;
+
+                if( is_null($prioridadTmp) ) {
+                    $prioridadTmp = $prioridad;
                     $hayProcesos = false;
                 }
 
-                reset($this->lp[$prioridad-1]);
+                reset($this->lp[$prioridad]);
+                $prioridad = $prioridadTmp;
                 continue;
             }
 
