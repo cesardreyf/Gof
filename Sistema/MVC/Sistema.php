@@ -68,7 +68,13 @@ class Sistema
         $this->aplicacion = new Aplicacion();
 
         // Gestor del controlador
-        $this->controlador = new Controlador($this->autoload, $this->aplicacion->procesos());
+        $this->controlador = new Controlador(
+            $this->autoload,
+            $this->aplicacion->procesos()->agregable(
+                Prioridad::Media,
+                Prioridad::Baja
+            )
+        );
 
         // Agregando los primeros procesos
         $this->aplicacion->procesos()->agregar($this->rutas,       Prioridad::Alta);
