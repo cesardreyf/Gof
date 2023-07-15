@@ -12,15 +12,6 @@ namespace Gof\Sistema\MVC\Aplicacion\DAP;
 class N1 implements DAP
 {
     /**
-     * Espacio de nombre del controlador
-     *
-     * Espacio de nombre por defecto que tendrá el controlador.
-     *
-     * @var string
-     */
-    public string $edn = '';
-
-    /**
      * Nombre de la clase del controlador
      *
      * @var string
