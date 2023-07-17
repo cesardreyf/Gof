@@ -94,17 +94,17 @@ class Dependencias implements IDependencias
     /**
      * @var array<string, callable> Lista de clases
      */
-    private array $clases;
+    protected array $clases = [];
 
     /**
      * @var ErrorNumerico Lista de errores
      */
-    private Errores $errores;
+    protected Errores $errores;
 
     /**
      * @var MascaraDeBits Configuración interna
      */
-    private MascaraDeBits $configuracion;
+    protected MascaraDeBits $configuracion;
 
     /**
      * Constructor
