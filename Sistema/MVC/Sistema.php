@@ -71,7 +71,6 @@ class Sistema
         $this->controlador = new Controlador(
             $this->autoload,
             $this->aplicacion->procesos()->agregable(
-                Prioridad::Media,
                 Prioridad::Baja
             )
         );
