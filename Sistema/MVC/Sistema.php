@@ -8,6 +8,7 @@ use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Controlador\Controlador;
+use Gof\Sistema\MVC\Inters\Inters;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
 
@@ -47,6 +48,11 @@ class Sistema
     private Controlador $controlador;
 
     /**
+     * @var Inters Instancia del gestor de los inters
+     */
+    private Inters $inters;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -61,11 +67,18 @@ class Sistema
         $this->autoload = new Autoload($cargadorDeArchivos, new FiltroPSR4());
         $this->autoload->registrar();
 
+        // Gestor de aplicación
+        $this->aplicacion = new Aplicacion();
+
         // Gestor de rutas
         $this->rutas = new Rutas();
 
-        // Gestor de aplicación
-        $this->aplicacion = new Aplicacion();
+        // Gestor de los inters
+        $this->inters = new Inters(
+            $this->aplicacion->procesos()->agregable(
+                Prioridad::Media
+            )
+        );
 
         // Gestor del controlador
         $this->controlador = new Controlador(
@@ -128,6 +141,16 @@ class Sistema
     public function controlador(): Controlador
     {
         return $this->controlador;
+    }
+
+    /**
+     * Obtiene el gestor de inters
+     *
+     * @return Inters
+     */
+    public function inters(): Inters
+    {
+        return $this->inters;
     }
 
 }
