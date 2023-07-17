@@ -21,11 +21,27 @@ class Niveles
     private DAP $n1;
 
     /**
+     * DAP de nivel 2
+     *
+     * @var DAP
+     */
+    private DAP $n2;
+
+    /**
+     * DAP de nivel 3
+     *
+     * @var DAP
+     */
+    private DAP $n3;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->n1 = new N1();
+        $this->n3 = new N3();
+        $this->n2 = new N2($this->n1, $this->n3);
     }
 
     /**
@@ -42,9 +58,13 @@ class Niveles
     {
         switch( $prioridad ) {
             case Prioridad::Alta:
-            case Prioridad::Media:
-            case Prioridad::Baja:
                 return $this->n1;
+
+            case Prioridad::Media:
+                return $this->n2;
+
+            case Prioridad::Baja:
+                return $this->n3;
         }
     }
 
