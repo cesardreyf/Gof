@@ -2,8 +2,6 @@
 
 namespace Gof\Patron\Soplon\Simple;
 
-use Gof\Patron\Soplon\Simple\Interfaz\Agente;
-
 /**
  * Patrón soplón simple
  *
@@ -13,7 +11,7 @@ use Gof\Patron\Soplon\Simple\Interfaz\Agente;
  * agentes registrados en una lista cuando se llame a la función **avisar**.
  *
  * Esta clase es simple. Lo único que hará es recorrer una lista de agentes y
- * llamar al método avisar, sin ningún tipo de información extra.
+ * llamar al método aviso de los agentes, sin ningún tipo de información extra.
  *
  * @package Gof\Patron\Soplon\Simple
  */
@@ -39,13 +37,13 @@ class Soplon
     /**
      * Avisa a todos los agentes
      *
-     * Llama al método avisar() de todos los agentes registrados.
+     * Envía un aviso a todos los agentes registrados.
      */
     public function avisar()
     {
         $lista = $this->agentes->lista();
         array_walk($lista, function(Agente $agente) {
-            $agente->avisar();
+            $agente->aviso();
         });
     }
 

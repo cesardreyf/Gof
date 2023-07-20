@@ -10,9 +10,9 @@ namespace Gof\Patron\Soplon\Variadico;
 interface Agente
 {
     /**
-     * Avisa a los agentes y le pasa el informe
+     * Recibe el aviso del soplón
      *
      * @param mixed ...$informe Datos del soplón.
      */
-    public function avisar(mixed ...$informe);
+    public function aviso(mixed ...$informe);
 }

@@ -45,7 +45,7 @@ class Soplon
     {
         $lista = $this->agentes->lista();
         array_walk($lista, function(Agente $agente) use ($informe) {
-            $agente->avisar(...$informe);
+            $agente->aviso(...$informe);
         });
     }
 

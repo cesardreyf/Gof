@@ -6,8 +6,8 @@ namespace Test\Patron\Soplon\Simple;
 
 use Gof\Patron\Soplon\Base\ID;
 use Gof\Patron\Soplon\Excepcion\AgenteInexistente;
+use Gof\Patron\Soplon\Simple\Agente;
 use Gof\Patron\Soplon\Simple\Agentes;
-use Gof\Patron\Soplon\Simple\Interfaz\Agente;
 use PHPUnit\Framework\TestCase;
 
 class AgentesTest extends TestCase

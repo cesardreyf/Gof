@@ -26,7 +26,7 @@ class SoplonTest extends TestCase
         $soplon->agentes()->agregar($agente);
         $agente
             ->expects($this->once())
-            ->method('avisar')
+            ->method('aviso')
             ->with(...$informe);
         $soplon->avisar(...$informe);
     }
