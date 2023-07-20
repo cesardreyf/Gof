@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Test\Patron\Soplon\Simple;
 
+use Gof\Patron\Soplon\Base\ID;
+use Gof\Patron\Soplon\Excepcion\AgenteInexistente;
 use Gof\Patron\Soplon\Simple\Agentes;
-use Gof\Patron\Soplon\Simple\Datos\ID;
-use Gof\Patron\Soplon\Simple\Excepcion\AgenteInexistente;
 use Gof\Patron\Soplon\Simple\Interfaz\Agente;
 use PHPUnit\Framework\TestCase;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Gof\Patron\Soplon\Simple\Excepcion;
+namespace Gof\Patron\Soplon\Excepcion;
 
-use Gof\Patron\Soplon\Simple\Datos\ID;
+use Gof\Patron\Soplon\Base\ID;
 
 /**
  * Excepción lanzada cuando no existe un agente solicitado
  *
- * @package Gof\Patron\Soplon\Simple\Excepcion
+ * @package Gof\Patron\Soplon\Excepcion
  */
 class AgenteInexistente extends Excepcion
 {

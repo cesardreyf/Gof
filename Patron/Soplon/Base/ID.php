@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Patron\Soplon\Simple\Datos;
+namespace Gof\Patron\Soplon\Base;
 
 /**
  * Almacena un identificador asociado a un agente en una lista
  *
- * @package Gof\Patron\Soplon\Simple\Datos
+ * @package Gof\Patron\Soplon\Base
  */
 class ID
 {
