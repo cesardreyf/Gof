@@ -118,12 +118,14 @@ class Ruta implements IRuta
      * lista de alias o **null** si no existen alias. Caso
      * contrario se agregará un nuevo alias a la lista.
      *
+     * @param string ...$alias Uno o varios alias para la ruta.
+     *
      * @return ?array
      */
-    public function alias(?string $alias = null): ?array
+    public function alias(string ...$alias): ?array
     {
-        if( !is_null($alias) ) {
-            $this->alias[] = $alias;
+        foreach( $alias as $recurso ) {
+            $this->alias[] = $recurso;
         }
         return $this->alias;
     }
