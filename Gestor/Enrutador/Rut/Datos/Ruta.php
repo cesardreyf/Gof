@@ -52,7 +52,7 @@ class Ruta implements IRuta
      * @param string $recurso Nombre del recurso que apuntará a la clase.
      * @param string $clase   Nombre de la clase a la que apuntará.
      */
-    public function __construct(string $recurso, string $clase)
+    public function __construct(string $recurso = '', string $clase = '')
     {
         $this->clase = $clase;
         $this->ruta = $recurso;

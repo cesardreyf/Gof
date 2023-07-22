@@ -4,7 +4,6 @@ namespace Gof\Gestor\Enrutador\Rut;
 
 use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
 use Gof\Gestor\Enrutador\Rut\Datos\Ruta;
-use Gof\Gestor\Enrutador\Rut\Datos\RutaRaiz;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
@@ -49,17 +48,15 @@ class Enrutador implements IEnrutador
      */
     private string $inexistente;
 
-
     /**
      * Constructor
      *
-     * @param Ruta   $rutaPadre   Ruta raíz que contenga las páginas accesibles.
      * @param string $principal   Clase a asociar al recurso principal (en caso de ausencia de recursos).
      * @param string $inexistente Clase a asociar en caso de que el recurso solicitado no coincida con ninguna ruta.
      */
     public function __construct(string $principal, string $inexistente)
     {
-        $this->rutas = new RutaRaiz();
+        $this->rutas = new Ruta();
         $this->principal = $principal;
         $this->inexistente = $inexistente;
     }
