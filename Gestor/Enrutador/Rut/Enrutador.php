@@ -4,6 +4,7 @@ namespace Gof\Gestor\Enrutador\Rut;
 
 use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
 use Gof\Gestor\Enrutador\Rut\Datos\Ruta;
+use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
@@ -34,9 +35,9 @@ class Enrutador implements IEnrutador
     private array $resto = [];
 
     /**
-     * @var Ruta Ruta padre.
+     * @var IRuta Ruta padre.
      */
-    private Ruta $rutas;
+    private IRuta $rutas;
 
     /**
      * @var string Nombre de la ruta principal.
@@ -126,9 +127,9 @@ class Enrutador implements IEnrutador
     /**
      * Obtiene la ruta padre
      *
-     * @return Ruta
+     * @return IRuta
      */
-    public function rutas(): Ruta
+    public function rutas(): IRuta
     {
         return $this->rutas;
     }
