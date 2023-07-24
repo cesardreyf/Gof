@@ -10,6 +10,7 @@ use Gof\Sistema\MVC\Rutas\Excepcion\ConfiguracionInexistente;
 use Gof\Sistema\MVC\Rutas\Excepcion\EnrutadorInexistente;
 use Gof\Sistema\MVC\Rutas\Nodos\Gestor as GestorPorNodos;
 use Gof\Sistema\MVC\Rutas\Simple\Gestor as GestorSimple;
+use Gof\Datos\Lista\Texto\ListaDeTextos;
 
 /**
  * Gestor de rutas del sistema MVC
@@ -48,7 +49,7 @@ class Rutas implements Ejecutable
         $enrutador = $this->obtenerEnrutador();
         $peticion  = $this->obtenerSolicitud();
 
-        $enrutador->procesar($peticion->lista());
+        $enrutador->procesar($peticion);
         $dap->parametros  = $enrutador->resto();
         $dap->controlador = $enrutador->nombreClase();
     }
@@ -97,10 +98,12 @@ class Rutas implements Ejecutable
      */
     private function obtenerSolicitud()
     {
-        return new GestorUrl(
+        $peticiones = new GestorUrl(
             $_GET[$this->configuracion->urlClave] ?? '',
             $this->configuracion->separador
         );
+
+        return new ListaDeTextos($peticiones->lista());
     }
 
 }

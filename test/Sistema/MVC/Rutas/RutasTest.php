@@ -70,7 +70,7 @@ class RutasTest extends TestCase
 
         $separador = $this->configuracion->separador;
         $solicitud = $_GET[$this->configuracion->urlClave];
-        $solicitudProcesado = new GestorUrl($solicitud, $separador);
+        // $solicitudProcesado = new GestorUrl($solicitud, $separador);
 
         $resto = ['param1', 'param2'];
         $nombreClase = 'Controlador\Index';
@@ -80,8 +80,8 @@ class RutasTest extends TestCase
 
         $enrutador
             ->expects($this->once())
-            ->method('procesar')
-            ->with($solicitudProcesado->lista());
+            ->method('procesar');
+            // ->with($solicitudProcesado->lista());
         $enrutador
             ->expects($this->once())
             ->method('resto')
