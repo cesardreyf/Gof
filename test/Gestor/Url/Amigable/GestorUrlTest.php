@@ -14,8 +14,8 @@ class GestorUrlTest extends TestCase
     {
         $peticion = '';
         $separador = '/';
-        $url = new GestorUrl($peticion, $separador);
-        $this->assertEmpty($url->lista()->lista());
+        $url = new GestorUrl($separador);
+        $this->assertEmpty($url->lista());
     }
 
     /**
@@ -25,10 +25,10 @@ class GestorUrlTest extends TestCase
      */
     public function testDividirLaPeticionSegunElSeparador(string $peticion, string $separador, array $resultadoEsperado): void
     {
-        $url = new GestorUrl($peticion, $separador);
-        $listaDeElementos = $url->lista();
-        $this->assertNotEmpty($listaDeElementos->lista());
-        $this->assertSame($resultadoEsperado, $listaDeElementos->lista());
+        $url = new GestorUrl($separador);
+        $url->procesar($peticion);
+        $this->assertNotEmpty($url->lista());
+        $this->assertSame($resultadoEsperado, $url->lista());
     }
 
     public function dataPeticionesJuntoConSeparador(): array
