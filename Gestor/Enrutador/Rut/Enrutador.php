@@ -4,7 +4,7 @@ namespace Gof\Gestor\Enrutador\Rut;
 
 use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
 use Gof\Gestor\Enrutador\Rut\Datos\Ruta;
-use Gof\Gestor\Enrutador\Rut\Datos\RutaRaiz;
+use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
@@ -27,7 +27,7 @@ class Enrutador implements IEnrutador
     /**
      * @var string Nombre de la clase.
      */
-    private string $clase;
+    private string $clase = '';
 
     /**
      * @var array Parámetros.
@@ -35,33 +35,16 @@ class Enrutador implements IEnrutador
     private array $resto = [];
 
     /**
-     * @var Ruta Ruta padre.
+     * @var IRuta Ruta padre.
      */
-    private Ruta $rutas;
-
-    /**
-     * @var string Nombre de la ruta principal.
-     */
-    private string $principal;
-
-    /**
-     * @var string Nombre de la ruta elegida en caso de no haber coincidencia al procesar.
-     */
-    private string $inexistente;
-
+    private IRuta $rutas;
 
     /**
      * Constructor
-     *
-     * @param Ruta   $rutaPadre   Ruta raíz que contenga las páginas accesibles.
-     * @param string $principal   Clase a asociar al recurso principal (en caso de ausencia de recursos).
-     * @param string $inexistente Clase a asociar en caso de que el recurso solicitado no coincida con ninguna ruta.
      */
-    public function __construct(string $principal, string $inexistente)
+    public function __construct()
     {
-        $this->rutas = new RutaRaiz();
-        $this->principal = $principal;
-        $this->inexistente = $inexistente;
+        $this->rutas = new Ruta();
     }
 
     /**
@@ -76,15 +59,19 @@ class Enrutador implements IEnrutador
     public function procesar(Lista $solicitud): bool
     {
         $rutaPadre   = $this->rutas;
-        $this->clase = $this->principal;
         $recursos    = $solicitud->lista();
         $rutas       = $rutaPadre->hijos() ?? [];
+        $inexistente = $rutaPadre->inexistente();
 
-        while( $recurso = array_shift($recursos) ) {
+        while( ($recurso = array_shift($recursos)) !== null ) {
             foreach( $rutas as $ruta ) {
-                if( $recurso === $ruta->ruta() || (is_array($ruta->alias()) && in_array($recurso, $ruta->alias())) ) {
+                if( $this->hayCoincidencia($recurso, $ruta) ) {
+                    if( !empty($ruta->inexistente()->clase()) ) {
+                        $inexistente = $ruta->inexistente();
+                    }
+
                     $this->clase = $ruta->clase();
-                    $rutas = $ruta->hijos();
+                    $rutas = $ruta->hijos() ?? [];
                     $rutaPadre = $ruta;
                     continue 2;
                 }
@@ -95,12 +82,25 @@ class Enrutador implements IEnrutador
                 break;
             }
 
-            $this->clase = $this->inexistente;
+            $this->clase = $inexistente->clase();
             break;
         }
 
         $this->resto = $recursos;
         return true;
+    }
+
+    /**
+     * Valida que la ruta y el recurso solicitado coincidan
+     *
+     * @param string $recurso Nombre de la ruta solicitada
+     * @param IRuta  $ruta    Ruta a validar
+     *
+     * @return bool Devuelve **true** si hay coincidencia
+     */
+    private function hayCoincidencia(string $recurso, IRuta $ruta): bool
+    {
+        return $recurso === $ruta->ruta() || (is_array($ruta->alias()) && in_array($recurso, $ruta->alias()));
     }
 
     /**
@@ -129,9 +129,9 @@ class Enrutador implements IEnrutador
     /**
      * Obtiene la ruta padre
      *
-     * @return Ruta
+     * @return IRuta
      */
-    public function rutas(): Ruta
+    public function rutas(): IRuta
     {
         return $this->rutas;
     }

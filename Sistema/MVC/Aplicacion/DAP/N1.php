@@ -2,6 +2,8 @@
 
 namespace Gof\Sistema\MVC\Aplicacion\DAP;
 
+use Gof\Sistema\MVC\Aplicacion\DAP\Solicitud\Solicitud;
+
 /**
  * Datos de Acceso Público del Sistema MVC
  *
@@ -34,4 +36,20 @@ class N1 implements DAP
      * @var array
      */
     public array $argumentos = [];
+
+    /**
+     * Datos de la solicitud
+     *
+     * @var Solicitud
+     */
+    public Solicitud $solicitud;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->solicitud = new Solicitud();
+    }
+
 }
