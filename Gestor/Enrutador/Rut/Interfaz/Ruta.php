@@ -36,4 +36,11 @@ interface Ruta
      * @return ?array
      */
     public function alias(): ?array;
+
+    /**
+     * Obtiene el módulo para rutas inexistentes
+     *
+     * @return ?Inexistente
+     */
+    public function inexistente(): ?Inexistente;
 }

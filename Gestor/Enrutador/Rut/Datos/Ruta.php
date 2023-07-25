@@ -47,12 +47,19 @@ class Ruta implements IRuta
     private ?array $alias = null;
 
     /**
+     * Almacena los datos de la ruta inexistente
+     *
+     * @var ?Inexistente
+     */
+    private ?Inexistente $inexistente;
+
+    /**
      * Constructor
      *
      * @param string $recurso Nombre del recurso que apuntará a la clase.
      * @param string $clase   Nombre de la clase a la que apuntará.
      */
-    public function __construct(string $recurso, string $clase)
+    public function __construct(string $recurso = '', string $clase = '')
     {
         $this->clase = $clase;
         $this->ruta = $recurso;
@@ -118,14 +125,21 @@ class Ruta implements IRuta
      * lista de alias o **null** si no existen alias. Caso
      * contrario se agregará un nuevo alias a la lista.
      *
+     * @param string ...$alias Uno o varios alias para la ruta.
+     *
      * @return ?array
      */
-    public function alias(?string $alias = null): ?array
+    public function alias(string ...$alias): ?array
     {
-        if( !is_null($alias) ) {
-            $this->alias[] = $alias;
+        foreach( $alias as $recurso ) {
+            $this->alias[] = $recurso;
         }
         return $this->alias;
+    }
+
+    public function inexistente(): ?Inexistente
+    {
+        return $this->inexistente ?? $this->inexistente = new Inexistente();
     }
 
 }

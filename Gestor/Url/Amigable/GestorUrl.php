@@ -37,9 +37,9 @@ class GestorUrl
     {
         $urlLimpia = trim($peticion, $separador);
         $urlFiltrada = filter_var($urlLimpia, FILTER_SANITIZE_URL);
-        $elementos = explode($separador, $urlFiltrada, empty($urlFiltrada) ? -1 : PHP_INT_MAX);
-        $arraySinElementosVacios = array_filter($elementos);
-        $this->lista = new Lista($arraySinElementosVacios);
+        $elementos = explode($separador, $urlFiltrada/*, empty($urlFiltrada) ? -1 : PHP_INT_MAX*/);
+        // $arraySinElementosVacios = array_filter($elementos);
+        $this->lista = new Lista($elementos);
     }
 
     /**
