@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\Sistema\MVC\Rutas;
 
 use Gof\Contrato\Enrutador\Enrutador;
+use Gof\Datos\Lista\Texto\ListaDeTextos;
 use Gof\Gestor\Url\Amigable\GestorUrl;
 use Gof\Sistema\MVC\Aplicacion\DAP\N1 as DAP;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
@@ -26,37 +27,7 @@ class RutasTest extends TestCase
         $this->dap = new DAP();
         $this->rutas = new Rutas();
         $this->configuracion = new Configuracion();
-        $this->rutas->configuracion($this->configuracion);
-    }
-
-    public function testMetodoGestorReflejaLaInstanciaDelEnrutadorEnConfiguracion(): void
-    {
-        $enrutador = $this->createMock(Enrutador::class);
-        $this->configuracion->enrutador = $enrutador;
-        $this->assertSame($enrutador, $this->rutas->gestor());
-    }
-
-    public function testMetodoConfiguracionDevuelveNullAlInstanciar(): void
-    {
-        $rutas = new Rutas();
-        $this->assertNull($rutas->configuracion());
-    }
-
-    public function testDefinirConfiguracion(): void
-    {
-        $rutas = new Rutas();
-        $nuevaConfiguracion = new Configuracion();
-        $this->assertNull($rutas->configuracion());
-        $rutas->configuracion($nuevaConfiguracion);
-        $this->assertSame($nuevaConfiguracion, $rutas->configuracion());
-    }
-
-    public function testEjecutarSinUnaConfiguracionLanzaExcepcion(): void
-    {
-        $this->expectException(ConfiguracionInexistente::class);
-        $rutas = new Rutas();
-        $this->assertNull($rutas->configuracion());
-        $rutas->ejecutar($this->dap);
+        $this->rutas->configuracion = $this->configuracion;
     }
 
     public function testFuncionamientoEsperado()
@@ -70,7 +41,9 @@ class RutasTest extends TestCase
 
         $separador = $this->configuracion->separador;
         $solicitud = $_GET[$this->configuracion->urlClave];
-        // $solicitudProcesado = new GestorUrl($solicitud, $separador);
+
+        $listaDeRecursos = ['recurso1', 'recurso2'];
+        $this->dap->solicitud->lista = $listaDeRecursos;
 
         $resto = ['param1', 'param2'];
         $nombreClase = 'Controlador\Index';
@@ -80,8 +53,8 @@ class RutasTest extends TestCase
 
         $enrutador
             ->expects($this->once())
-            ->method('procesar');
-            // ->with($solicitudProcesado->lista());
+            ->method('procesar')
+            ->with(new ListaDeTextos($listaDeRecursos));
         $enrutador
             ->expects($this->once())
             ->method('resto')
