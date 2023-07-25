@@ -9,6 +9,7 @@ use Gof\Sistema\MVC\Aplicacion\Aplicacion;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Controlador\Controlador;
 use Gof\Sistema\MVC\Inters\Inters;
+use Gof\Sistema\MVC\Peticiones\Peticiones;
 use Gof\Sistema\MVC\Registros\Registros;
 use Gof\Sistema\MVC\Rutas\Rutas;
 
@@ -53,6 +54,11 @@ class Sistema
     private Inters $inters;
 
     /**
+     * @var Peticiones Instancia del gestor de peticiones
+     */
+    private Peticiones $peticiones;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -69,6 +75,9 @@ class Sistema
 
         // Gestor de aplicación
         $this->aplicacion = new Aplicacion();
+
+        // Gestor de peticiones
+        $this->peticiones = new Peticiones();
 
         // Gestor de rutas
         $this->rutas = new Rutas();
@@ -89,6 +98,7 @@ class Sistema
         );
 
         // Agregando los primeros procesos
+        $this->aplicacion->procesos()->agregar($this->peticiones,  Prioridad::Alta);
         $this->aplicacion->procesos()->agregar($this->rutas,       Prioridad::Alta);
         $this->aplicacion->procesos()->agregar($this->controlador, Prioridad::Alta);
     }
@@ -151,6 +161,16 @@ class Sistema
     public function inters(): Inters
     {
         return $this->inters;
+    }
+
+    /**
+     * Obtiene el gestor de peticiones
+     *
+     * @return Peticiones
+     */
+    public function peticiones(): Peticiones
+    {
+        return $this->peticiones;
     }
 
 }

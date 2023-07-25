@@ -2,7 +2,7 @@
 
 namespace Gof\Gestor\Url\Amigable;
 
-use Gof\Datos\Lista\Texto\ListaDeTextos as Lista;
+use Gof\Contrato\Peticiones\Peticiones;
 
 /**
  * Gestor de URL Amigable
@@ -12,7 +12,7 @@ use Gof\Datos\Lista\Texto\ListaDeTextos as Lista;
  *
  * @package Gof\Gestor\Url\Amigable;
  */
-class GestorUrl
+class GestorUrl implements Peticiones
 {
     /**
      * Separador por defecto
@@ -23,31 +23,73 @@ class GestorUrl
      */
     const SEPARADOR_POR_DEFECTO = '/';
 
-    private Lista $lista;
+    /**
+     * Almacena el caracter que se empleará para separar los recursos solicitados en la cadena
+     *
+     * @var string
+     */
+    private string $separador;
+
+    /**
+     * Lista de recursos solicitados
+     *
+     * @var array
+     */
+    private array $lista = [];
 
     /**
      * Constructor
      *
-     * En base a una petición (string) crea una lista cuyos elementos son partes de la petición
-     * dividos por el caracter indicado en el parámetro **$separador**.
-     *
-     * @param string $peticion Cadena con la petición.
+     * @param string $separador Caracter usado para dividir la solicitud en elementos de un array
      */
-    public function __construct(string $peticion, string $separador = self::SEPARADOR_POR_DEFECTO)
+    public function __construct(string $separador = self::SEPARADOR_POR_DEFECTO)
     {
-        $urlLimpia = trim($peticion, $separador);
+        $this->separador = $separador;
+    }
+
+    /**
+     * Procesa la petición
+     *
+     * Limpia la cadena, la sanitiza, la divide en partes teniendo en cuenta el separador y
+     * genera una lista ordenada de los recursos solicitados (un array).
+     *
+     * @param string $peticion Cadena a ser procesada.
+     *
+     * @return bool Devuelve **true** si se procesó correctamente.
+     */
+    public function procesar(string $peticion): bool
+    {
+        $urlLimpia = trim($peticion, $this->separador);
         $urlFiltrada = filter_var($urlLimpia, FILTER_SANITIZE_URL);
-        $elementos = explode($separador, $urlFiltrada/*, empty($urlFiltrada) ? -1 : PHP_INT_MAX*/);
-        // $arraySinElementosVacios = array_filter($elementos);
-        $this->lista = new Lista($elementos);
+        $listaDeRecursos = explode($this->separador, $urlFiltrada/*, empty($urlFiltrada) ? -1 : PHP_INT_MAX*/);
+        $this->definirListaOrdenada($listaDeRecursos);
+        return true;
+    }
+
+    /**
+     * Ordena los elementos del array en la lista interna
+     *
+     * @param array $recursos Lista de recursos a ordenar
+     *
+     * @access private
+     */
+    private function definirListaOrdenada(array $recursos)
+    {
+        $this->lista = [];
+        foreach( $recursos as $recurso ) {
+            $this->lista[] = $recurso;
+        }
     }
 
     /**
      * Lista de peticiones
      *
-     * @return Lista Devuelve la lista de peticiones
+     * Devuelve un array con todos los recursos solicitados del último
+     * procesamiento.
+     *
+     * @return array
      */
-    public function lista(): Lista
+    public function lista(): array
     {
         return $this->lista;
     }

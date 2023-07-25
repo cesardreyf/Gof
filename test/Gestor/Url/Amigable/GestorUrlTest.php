@@ -14,21 +14,21 @@ class GestorUrlTest extends TestCase
     {
         $peticion = '';
         $separador = '/';
-        $url = new GestorUrl($peticion, $separador);
-        $this->assertEmpty($url->lista()->lista());
+        $url = new GestorUrl($separador);
+        $this->assertEmpty($url->lista());
     }
 
     /**
      *  @dataProvider dataPeticionesJuntoConSeparador
      *  @dataProvider dataPeticionSanitizada
-     *  @dataProvider dataPeticionLimpiada
+     *  @dataProvider dataPeticionNoLimpiada
      */
     public function testDividirLaPeticionSegunElSeparador(string $peticion, string $separador, array $resultadoEsperado): void
     {
-        $url = new GestorUrl($peticion, $separador);
-        $listaDeElementos = $url->lista();
-        $this->assertNotEmpty($listaDeElementos->lista());
-        $this->assertSame($resultadoEsperado, $listaDeElementos->lista());
+        $url = new GestorUrl($separador);
+        $url->procesar($peticion);
+        $this->assertNotEmpty($url->lista());
+        $this->assertSame($resultadoEsperado, $url->lista());
     }
 
     public function dataPeticionesJuntoConSeparador(): array
@@ -49,7 +49,7 @@ class GestorUrlTest extends TestCase
         ];
     }
 
-    public function dataPeticionLimpiada(): array
+    public function dataPeticionNoLimpiada(): array
     {
         return [
             [
@@ -62,7 +62,7 @@ class GestorUrlTest extends TestCase
             ],
             [
                 '++algo+++no-va++++bien++', '+',
-                ['algo', 'no-va', 'bien']
+                ['algo', '', '', 'no-va', '', '', '', 'bien']
             ]
         ];
     }
@@ -72,7 +72,7 @@ class GestorUrlTest extends TestCase
         return [
             [
                 "Que+es+esto?+\x99", '+',
-                ['Que', 'es', 'esto?']
+                ['Que', 'es', 'esto?', '']
             ]
         ];
     }
