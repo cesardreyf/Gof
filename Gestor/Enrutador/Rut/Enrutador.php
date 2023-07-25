@@ -5,6 +5,7 @@ namespace Gof\Gestor\Enrutador\Rut;
 use Gof\Contrato\Enrutador\Enrutador as IEnrutador;
 use Gof\Gestor\Enrutador\Rut\Datos\Ruta;
 use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
+use Gof\Gestor\Enrutador\Rut\Procesador\Procesador;
 use Gof\Interfaz\Lista\Textos as Lista;
 
 /**
@@ -58,49 +59,18 @@ class Enrutador implements IEnrutador
      */
     public function procesar(Lista $solicitud): bool
     {
-        $rutaPadre   = $this->rutas;
-        $recursos    = $solicitud->lista();
-        $rutas       = $rutaPadre->hijos() ?? [];
-        $inexistente = $rutaPadre->inexistente();
+        $seguroDeVida = 999; //< Por las dudas; Temporal...
+        $procesador = new Procesador($solicitud, $this->rutas);
 
-        while( ($recurso = array_shift($recursos)) !== null ) {
-            foreach( $rutas as $ruta ) {
-                if( $this->hayCoincidencia($recurso, $ruta) ) {
-                    if( !empty($ruta->inexistente()->clase()) ) {
-                        $inexistente = $ruta->inexistente();
-                    }
-
-                    $this->clase = $ruta->clase();
-                    $rutas = $ruta->hijos() ?? [];
-                    $rutaPadre = $ruta;
-                    continue 2;
-                }
+        while( $procesador->hayRecursos() && --$seguroDeVida ) {
+            if( $procesador->hayCoincidencia() === false ) {
+                $procesador->establecerRutaInexistente();
             }
-
-            array_unshift($recursos, $recurso);
-            if( $rutaPadre->parametros() === true ) {
-                break;
-            }
-
-            $this->clase = $inexistente->clase();
-            break;
         }
 
-        $this->resto = $recursos;
+        $this->clase = $procesador->obtenerRuta()->clase();
+        $this->resto = $procesador->recursos();
         return true;
-    }
-
-    /**
-     * Valida que la ruta y el recurso solicitado coincidan
-     *
-     * @param string $recurso Nombre de la ruta solicitada
-     * @param IRuta  $ruta    Ruta a validar
-     *
-     * @return bool Devuelve **true** si hay coincidencia
-     */
-    private function hayCoincidencia(string $recurso, IRuta $ruta): bool
-    {
-        return $recurso === $ruta->ruta() || (is_array($ruta->alias()) && in_array($recurso, $ruta->alias()));
     }
 
     /**
