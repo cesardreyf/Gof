@@ -3,7 +3,8 @@
 namespace Gof\Gestor\Enrutador\Rut;
 
 use Gof\Gestor\Enrutador\Rut\Eventos\Al;
-use Gof\Gestor\Enrutador\Rut\Eventos\Eventos;
+use Gof\Gestor\Enrutador\Rut\Eventos\Evento;
+use Gof\Gestor\Enrutador\Rut\Eventos\Gestor as GestorDeEventos;
 use Gof\Gestor\Enrutador\Rut\Eventos\Ruta;
 use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 use Gof\Interfaz\Lista\Textos as Lista;
@@ -30,14 +31,14 @@ class EnrutadorConEventos extends Enrutador
      *
      * @var Eventos
      */
-    private Eventos $eventos;
+    private GestorDeEventos $eventos;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->eventos = new Eventos();
+        $this->eventos = new GestorDeEventos();
         $this->rutas = new Ruta($this->eventos);
     }
 
@@ -53,15 +54,18 @@ class EnrutadorConEventos extends Enrutador
      *
      * @param Lista $objetivos Lista de recursos a buscar en el árbol de nodos.
      *
-     * @return boo Devuelve el estado de la operación.
+     * @return bool Devuelve el estado de la operación.
      */
     public function procesar(Lista $solicitud): bool
     {
-        if( parent::procesar($solicitud) === true ) {
-            $this->eventos->avisar($this->rutaFinal, Al::Procesar);
-            return true;
-        }
-        return false;
+        $resultado = parent::procesar($solicitud);
+        $this->eventos->generar(
+            new Evento(
+                $this->rutaFinal,
+                Al::Procesar,
+            )
+        );
+        return $resultado;
     }
 
     /**
@@ -69,7 +73,7 @@ class EnrutadorConEventos extends Enrutador
      *
      * @return Eventos
      */
-    public function eventos(): Eventos
+    public function eventos(): GestorDeEventos
     {
         return $this->eventos;
     }

@@ -3,42 +3,46 @@
 namespace Gof\Gestor\Enrutador\Rut\Eventos;
 
 use Gof\Gestor\Enrutador\Rut\Datos\Ruta as RutaNormal;
-use Gof\Gestor\Enrutador\Rut\Eventos\Eventos;
+use Gof\Gestor\Enrutador\Rut\Eventos\Evento;
+use Gof\Gestor\Enrutador\Rut\Eventos\Gestor;
 use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 
 /**
  * Ruta con gestión de eventos
  *
- * Al crear la instancia envía un aviso al evento recibido por el constructor
- * pasándole la propia instancia de la ruta como informe.
+ * Al agregar una nueva ruta hija se envía un evento a los observadores con una
+ * instancia de la ruta creada.
  *
- * @package Gof\Gestor\Enrutador\Rut\Datos
+ * @package Gof\Gestor\Enrutador\Rut\Eventos
  */
 class Ruta extends RutaNormal
 {
     /**
      * Instancia del gestor de eventos
      *
-     * @var Evento
+     * @var Gestor
      */
-    private Eventos $eventos;
+    private Gestor $eventos;
 
     /**
      * Constructor
      *
-     * @param Eventos $eventos Intancia del gestor de ventos.
-     * @param string  $recurso Nombre del recurso que apuntará a la clase.
-     * @param string  $clase   Nombre de la clase a la que apuntará.
+     * @param Gestor $eventos Intancia del gestor de ventos.
+     * @param string $recurso Nombre del recurso que apuntará a la clase.
+     * @param string $clase   Nombre de la clase a la que apuntará.
      */
-    public function __construct(Eventos $eventos, string $recurso = '', string $clase = '')
+    public function __construct(Gestor $eventos, string $recurso = '', string $clase = '')
     {
         parent::__construct($recurso, $clase);
-
-        // Envía el aviso de que esta ruta se agregó
-        $eventos->avisar($this, Al::Agregar);
-
-        // Almacena la instancia para las rutas hijas
         $this->eventos = $eventos;
+
+        // Genera el evento
+        $this->eventos->generar(
+            new Evento(
+                $this,
+                Al::Agregar
+            )
+        );
     }
 
     /**

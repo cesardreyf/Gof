@@ -6,11 +6,13 @@ use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Observador;
 use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 
 /**
+ * Gestor de eventos
+ *
  * Almacena y gestiona los eventos del EnrutadorConEventos
  *
  * @package Gof\Gestor\Enrutador\Rut\Buchon
  */
-class Eventos
+class Gestor
 {
     /**
      * Lista de observadores
@@ -25,11 +27,10 @@ class Eventos
      * @param IRuta $ruta   Ruta que provoca el evento
      * @param Al    $evento Evento producido
      */
-    public function avisar(IRuta $ruta, Al $evento)
+    public function generar(Evento $evento)
     {
         foreach( $this->observadores as $observador ) {
-            $metodo = "al{$evento->name}";
-            $observador->{$metodo}($ruta);
+            $observador->evento($evento);
         };
     }
 
