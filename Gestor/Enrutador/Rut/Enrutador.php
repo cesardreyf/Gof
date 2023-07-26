@@ -38,7 +38,14 @@ class Enrutador implements IEnrutador
     /**
      * @var IRuta Ruta padre.
      */
-    private IRuta $rutas;
+    protected IRuta $rutas;
+
+    /**
+     * Almacena la ruta con la cual hubo coincidencia
+     *
+     * @var ?IRuta
+     */
+    protected ?IRuta $rutaFinal;
 
     /**
      * Constructor
@@ -56,6 +63,8 @@ class Enrutador implements IEnrutador
      * un array.
      *
      * @param Lista $objetivos Lista de recursos a buscar en el árbol de nodos.
+     *
+     * @return boo Devuelve el estado de la operación.
      */
     public function procesar(Lista $solicitud): bool
     {
@@ -68,7 +77,8 @@ class Enrutador implements IEnrutador
             }
         }
 
-        $this->clase = $procesador->obtenerRuta()->clase();
+        $this->rutaFinal = $procesador->obtenerRuta();
+        $this->clase = $this->rutaFinal->clase();
         $this->resto = $procesador->recursos();
         return true;
     }

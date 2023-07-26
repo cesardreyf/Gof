@@ -30,7 +30,7 @@ class Ruta implements IRuta
      *
      * @var array<int, IRuta>
      */
-    private ?array $hijos = null;
+    protected ?array $hijos = null;
 
     /**
      * Indica si la ruta contempla parámetros o no
