@@ -51,4 +51,14 @@ class Identificador implements Observador
         $ruta->asignarIdentificador($this->idl++);
     }
 
+    /**
+     * Obtiene el valor actual del puntero idl
+     *
+     * @return int Devuelve el id disponible actualmente.
+     */
+    public function idl(): int
+    {
+        return $this->idl;
+    }
+
 }
