@@ -55,7 +55,7 @@ class Ruta extends RutaNormal
      */
     public function agregar(string $recurso, string $clase): IRuta
     {
-        return $this->hijos[] = new self($this->eventos, $recurso, $clase);
+        return $this->hijos[] = new static($this->eventos, $recurso, $clase);
     }
 
 }

@@ -6,6 +6,7 @@ use Gof\Gestor\Enrutador\Rut\Eventos\Al;
 use Gof\Gestor\Enrutador\Rut\Eventos\Evento;
 use Gof\Gestor\Enrutador\Rut\Eventos\Gestor as GestorDeEventos;
 use Gof\Gestor\Enrutador\Rut\Eventos\Ruta;
+use Gof\Gestor\Enrutador\Rut\Excepcion\RutaSinSeguimiento;
 use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 use Gof\Interfaz\Lista\Textos as Lista;
 
@@ -35,11 +36,20 @@ class EnrutadorConEventos extends Enrutador
 
     /**
      * Constructor
+     *
+     * @param ?GestorDeEventos $gEventos  Instancia del gestor de eventos (Opcional).
+     * @param ?IRuta           $rutaPadre Instancia de la ruta padre (Opcional).
+     *
+     * @throws RutaSinSeguimiento si se pasa una ruta padre y no se pasa el gestor de eventos.
      */
-    public function __construct()
+    public function __construct(?GestorDeEventos $gEventos = null, ?IRuta $rutaPadre = null)
     {
-        $this->eventos = new GestorDeEventos();
-        $this->rutas = new Ruta($this->eventos);
+        if( is_null($gEventos) && !is_null($rutaPadre) ) {
+            throw new RutaSinSeguimiento();
+        }
+
+        $this->eventos = $gEventos ?? new GestorDeEventos();
+        parent::__construct($rutaPadre ?? new Ruta($this->eventos));
     }
 
     /**

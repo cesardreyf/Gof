@@ -50,9 +50,9 @@ class Enrutador implements IEnrutador
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(?IRuta $rutaPadre = null)
     {
-        $this->rutas = new Ruta();
+        $this->rutas = $rutaPadre ?? new Ruta();
     }
 
     /**
