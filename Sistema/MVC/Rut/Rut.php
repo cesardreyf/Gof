@@ -26,9 +26,12 @@ class Rut extends EnrutadorConEventos
         $rutaPadre = new Ruta($gestor);
         parent::__construct($gestor, $rutaPadre);
 
-        // Extensiones para las rutas...
         $observadores = $this->eventos()->observadores();
-        $observadores->agregar(new Observador\Identificador());
+        $listaDeObservadores = new ListaDeObservadores();
+
+        foreach( $listaDeObservadores->lista() as $observador ) {
+            $observadores->agregar($observador);
+        }
     }
 
 }
