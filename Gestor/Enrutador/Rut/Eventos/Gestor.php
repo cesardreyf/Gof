@@ -2,8 +2,8 @@
 
 namespace Gof\Gestor\Enrutador\Rut\Eventos;
 
-use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Observador;
 use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
+use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Observadores as IObservadores;
 
 /**
  * Gestor de eventos
@@ -15,11 +15,19 @@ use Gof\Gestor\Enrutador\Rut\Interfaz\Ruta as IRuta;
 class Gestor
 {
     /**
-     * Lista de observadores
+     * Gestor de observadores
      *
-     * @var Observador[]
+     * @var Observadores
      */
-    private array $observadores = [];
+    private Observadores $observadores;
+
+    /**
+     * Constructor
+     */
+    public function __construct(?IObservadores $observadores = null)
+    {
+        $this->observadores = $observadores ?? new Observadores();
+    }
 
     /**
      * Avisa de un evento a los observadores
@@ -29,22 +37,19 @@ class Gestor
      */
     public function generar(Evento $evento)
     {
-        foreach( $this->observadores as $observador ) {
+        foreach( $this->observadores->lista() as $observador ) {
             $observador->evento($evento);
         };
     }
 
     /**
-     * Agrega un nuevo observador
+     * Obtiene el gestor de observadores
      *
-     * Agrega un observador que recibirá las notificaciones de los eventos
-     * producidos.
-     *
-     * @param Observador $observador Instancia del observador.
+     * @return Observadores
      */
-    public function agregar(Observador $observador)
+    public function observadores(): Observadores
     {
-        $this->observadores[] = $observador;
+        return $this->observadores;
     }
 
 }
