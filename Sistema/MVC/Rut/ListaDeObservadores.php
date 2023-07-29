@@ -23,6 +23,7 @@ class ListaDeObservadores implements Lista
     {
         return [
             new Observador\Identificador(),
+            new Observador\GestorDeInters(),
         ];
     }
 

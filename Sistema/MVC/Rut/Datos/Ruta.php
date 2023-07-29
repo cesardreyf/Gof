@@ -15,4 +15,5 @@ use Gof\Interfaz\Id;
 class Ruta extends IRuta implements Id
 {
     use Extension\Id;
+    use Extension\Inters;
 }
