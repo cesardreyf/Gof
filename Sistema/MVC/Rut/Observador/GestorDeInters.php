@@ -2,10 +2,12 @@
 
 namespace Gof\Sistema\MVC\Rut\Observador;
 
+use Gof\Gestor\Autoload\Autoload;
 use Gof\Gestor\Enrutador\Rut\Eventos\Al;
 use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Evento;
 use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Observador;
 use Gof\Sistema\MVC\Inters\Contenedor\Gestor;
+use Gof\Sistema\MVC\Inters\Inters;
 use Gof\Sistema\MVC\Rut\Datos\Ruta;
 
 /**
@@ -26,11 +28,30 @@ class GestorDeInters implements Observador
     private Gestor $gestorDeInters;
 
     /**
-     * Constructor
+     * Instancia del módulo Inters
+     *
+     * @var Inters
      */
-    public function __construct()
+    private Inters $mInters;
+
+    /**
+     * Instancia del gestor de autoload
+     *
+     * @var Autoload
+     */
+    private Autoload $gAutoload;
+
+    /**
+     * Constructor
+     *
+     * @param Inters $inters Instancia del módulo Inters del sistema MVC.
+     * @param Autoload $autoload Instancia del gestor de autoload.
+     */
+    public function __construct(Inters $inters, Autoload $autoload)
     {
         $this->gestorDeInters = new Gestor();
+        $this->gAutoload = $autoload;
+        $this->mInters = $inters;
     }
 
     /**
@@ -43,8 +64,14 @@ class GestorDeInters implements Observador
      */
     public function evento(Evento $evento)
     {
-        if( $evento->tipo() === Al::Agregar ) {
-            $this->asignarGestorDeInters($evento->ruta());
+        switch( $evento->tipo() ) {
+            case Al::Agregar:
+                $this->asignarGestorDeInters($evento->ruta());
+                break;
+
+            case Al::Procesar:
+                $this->cargarEnElSistemaLosIntersDeLaRuta($evento->ruta());
+                break;
         }
     }
 
@@ -56,6 +83,19 @@ class GestorDeInters implements Observador
     public function asignarGestorDeInters(Ruta $ruta)
     {
         $ruta->asignarGestorDeInters($this->gestorDeInters);
+    }
+
+    /**
+     * Carga los inters contenidos en la ruta
+     *
+     * Carga los inters almacenados en la ruta a la aplicación del sistema MVC
+     * para que los ejecute cuando sea necesario.
+     *
+     * @param Ruta $ruta Instancia de la ruta.
+     */
+    public function cargarEnElSistemaLosIntersDeLaRuta(Ruta $ruta)
+    {
+        $this->mInters->cargar($ruta->inters(), $this->gAutoload);
     }
 
 }
