@@ -1,11 +1,11 @@
 <?php
 
-namespace Gof\Sistema\MVC\Rut\Inters\Modulos;
+namespace Gof\Sistema\MVC\Inters\Contenedor\Modulos;
 
 /**
  * Módulo encargado de gestionar la lista de inters
  *
- * @package Gof\Sistema\MVC\Rut\Inters\Modulos
+ * @package Gof\Sistema\MVC\Inters\Contenedor\Modulos
  */
 class Inters
 {

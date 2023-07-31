@@ -5,8 +5,8 @@ namespace Gof\Sistema\MVC\Rut\Observador;
 use Gof\Gestor\Enrutador\Rut\Eventos\Al;
 use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Evento;
 use Gof\Gestor\Enrutador\Rut\Eventos\Interfaz\Observador;
+use Gof\Sistema\MVC\Inters\Contenedor\Gestor;
 use Gof\Sistema\MVC\Rut\Datos\Ruta;
-use Gof\Sistema\MVC\Rut\Inters\Gestor;
 
 /**
  * Observador para los identificadores de las rutas del sistema MVC

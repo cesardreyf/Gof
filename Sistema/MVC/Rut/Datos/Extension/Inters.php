@@ -2,8 +2,8 @@
 
 namespace Gof\Sistema\MVC\Rut\Datos\Extension;
 
-use Gof\Sistema\MVC\Rut\Inters\Gestor;
-use Gof\Sistema\MVC\Rut\Inters\Subgestor;
+use Gof\Sistema\MVC\Inters\Contenedor\Gestor;
+use Gof\Sistema\MVC\Inters\Contenedor\Contenedor;
 
 /**
  * Proporciona características de gestionar inters para las rutas
@@ -15,6 +15,13 @@ use Gof\Sistema\MVC\Rut\Inters\Subgestor;
  */
 trait Inters
 {
+    /**
+     * Método abstracto a implementar por la clase que use este trait
+     *
+     * NOTA: se asume que la clase implementa la interfaz Id.
+     *
+     * @see Gof\Interfaz\Id
+     */
     abstract public function id(): int;
 
     /**
@@ -25,20 +32,20 @@ trait Inters
     private Gestor $gInters;
 
     /**
-     * Subgestor dedicado solo para esta ruta
+     * Contenedor dedicado solo para esta ruta
      *
-     * @var Subgestor
+     * @var Contenedor
      */
-    private Subgestor $miGestorDeInters;
+    private Contenedor $contenedor;
 
     /**
      * Obtiene el gestor de inters para la ruta
      *
-     * @return Gestor
+     * @return Contenedor
      */
-    public function inters(): Subgestor
+    public function inters(): Contenedor
     {
-        return $this->miGestorDeInters ?? $this->miGestorDeInters = $this->gInters->segunId($this->id());
+        return $this->contenedor ?? $this->contenedor = $this->gInters->segunId($this);
     }
 
     /**

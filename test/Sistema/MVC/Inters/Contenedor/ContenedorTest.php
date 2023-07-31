@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Test\Sistema\MVC\Rut\Inters;
 
-use Gof\Sistema\MVC\Rut\Inters\Subgestor;
+use Gof\Sistema\MVC\Inters\Contenedor\Contenedor;
 use PHPUnit\Framework\TestCase;
 
-class SubgestorTest extends TestCase
+class ContenedorTest extends TestCase
 {
     public int $ptr;
     public int $rutaId;
     public array $rutas;
     public array $inters;
-    public Subgestor $subgestor;
+    public Contenedor $contenedor;
 
     public function setUp(): void
     {
@@ -21,15 +21,15 @@ class SubgestorTest extends TestCase
         $this->rutaId = 0;
         $this->rutas = [];
         $this->inters = [];
-        $this->subgestor = new Subgestor($this->rutaId, $this->inters, $this->rutas, $this->ptr);
+        $this->contenedor = new Contenedor($this->rutaId, $this->inters, $this->rutas, $this->ptr);
     }
 
     public function testAgregarYObtenerUnInter(): void
     {
         $nombreDelInter = 'Un\Inter\Cualquiera';
-        $this->assertEmpty($this->subgestor->obtener());
-        $this->subgestor->agregar($nombreDelInter);
-        $listaDeInters = $this->subgestor->obtener();
+        $this->assertEmpty($this->contenedor->obtener());
+        $this->contenedor->agregar($nombreDelInter);
+        $listaDeInters = $this->contenedor->obtener();
         $this->assertIsArray($listaDeInters);
         $this->assertNotEmpty($listaDeInters);
         $this->assertSame($nombreDelInter, array_pop($listaDeInters));
@@ -40,11 +40,11 @@ class SubgestorTest extends TestCase
      */
     public function testAgregarVariosIntersYObtenerlosTodos(array $listaDeInters): void
     {
-        $this->assertEmpty($this->subgestor->obtener());
+        $this->assertEmpty($this->contenedor->obtener());
         foreach( $listaDeInters as $inter ) {
-            $this->subgestor->agregar($inter);
+            $this->contenedor->agregar($inter);
         }
-        $listaDeIntersObtenidos = $this->subgestor->obtener();
+        $listaDeIntersObtenidos = $this->contenedor->obtener();
         $this->assertSame($listaDeInters, $listaDeIntersObtenidos);
     }
 
@@ -53,16 +53,16 @@ class SubgestorTest extends TestCase
      */
     public function testAgregarVariosIntersRemoverAlgunosYObtenerLosQueQuedan(array $listaDeInters): void
     {
-        $this->assertEmpty($this->subgestor->obtener());
+        $this->assertEmpty($this->contenedor->obtener());
         foreach( $listaDeInters as $inter ) {
-            $this->subgestor->agregar($inter);
+            $this->contenedor->agregar($inter);
         }
 
         $alAzar = rand(0, count($listaDeInters) - 1);
-        $this->subgestor->remover($listaDeInters[$alAzar]);
+        $this->contenedor->remover($listaDeInters[$alAzar]);
         unset($listaDeInters[$alAzar]);
 
-        $listaDeIntersObtenidos = $this->subgestor->obtener();
+        $listaDeIntersObtenidos = $this->contenedor->obtener();
         $this->assertEquals(array_values($listaDeInters), array_values($listaDeIntersObtenidos));
     }
 

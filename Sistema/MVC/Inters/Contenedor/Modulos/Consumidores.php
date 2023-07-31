@@ -1,23 +1,23 @@
 <?php
 
-namespace Gof\Sistema\MVC\Rut\Inters\Modulos;
+namespace Gof\Sistema\MVC\Inters\Contenedor\Modulos;
 
 /**
- * Módulo encargado de gestionar la lista de rutas
+ * Módulo encargado de gestionar la lista de un consumidor
  *
- * @package Gof\Sistema\MVC\Rut\Inters\Modulos
+ * @package Gof\Sistema\MVC\Inters\Contenedor\Modulos
  */
-class Rutas
+class Consumidores
 {
     /**
-     * Almacena la lista de rutas
+     * Almacena la lista de consumidores
      *
      * @var array
      */
     private array $lista;
 
     /**
-     * Id de la ruta con la que trabajará
+     * Id del consumidor con la que trabajará
      *
      * @var int
      */
@@ -26,20 +26,21 @@ class Rutas
     /**
      * Construtor
      *
-     * @param array &$lista Referenia a la lista de rutas
-     * @param int    $id    Id de la ruta
+     * @param array &$lista Referenia a la lista de consumidores.
+     * @param int    $id    Id del consumidor.
      */
     public function __construct(array &$lista, int $id)
     {
         $this->id = $id;
         $this->lista =& $lista;
+
         if( !isset($this->lista[$id]) ) {
             $this->lista[$id] = [];
         }
     }
 
     /**
-     * Agrega un inter a la lista interna de la ruta
+     * Agrega un inter a la lista al consumidor
      *
      * Si el inter ya existe en la lista no se vuelve a agregar.
      *
@@ -53,7 +54,7 @@ class Rutas
     }
 
     /**
-     * Elimina un inter de la ruta
+     * Remueve el inter de la lista
      *
      * @param int $id Id del inter
      */
@@ -65,7 +66,7 @@ class Rutas
     }
 
     /**
-     * Obtiene los ID de todos los inters de la ruta
+     * Obtiene los ID de todos los inters almacenados por el consumidor
      *
      * @return int[]
      */
