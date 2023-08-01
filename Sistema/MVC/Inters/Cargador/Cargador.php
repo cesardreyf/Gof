@@ -2,8 +2,10 @@
 
 namespace Gof\Sistema\MVC\Inters\Cargador;
 
+use Generator;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
+use Gof\Sistema\MVC\Inters\Cargador\Excepcion\InterInexistente;
 use Gof\Sistema\MVC\Inters\Contenedor\Contenedor;
 
 /**
@@ -41,14 +43,55 @@ class Cargador
      *
      * @param Contenedor $contenedor Contenedor de inters.
      *
-     * @return Ejecutable[]
+     * @return Generator
+     *
+     * @throws InterInexistente si el autoload no pudo cargar correctamente la clase.
+     * @throws InterInvalido si la clase del Inter no implementa la interfaz Ejecutable.
+     *
+     * @see Ejecutable
      */
-    public function cargar(Contenedor $contenedor): \Generator
+    public function cargar(Contenedor $contenedor): Generator
     {
-        foreach( $contenedor->obtener() as $nombreCompletoDelInter ) {
+        foreach( $contenedor->obtener() as $clave => $nombreCompletoDelInter ) {
             $inter = $this->autoload->instanciar($nombreCompletoDelInter);
-            // TAREA: Lanzar excepción si es null o si no es ejecutable
+            $this->lanzarExcepcionSiElAutoloadNoPudoCargarLaClase($inter, $nombreCompletoDelInter);
+            $this->lanzarExcepcionSiLaClaseCargadaNoImplementaLaInterfazEjecutable($inter, $nombreCompletoDelInter);
             yield $inter;
+        }
+    }
+
+    /**
+     * Verifica si la instancia recibida no es un valor nulo
+     *
+     * @param mixed      $inter
+     * @param Contenedor $contenedor
+     * @param string     $nombreDelInter
+     *
+     * @throws InterInexistente si el inter es nulo.
+     *
+     * @access private
+     */
+    private function lanzarExcepcionSiElAutoloadNoPudoCargarLaClase(mixed $inter, string $nombreDelInter)
+    {
+        if( is_null($inter) ) {
+            throw new InterInexistente($nombreDelInter);
+        }
+    }
+
+    /**
+     * Verifica si la instancia del inter implementa la interfaz Ejecutable
+     *
+     * @param object $inter
+     * @param string $nombreCompletoDelInter
+     *
+     * @throws InterInvalido si el inter no implementa la interfaz.
+     *
+     * @access private
+     */
+    private function lanzarExcepcionSiLaClaseCargadaNoImplementaLaInterfazEjecutable(object $inter, string $nombreCompletoDelInter)
+    {
+        if( !$inter instanceof Ejecutable ) {
+            throw new InterInvalido($nombreCompletoDelInter);
         }
     }
 
