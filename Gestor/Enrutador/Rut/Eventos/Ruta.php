@@ -28,12 +28,11 @@ class Ruta extends RutaNormal
      * Constructor
      *
      * @param Gestor $eventos Intancia del gestor de ventos.
-     * @param string $recurso Nombre del recurso que apuntará a la clase.
-     * @param string $clase   Nombre de la clase a la que apuntará.
+     * @param mixed ...$argumentosDelConstructorDeLaRutaPadre Eso.
      */
-    public function __construct(Gestor $eventos, string $recurso = '', string $clase = '')
+    public function __construct(Gestor $eventos, ...$argumentosDelConstructorDeLaRutaPadre)
     {
-        parent::__construct($recurso, $clase);
+        parent::__construct(...$argumentosDelConstructorDeLaRutaPadre);
         $this->eventos = $eventos;
 
         // Genera el evento
@@ -43,19 +42,8 @@ class Ruta extends RutaNormal
                 Al::Agregar
             )
         );
-    }
 
-    /**
-     * Crea una nueva ruta y lo agrega como ruta hijo
-     *
-     * @param string $recurso Nombre del recurso
-     * @param string $clase   Nombre de la clase
-     *
-     * @return IRuta Devuelve una instancia de la nueva ruta hija
-     */
-    public function agregar(string $recurso, string $clase): IRuta
-    {
-        return $this->hijos[] = new static($this->eventos, $recurso, $clase);
+        $this->argumentosObligatorios[] = $this->eventos;
     }
 
 }

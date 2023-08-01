@@ -30,7 +30,7 @@ class Ruta implements IRuta
      *
      * @var array<int, IRuta>
      */
-    protected ?array $hijos = null;
+    private ?array $hijos = null;
 
     /**
      * Indica si la ruta contempla parámetros o no
@@ -54,6 +54,15 @@ class Ruta implements IRuta
     private ?Inexistente $inexistente;
 
     /**
+     * Argumentos extras para las clases hijas
+     *
+     * Puede que sea solo temporal.
+     *
+     * @var array
+     */
+    protected array $argumentosObligatorios = [];
+
+    /**
      * Constructor
      *
      * @param string $recurso Nombre del recurso que apuntará a la clase.
@@ -75,7 +84,10 @@ class Ruta implements IRuta
      */
     public function agregar(string $recurso, string $clase): IRuta
     {
-        return $this->hijos[] = new self($recurso, $clase);
+        $argumentosDelConstructor   = $this->argumentosObligatorios;
+        $argumentosDelConstructor[] = $recurso;
+        $argumentosDelConstructor[] = $clase;
+        return $this->hijos[] = new static(...$argumentosDelConstructor);
     }
 
     /**
