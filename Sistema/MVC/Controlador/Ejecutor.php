@@ -5,6 +5,7 @@ namespace Gof\Sistema\MVC\Controlador;
 use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Aplicacion\DAP\DAP;
 use Gof\Sistema\MVC\Aplicacion\DAP\N1 as DAPN1;
+use Gof\Sistema\MVC\Controlador\Excepcion\ControladorIndefinido;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
@@ -53,15 +54,19 @@ class Ejecutor implements Ejecutable
      *
      * @param DAP $dap Datos de acceso público.
      *
+     * @throws ControladorIndefinido si el registro que guarda el nombre del controlador está vacío.
      * @throws ControladorInexistente si el autoload no pudo crear la instancia del controlador.
-     * @throws ControladorInvalido si el controlador no implementa la interfaz Ejecutable
+     * @throws ControladorInvalido si el controlador no implementa la interfaz Ejecutable.
      *
      * @see Ejecutable
      */
     public function ejecutar(DAP $dap)
     {
-        $controlador = $this->autoload->instanciar($this->dapn1->controlador, ...$this->dapn1->argumentos);
+        if( empty($this->dapn1->controlador) ) {
+            throw new ControladorIndefinido();
+        }
 
+        $controlador = $this->autoload->instanciar($this->dapn1->controlador, ...$this->dapn1->argumentos);
         if( is_null($controlador) ) {
             throw new ControladorInexistente($this->dapn1->controlador);
         }

@@ -17,7 +17,7 @@ class ControladorInexistente extends Excepcion
      */
     public function __construct(string $controlador)
     {
-        parent::__construct("No existe ningún controlador o clase llamado: {$controlador}");
+        parent::__construct("No existe ningún controlador o clase llamado: '{$controlador}'.");
     }
 
 }

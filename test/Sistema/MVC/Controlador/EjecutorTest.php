@@ -8,6 +8,7 @@ use Gof\Gestor\Autoload\Autoload;
 use Gof\Sistema\MVC\Aplicacion\DAP\DAP;
 use Gof\Sistema\MVC\Aplicacion\DAP\N1 as DAPN1;
 use Gof\Sistema\MVC\Controlador\Ejecutor;
+use Gof\Sistema\MVC\Controlador\Excepcion\ControladorIndefinido;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInexistente;
 use Gof\Sistema\MVC\Controlador\Excepcion\ControladorInvalido;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
@@ -53,9 +54,20 @@ class EjecutorTest extends TestCase
         $this->ejecutor->ejecutar($this->dap);
     }
 
+    public function testLanzarExcepcionSiElValorDelControladorEstaVacio(): void
+    {
+        $this->expectException(ControladorIndefinido::class);
+        $this->dapn1->controlador = '';
+        $this->autoload
+            ->expects($this->never())
+            ->method('instanciar');
+        $this->ejecutor->ejecutar($this->dap);
+    }
+
     public function testLanzarExcepcionSiNoSeCreaLaInstancia(): void
     {
         $this->expectException(ControladorInexistente::class);
+        $this->dapn1->controlador = 'Controlador\Inexistente';
         $this->autoload
             ->expects($this->once())
             ->method('instanciar')
@@ -66,6 +78,7 @@ class EjecutorTest extends TestCase
     public function testLanzarExcepcionSiLaClaseInstanciadaNoEsUnEjecutable(): void
     {
         $this->expectException(ControladorInvalido::class);
+        $this->dapn1->controlador = stdClass::class;
         $instancia = $this->createMock(stdClass::class);
         $this->autoload
             ->expects($this->once())
