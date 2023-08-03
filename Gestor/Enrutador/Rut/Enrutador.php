@@ -38,17 +38,19 @@ class Enrutador implements IEnrutador
     /**
      * @var IRuta Ruta padre.
      */
-    protected IRuta $rutas;
+    private IRuta $rutas;
 
     /**
      * Almacena la ruta con la cual hubo coincidencia
      *
      * @var ?IRuta
      */
-    protected ?IRuta $rutaFinal;
+    private ?IRuta $rutaFinal = null;
 
     /**
      * Constructor
+     *
+     * @param ?IRuta $rutaPadre Ruta padre (Opcional).
      */
     public function __construct(?IRuta $rutaPadre = null)
     {
@@ -77,9 +79,14 @@ class Enrutador implements IEnrutador
             }
         }
 
-        $this->rutaFinal = $procesador->obtenerRuta();
-        $this->clase = $this->rutaFinal->clase();
-        $this->resto = $procesador->recursos();
+        $rutaFinal = $procesador->obtenerRuta();
+        $this->definirRutaFinal($rutaFinal);
+
+        if( !is_null($rutaFinal) ) {
+            $this->clase = $this->rutaFinal->clase();
+            $this->resto = $procesador->recursos();
+        }
+
         return true;
     }
 
@@ -114,6 +121,16 @@ class Enrutador implements IEnrutador
     public function rutas(): IRuta
     {
         return $this->rutas;
+    }
+
+    /**
+     * Define la ruta final
+     *
+     * @param ?IRuta $rutaFinal Instancia de la ruta o **null** si no hubo coincidencia.
+     */
+    protected function definirRutaFinal(?IRuta $rutaFinal = null)
+    {
+        $this->rutaFinal = $rutaFinal;
     }
 
 }

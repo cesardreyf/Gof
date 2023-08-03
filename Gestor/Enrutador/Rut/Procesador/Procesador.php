@@ -50,9 +50,9 @@ class Procesador
     /**
      * Almacena los datos para definir la ruta inexistente
      *
-     * @var Inexistente
+     * @var IRuta
      */
-    private Inexistente $inexistente;
+    private ?IRuta $inexistente;
 
     /**
      * Constructor
@@ -91,7 +91,7 @@ class Procesador
         $rutas = $this->rutaPadre->hijos() ?? [];
         foreach( $rutas as $ruta ) {
             if( $this->recurso === $ruta->ruta() || (is_array($ruta->alias()) && in_array($this->recurso, $ruta->alias())) ) {
-                if( !empty($ruta->inexistente()->clase()) ) {
+                if( !is_null($ruta->inexistente()) ) {
                     $this->inexistente = $ruta->inexistente();
                 }
 
@@ -119,7 +119,7 @@ class Procesador
      */
     public function establecerRutaInexistente()
     {
-        $this->rutaFinal = new Ruta(clase: $this->inexistente->clase());
+        $this->rutaFinal = $this->inexistente;
     }
 
     /**
@@ -144,9 +144,9 @@ class Procesador
      * definida por la propiedad ruta->inexistente->clase de la ruta padre más
      * cercana, si existe; caso contrario el nombre de la clase estará vacío.
      *
-     * @return IRuta
+     * @return ?IRuta
      */
-    public function obtenerRuta(): IRuta
+    public function obtenerRuta(): ?IRuta
     {
         return $this->rutaFinal;
     }

@@ -53,29 +53,19 @@ class EnrutadorConEventos extends Enrutador
     }
 
     /**
-     * Procesa la solicitud
-     *
-     * Recorre la lista de rutas en búsqueda del recurso solicitado. Si lo
-     * encuentra almacena el nombre de la clase y el resto de la solicitud en
-     * un array.
-     *
-     * Si se haya una ruta final, la misma será pasada a todos los agentes que
-     * estén registrados en el evento alProcesar.
-     *
-     * @param Lista $objetivos Lista de recursos a buscar en el árbol de nodos.
-     *
-     * @return bool Devuelve el estado de la operación.
+     * @inheritDoc
      */
-    public function procesar(Lista $solicitud): bool
+    protected function definirRutaFinal(?IRuta $rutaFinal = null)
     {
-        $resultado = parent::procesar($solicitud);
-        $this->eventos->generar(
-            new Evento(
-                $this->rutaFinal,
-                Al::Procesar,
-            )
-        );
-        return $resultado;
+        parent::definirRutaFinal($rutaFinal);
+        if( !is_null($rutaFinal) ) {
+            $this->eventos->generar(
+                new Evento(
+                    $rutaFinal,
+                    Al::Procesar,
+                )
+            );
+        }
     }
 
     /**

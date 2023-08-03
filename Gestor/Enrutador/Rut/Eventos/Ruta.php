@@ -33,17 +33,23 @@ class Ruta extends RutaNormal
     public function __construct(Gestor $eventos, ...$argumentosDelConstructorDeLaRutaPadre)
     {
         parent::__construct(...$argumentosDelConstructorDeLaRutaPadre);
+        $this->argumentosObligatorios[] = $eventos;
         $this->eventos = $eventos;
+    }
+
+    protected function nuevaRuta(...$argumentos): IRuta
+    {
+        $nuevaRuta = parent::nuevaRuta(...$argumentos);
 
         // Genera el evento
         $this->eventos->generar(
             new Evento(
-                $this,
+                $nuevaRuta,
                 Al::Agregar
             )
         );
-
-        $this->argumentosObligatorios[] = $this->eventos;
+        
+        return $nuevaRuta;
     }
 
 }

@@ -49,9 +49,9 @@ class Ruta implements IRuta
     /**
      * Almacena los datos de la ruta inexistente
      *
-     * @var ?Inexistente
+     * @var ?IRuta
      */
-    private ?Inexistente $inexistente;
+    private ?IRuta $inexistente = null;
 
     /**
      * Argumentos extras para las clases hijas
@@ -84,10 +84,7 @@ class Ruta implements IRuta
      */
     public function agregar(string $recurso, string $clase): IRuta
     {
-        $argumentosDelConstructor   = $this->argumentosObligatorios;
-        $argumentosDelConstructor[] = $recurso;
-        $argumentosDelConstructor[] = $clase;
-        return $this->hijos[] = new static(...$argumentosDelConstructor);
+        return $this->hijos[] = $this->nuevaRuta($recurso, $clase);
     }
 
     /**
@@ -149,9 +146,25 @@ class Ruta implements IRuta
         return $this->alias;
     }
 
-    public function inexistente(): ?Inexistente
+    public function inexistente(?string $clase = null): ?IRuta
     {
-        return $this->inexistente ?? $this->inexistente = new Inexistente();
+        return is_null($clase) ? $this->inexistente : $this->inexistente = $this->nuevaRuta(clase: $clase);
+    }
+
+    /**
+     * Obtiene una instancia de una nueva ruta
+     *
+     * @param string $recurso Nombre del recurso.
+     * @param string $clase   Nombre completo de la clase.
+     *
+     * @return IRuta
+     */
+    protected function nuevaRuta(string $recurso = '', string $clase = ''): IRuta
+    {
+        $argumentosDelConstructor   = $this->argumentosObligatorios;
+        $argumentosDelConstructor[] = $recurso;
+        $argumentosDelConstructor[] = $clase;
+        return new static(...$argumentosDelConstructor);
     }
 
 }
