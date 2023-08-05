@@ -2,16 +2,24 @@
 
 namespace Gof\Sistema\MVC\Inters;
 
+use Gof\Gestor\Autoload\Autoload;
 use Gof\Interfaz\Lista;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Procesos;
 use Gof\Sistema\MVC\Interfaz\Ejecutable;
+use Gof\Sistema\MVC\Inters\Cargador\Cargador;
+use Gof\Sistema\MVC\Inters\Contenedor\Contenedor;
 
 /**
  * Gestor de inters
  *
- * Módulo encargado de gestionar los inters: procesos que se ejecutan antes del
- * controlador.
+ * Módulo del sistema MVC encargado de gestionar los inters.
+ *
+ * Los inters son procesos ejecutables de la aplicación del sistema MVC. La
+ * aplicación ejecuta los procesos por órden de prioridad. Los inters ocupan la
+ * prioridad Media. Esto quiere decir que se ejecutarán después de los procesos
+ * esenciales del sistema MVC y antes de la ejecución del controlador (el cual
+ * ocupa un proceso de prioridad Baja).
  *
  * @package Gof\Sistema\MVC\Inters
  */
@@ -60,6 +68,29 @@ class Inters
         array_walk($lista, function(Ejecutable $inter) {
             $this->agregar($inter);
         });
+    }
+
+    /**
+     * Carga los inters almacenados en un contenedor
+     *
+     * Recorre la lista de nombres de clases de inters alojados en el
+     * contenedor, crea las instancias y luego los agrega al gestor de
+     * procesos de la aplicación del sistema MVC.
+     *
+     * Delega la creación de los objetos de los inters al gestor de autoload.
+     * Delega la inserción de los procesos a la función agregar.
+     *
+     * @param Contenedor $inters   Instancia del contenedor.
+     * @param Autoload   $autoload Instancia del gestor de autoload.
+     *
+     * @see Inters::agregar()
+     */
+    public function cargar(Contenedor $inters, Autoload $autoload)
+    {
+        $cargador = new Cargador($autoload);
+        foreach( $cargador->cargar($inters) as $inter ) {
+            $this->agregar($inter);
+        }
     }
 
 }

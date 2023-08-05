@@ -8,6 +8,7 @@ use Gof\Gestor\Autoload\Filtro\PSR4 as FiltroPSR4;
 use Gof\Sistema\MVC\Aplicacion\Aplicacion;
 use Gof\Sistema\MVC\Aplicacion\Procesos\Prioridad;
 use Gof\Sistema\MVC\Controlador\Controlador;
+use Gof\Sistema\MVC\Inters\Fijos\Todos as IntersFijos;
 use Gof\Sistema\MVC\Inters\Inters;
 use Gof\Sistema\MVC\Peticiones\Peticiones;
 use Gof\Sistema\MVC\Registros\Registros;
@@ -88,6 +89,7 @@ class Sistema
                 Prioridad::Media
             )
         );
+        $this->inters->agregarLista(new IntersFijos());
 
         // Gestor del controlador
         $this->controlador = new Controlador(
