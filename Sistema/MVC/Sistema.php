@@ -89,6 +89,8 @@ class Sistema
                 Prioridad::Media
             )
         );
+
+        // Agrega los Inters por defecto del sistema
         $this->inters->agregarLista(new IntersFijos());
 
         // Gestor del controlador

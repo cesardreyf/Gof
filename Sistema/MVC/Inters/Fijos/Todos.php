@@ -20,6 +20,11 @@ class Todos implements Lista
     public function lista(): array
     {
         return [
+            new ConfiguracionDelGDI(),
+            new Session(),
+            new Cookies(),
+            new ACSRF(),
+            new Redireccion(),
         ];
     }
 
