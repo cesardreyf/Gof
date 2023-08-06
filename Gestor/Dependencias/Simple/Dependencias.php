@@ -163,7 +163,7 @@ class Dependencias implements IDependencias
                 throw new ClaseInexistente($nombre);
             }
 
-            $this->errores->agregar(self::ERROR_CLASE_INEXISTENTE);
+            $this->agregarError(self::ERROR_CLASE_INEXISTENTE);
             return false;
         }
 
@@ -226,7 +226,7 @@ class Dependencias implements IDependencias
                 throw new SinPermisosParaCambiar($nombre);
             }
 
-            $this->errores->agregar(self::ERROR_SIN_PERMISOS_PARA_CAMBIAR);
+            $this->agregarError(self::ERROR_SIN_PERMISOS_PARA_CAMBIAR);
             return false;
         }
 
@@ -261,7 +261,7 @@ class Dependencias implements IDependencias
                 throw new SinPermisosParaRemover($nombre);
             }
 
-            $this->errores->agregar(self::ERROR_SIN_PERMISOS_PARA_REMOVER);
+            $this->agregarError(self::ERROR_SIN_PERMISOS_PARA_REMOVER);
             return false;
         }
 
@@ -303,7 +303,7 @@ class Dependencias implements IDependencias
                 throw new SinPermisosParaDefinir($nombre);
             }
 
-            $this->errores->agregar(self::ERROR_SIN_PERMISOS_PARA_DEFINIR);
+            $this->agregarError(self::ERROR_SIN_PERMISOS_PARA_DEFINIR);
             return false;
         }
 
@@ -407,9 +407,9 @@ class Dependencias implements IDependencias
      *
      * @return bool Devuelve **true** si la clase está reservada o **false** de lo contrario
      *
-     * @access private
+     * @access protected
      */
-    private function claseEstaReservada(string $nombre): bool
+    protected function claseEstaReservada(string $nombre): bool
     {
         if( empty($this->clases[$nombre]) ) {
             return false;
@@ -419,7 +419,7 @@ class Dependencias implements IDependencias
             throw new ClaseReservada($nombre);
         }
 
-        $this->errores->agregar(self::ERROR_CLASE_RESERVADA);
+        $this->agregarError(self::ERROR_CLASE_RESERVADA);
         return true;
     }
 
@@ -431,9 +431,9 @@ class Dependencias implements IDependencias
      *
      * @return bool Devuelve **false** si el objeto es una instancia de la clase, o **true** de lo contrario
      *
-     * @access private
+     * @access protected
      */
-    private function objetoNoCorresponde(mixed $objeto, string $clase): bool
+    protected function objetoNoCorresponde(mixed $objeto, string $clase): bool
     {
         if( $objeto instanceof $clase ) {
             return false;
@@ -443,7 +443,7 @@ class Dependencias implements IDependencias
             throw new ObjetoNoCorrespondido($clase, $objeto);
         }
 
-        $this->errores->agregar(self::ERROR_OBJETO_NO_CORRESPONDIDO);
+        $this->agregarError(self::ERROR_OBJETO_NO_CORRESPONDIDO);
         return true;
     }
 
@@ -454,20 +454,32 @@ class Dependencias implements IDependencias
      *
      * @return bool Devuelve **true** si la clase no está reservada, **false** de lo contrario
      *
-     * @access private
+     * @access protected
      */
-    private function claseNoEstaReservada(string $nombre): bool
+    protected function claseNoEstaReservada(string $nombre): bool
     {
         if( empty($this->clases[$nombre]) ) {
             if( $this->configuracion->activados(self::LANZAR_EXCEPCION) ) {
                 throw new ClaseNoReservada($nombre);
             }
 
-            $this->errores->agregar(self::ERROR_CLASE_NO_RESERVADA);
+            $this->agregarError(self::ERROR_CLASE_NO_RESERVADA);
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Agrega un error al gestor de errores numérico
+     *
+     * @param int $error Error a agregar.
+     *
+     * @access private
+     */
+    protected function agregarError(int $error)
+    {
+        $this->errores->agregar($error);
     }
 
 }
