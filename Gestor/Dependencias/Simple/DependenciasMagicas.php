@@ -31,7 +31,7 @@ class DependenciasMagicas extends Dependencias
      *
      * @var string[]
      */
-    private array $metodosPublicos;
+    protected array $metodosPublicos;
 
     /**
      * Lista de métodos reservados
@@ -40,7 +40,7 @@ class DependenciasMagicas extends Dependencias
      *
      * @var array<string, string>
      */
-    private array $metodos = [];
+    protected array $metodos = [];
 
     /**
      * Constructor
