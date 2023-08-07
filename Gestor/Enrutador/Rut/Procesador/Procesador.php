@@ -55,6 +55,11 @@ class Procesador
     private ?IRuta $inexistente;
 
     /**
+     * @var bool
+     */
+    private bool $continuar = true;
+
+    /**
      * Constructor
      *
      * @param Lista $recursos  Lista de recursos solicitados.
@@ -74,7 +79,10 @@ class Procesador
      */
     public function hayRecursos(): bool
     {
-        return !is_null($this->recurso = array_shift($this->recursos));
+        if( $this->continuar ) {
+            $this->recurso = array_shift($this->recursos);
+        }
+        return $this->continuar;
     }
 
     /**
@@ -103,6 +111,9 @@ class Procesador
 
         // Agrega el recurso nuevamente a la lista
         array_unshift($this->recursos, $this->recurso);
+
+        //
+        $this->continuar = false;
 
         // Si la ruta padre acepta parámetros hay coincidencia
         if( $this->rutaPadre->parametros() === true ) {
