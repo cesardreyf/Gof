@@ -65,6 +65,7 @@ class Procesador
         $this->rutaPadre = $rutaPadre;
         $this->recursos = $recursos->lista();
         $this->inexistente = $rutaPadre->inexistente();
+        $this->actualizarRecurso();
     }
 
     /**
@@ -74,7 +75,7 @@ class Procesador
      */
     public function hayRecursos(): bool
     {
-        return !is_null($this->recurso = array_shift($this->recursos));
+        return !is_null($this->recurso);
     }
 
     /**
@@ -97,12 +98,16 @@ class Procesador
 
                 $this->rutaFinal = $ruta;
                 $this->rutaPadre = $ruta;
+                $this->actualizarRecurso();
                 return true;
             }
         }
 
         // Agrega el recurso nuevamente a la lista
         array_unshift($this->recursos, $this->recurso);
+
+        // Remueve el recurso del registro
+        $this->recurso = null;
 
         // Si la ruta padre acepta parámetros hay coincidencia
         if( $this->rutaPadre->parametros() === true ) {
@@ -149,6 +154,17 @@ class Procesador
     public function obtenerRuta(): ?IRuta
     {
         return $this->rutaFinal;
+    }
+
+    /**
+     * Actualiza el recurso actual
+     *
+     * Actualiza el registro donde se almacena el recurso con el que se trabajará.
+     * El recurso lo saca desde la lista de recursos disponibles.
+     */
+    public function actualizarRecurso()
+    {
+        $this->recurso = array_shift($this->recursos);
     }
 
 }
