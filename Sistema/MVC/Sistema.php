@@ -91,7 +91,7 @@ class Sistema
         );
 
         // Agrega los Inters por defecto del sistema
-        $this->inters->agregarLista(new IntersFijos());
+        $this->inters->agregarLista(new IntersFijos($this));
 
         // Gestor del controlador
         $this->controlador = new Controlador(
