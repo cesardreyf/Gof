@@ -66,4 +66,36 @@ class AplicacionTest extends TestCase
         $this->assertSame($ordenEsperado, $orden);
     }
 
+    public function testInterrumpirEjecucionDeLosProcesos(): void
+    {
+        $ordenDeEjecucion = [];
+        $cualquierPrioridad = Prioridad::Alta;
+        $procesoQueInterrumpeLaEjecucion = 3;
+        $ordenDeEjecucionEsperado = [];
+        $tope = $procesoQueInterrumpeLaEjecucion + 3;
+
+        for( $indice = 0; $indice < $tope; $indice++) {
+            $proceso = $this->createMock(Ejecutable::class);
+            $proceso
+                ->expects($indice <= $procesoQueInterrumpeLaEjecucion ? $this->once() : $this->never())
+                ->method('ejecutar')
+                ->willReturnCallback(function() use (&$ordenDeEjecucion, $indice, $procesoQueInterrumpeLaEjecucion) {
+                    array_push($ordenDeEjecucion, $indice);
+
+                    if( $procesoQueInterrumpeLaEjecucion == $indice ) {
+                        $this->aplicacion->interrumpir();
+                    }
+                });
+
+            if( $indice <= $procesoQueInterrumpeLaEjecucion ) {
+                $ordenDeEjecucionEsperado[] = $indice;
+            }
+
+            $this->aplicacion->procesos()->agregar($proceso, $cualquierPrioridad);
+        }
+
+        $this->aplicacion->ejecutar();
+        $this->assertSame($ordenDeEjecucionEsperado, $ordenDeEjecucion);
+    }
+
 }

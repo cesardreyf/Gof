@@ -35,6 +35,11 @@ class Aplicacion
     private Niveles $dap;
 
     /**
+     * @var bool Registro que al activarse interrumpe la ejecución de los procesos
+     */
+    private bool $interrumpir = false;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -65,7 +70,7 @@ class Aplicacion
         $prioridad = current($prioridades);
         $datos = $this->dap->segunPrioridad($prioridad);
 
-        while( $hayProcesos ) {
+        while( $hayProcesos && $this->interrumpir != true ) {
             $proceso = current($this->lp[$prioridad->value]);
 
             if( $proceso === false ) {
@@ -85,6 +90,19 @@ class Aplicacion
             $proceso->ejecutar($datos);
             next($this->lp[$prioridad->value]);
         }
+    }
+
+    /**
+     * Emite una señal para interrumpir la ejecución de los procesos
+     *
+     * Si hay una ejecución en proceso la interrupción se hará justo después de
+     * finalizar la ejecución del proceso actual.
+     *
+     * @throws Exception si blab
+     */
+    public function interrumpir()
+    {
+        $this->interrumpir = true;
     }
 
     /**
