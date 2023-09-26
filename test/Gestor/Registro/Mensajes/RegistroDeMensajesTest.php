@@ -125,4 +125,24 @@ class RegistroDeMensajesTest extends TestCase
         $this->assertFalse($this->registro->vacio());
     }
 
+    public function testMetodoHayValidaLaExistenciaDeMensajesRegistradosYSiempreEsElInversoDelMetodoVacio(): void
+    {
+        $this->assertFalse($this->registro->hay());
+        $this->assertTrue($this->registro->vacio());
+        $this->registro->agregarMensaje('da igual');
+        $this->assertTrue($this->registro->hay());
+        $this->assertFalse($this->registro->vacio());
+        $this->registro->limpiar();
+        $this->assertFalse($this->registro->hay());
+        $this->assertTrue($this->registro->vacio());
+
+        $subregistro = $this->registro->crearSubregistro('da igual');
+        $subregistro->agregarMensaje('un mensaje cualquiera');
+        $this->assertTrue($this->registro->hay());
+        $this->assertFalse($this->registro->vacio());
+        $subregistro->limpiar();
+        $this->assertFalse($this->registro->hay());
+        $this->assertTrue($this->registro->vacio());
+    }
+
 }
