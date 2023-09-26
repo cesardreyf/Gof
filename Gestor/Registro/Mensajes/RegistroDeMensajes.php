@@ -94,6 +94,18 @@ class RegistroDeMensajes implements IRegistroDeMensajes
     }
 
     /**
+     * Indica si hay mensajes registrados
+     *
+     * Es la contra del método vacio.
+     *
+     * @return bool
+     */
+    public function hay(): bool
+    {
+        return !$this->vacio();
+    }
+
+    /**
      * Limpia la lista de mensajes
      *
      * Limpia la lista de mensajes y de subgestores registrados.
