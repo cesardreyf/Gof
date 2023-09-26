@@ -117,4 +117,12 @@ class RegistroDeMensajesTest extends TestCase
         $this->assertContains($mensaje, $this->registro->lista()[$nombreDelSubregistro]);
     }
 
+    public function testMetodoVacioDevuelveFalseSiUnoDeSusSubregistrosTieneMensajesRegistrados(): void
+    {
+        $subregistro = $this->registro->crearSubregistro('da igual');
+        $this->assertTrue($this->registro->vacio());
+        $subregistro->agregarMensaje('un mensaje cualquiera');
+        $this->assertFalse($this->registro->vacio());
+    }
+
 }

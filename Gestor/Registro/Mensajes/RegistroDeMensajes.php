@@ -80,7 +80,17 @@ class RegistroDeMensajes implements IRegistroDeMensajes
      */
     public function vacio(): bool
     {
-        return empty($this->almacen);
+        if( !empty($this->almacen) ) {
+            return false;
+        }
+
+        foreach( $this->subregistro as $subregistro ) {
+            if( !$subregistro->vacio() ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
