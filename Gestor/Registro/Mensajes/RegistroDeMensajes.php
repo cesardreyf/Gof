@@ -20,6 +20,11 @@ class RegistroDeMensajes implements IRegistroDeMensajes
     protected array $almacen = [];
 
     /**
+     * @var array Almacena los subregistros hijos
+     */
+    protected array $subregistro = [];
+
+    /**
      * Agrega un mensaje al registro
      *
      * @param string $mensaje Mensaje a agregar al registro
