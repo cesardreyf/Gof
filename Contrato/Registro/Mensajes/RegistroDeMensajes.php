@@ -44,7 +44,14 @@ interface RegistroDeMensajes extends MensajeGuardable, Lista
     /**
      * Verifica si el registro está vacío
      *
-     * @return bool Devuelve el estado de la validación
+     * @return bool Devuelve **true** si está vacio, **false** de lo contrario
      */
     public function vacio(): bool;
+
+    /**
+     * Verifica si hay mensajes registrados
+     *
+     * @return bool Devuelve **true** si hay mensajes, **false** de lo contrario
+     */
+    public function hay(): bool;
 }
