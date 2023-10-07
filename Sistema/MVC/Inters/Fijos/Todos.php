@@ -36,6 +36,7 @@ class Todos implements Lista
             new Cookies(),
             new ACSRF(),
             new Redireccion(),
+            new Solicitud(),
         ];
     }
 
