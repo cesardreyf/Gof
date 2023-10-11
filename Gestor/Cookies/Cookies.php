@@ -99,7 +99,7 @@ class Cookies implements ICookies
             $duracion = time() + $duracion;
         }
 
-        return $this->opciones['expires'] = $duracion;
+        return $this->opciones['expires'] = (int)$duracion;
     }
 
     /**
