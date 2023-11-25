@@ -45,23 +45,31 @@ class Contenedor
     /**
      * Agrega un inter al contenedor
      *
-     * @param string $inter Nombre del inter.
+     * @param string $inter     Nombre del inter.
+     * @param stirng ...$inters Más nombres de inters
      */
-    public function agregar(string $inter)
+    public function agregar(string $inter, string ...$inters)
     {
-        $idDelInter = $this->inters->agregar($inter);
-        $this->consumidores->agregar($idDelInter);
+        array_unshift($inters, $inter);
+        foreach( $inters as $inter ) {
+            $idDelInter = $this->inters->agregar($inter);
+            $this->consumidores->agregar($idDelInter);
+        }
     }
 
     /**
      * Remueve un inter del contenedor
      *
-     * @param string $inter Nombre del inter a remover
+     * @param string $inter     Nombre del inter a remover
+     * @param stirng ...$inters Más nombres de inters
      */
-    public function remover(string $inter)
+    public function remover(string $inter, string ...$inters)
     {
-        if( ($idDelInter = $this->inters->obtenerId($inter)) !== null ) {
-            $this->consumidores->remover($idDelInter);
+        array_unshift($inters, $inter);
+        foreach( $inters as $inter ) {
+            if( ($idDelInter = $this->inters->obtenerId($inter)) !== null ) {
+                $this->consumidores->remover($idDelInter);
+            }
         }
     }
 
