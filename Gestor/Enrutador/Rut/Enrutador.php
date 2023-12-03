@@ -80,8 +80,12 @@ class Enrutador implements IEnrutador
         }
 
         $rutaFinal = $procesador->obtenerRuta();
-        $this->definirRutaFinal($rutaFinal);
+        if( empty($rutaFinal->clase()) ) {
+            $procesador->establecerRutaInexistente();
+            $rutaFinal = $procesador->obtenerRuta();
+        }
 
+        $this->definirRutaFinal($rutaFinal);
         if( !is_null($rutaFinal) ) {
             $this->clase = $this->rutaFinal->clase();
             $this->resto = $procesador->recursos();

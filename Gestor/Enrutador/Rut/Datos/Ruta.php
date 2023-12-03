@@ -82,7 +82,7 @@ class Ruta implements IRuta
      *
      * @return IRuta Devuelve una instancia de la nueva ruta hija
      */
-    public function agregar(string $recurso, string $clase): IRuta
+    public function agregar(string $recurso, string $clase = ''): IRuta
     {
         return $this->hijos[] = $this->nuevaRuta($recurso, $clase);
     }
