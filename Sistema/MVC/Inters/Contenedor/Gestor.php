@@ -5,15 +5,16 @@ namespace Gof\Sistema\MVC\Inters\Contenedor;
 use Gof\Interfaz\Id;
 
 /**
- * Contenedor de inters cargables
+ * Gestor de contenedores de inters
  *
- * Gestiona un contenedor de nombres de inters que serán cargados por otro
- * componente.
+ * Este módulo solo se encarga de gestionar el almacenamiento de los inters y
+ * los consumidores.
  *
  * @package Gof\Sistma\MVC\Inters\Contenedor
  */
 class Gestor
 {
+
     /**
      * Almacena la lista de inters
      *
@@ -27,6 +28,13 @@ class Gestor
      * @var array<int, int>
      */
     private array $consumidores = [];
+
+    /**
+     * Almacena los grupos
+     *
+     * @var array<string, int[]>
+     */
+    private array $grupos = [];
 
     /**
      * Puntero al último ID de los inters
@@ -50,7 +58,8 @@ class Gestor
             $consumidor->id(),
             $this->inters,
             $this->consumidores,
-            $this->ptr
+            $this->ptr,
+            $this->grupos,
         );
     }
 

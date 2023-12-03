@@ -2,8 +2,9 @@
 
 namespace Gof\Sistema\MVC\Inters\Contenedor;
 
-use Gof\Sistema\MVC\Inters\Contenedor\Modulos\Inters;
 use Gof\Sistema\MVC\Inters\Contenedor\Modulos\Consumidores;
+use Gof\Sistema\MVC\Inters\Contenedor\Modulos\Grupos;
+use Gof\Sistema\MVC\Inters\Contenedor\Modulos\Inters;
 
 /**
  * Contenedor de inters para los consumidores
@@ -14,6 +15,7 @@ use Gof\Sistema\MVC\Inters\Contenedor\Modulos\Consumidores;
  */
 class Contenedor
 {
+
     /**
      * Módulo de inters
      *
@@ -29,17 +31,26 @@ class Contenedor
     private Consumidores $consumidores;
 
     /**
+     * Módulo de grupos
+     *
+     * @var Grupos
+     */
+    private Grupos $grupos;
+
+    /**
      * Constructor
      *
      * @param int    $cid          Id del consumidor.
      * @param array &$inters       Referencia a la lista de inters.
      * @param array &$consumidores Referencia a la lista de consumidores.
      * @param int   &$ptr          Referencia al puntero interno del gestor.
+     * @param array &grupos        Referencia a la lista de grupos.
      */
-    public function __construct(int $cid, array &$inters, array &$consumidores, int &$ptr)
+    public function __construct(int $cid, array &$inters, array &$consumidores, int &$ptr, array &$grupos)
     {
         $this->inters       = new Inters($inters, $ptr);
         $this->consumidores = new Consumidores($consumidores, $cid);
+        $this->grupos       = new Grupos($grupos, $this->inters, $this->consumidores);
     }
 
     /**
@@ -82,6 +93,16 @@ class Contenedor
     {
         $listaConLosIdsDeLosInters = $this->consumidores->obtenerTodos();
         return empty($listaConLosIdsDeLosInters) ? [] : $this->inters->obtenerInters(...$listaConLosIdsDeLosInters);
+    }
+
+    /**
+     * Obtiene el submódulo encargado de gestionar los grupos de inters
+     *
+     * @return Grupos
+     */
+    public function grupo(): Grupos
+    {
+        return $this->grupos;
     }
 
 }
