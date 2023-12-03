@@ -63,12 +63,15 @@ class Grupos
      */
     public function asignar(string $grupo, string ...$grupos)
     {
-        if( !isset($this->grupos[$grupo]) ) {
-            throw new ExcepcionGrupoInexistente($grupo);
-        }
+        array_unshift($grupos, $grupo);
+        foreach( $grupos as $grupo ) {
+            if( !isset($this->grupos[$grupo]) ) {
+                throw new ExcepcionGrupoInexistente($grupo);
+            }
 
-        foreach( $this->grupos[$grupo] as $inter ) {
-            $this->consumidores->agregar($inter);
+            foreach( $this->grupos[$grupo] as $inter ) {
+                $this->consumidores->agregar($inter);
+            }
         }
     }
 
