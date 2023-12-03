@@ -3,6 +3,8 @@
 namespace Gof\Sistema\MVC\Rut;
 
 use Gof\Gestor\Enrutador\Rut\EnrutadorConEventos;
+use Gof\Gestor\Enrutador\Rut\Eventos\Al;
+use Gof\Gestor\Enrutador\Rut\Eventos\Evento;
 use Gof\Gestor\Enrutador\Rut\Eventos\Gestor;
 use Gof\Sistema\MVC\Rut\Datos\Ruta;
 use Gof\Sistema\MVC\Sistema;
@@ -32,6 +34,8 @@ class Rut extends EnrutadorConEventos
         foreach( $listaDeObservadores->lista() as $observador ) {
             $observadores->agregar($observador);
         }
+
+        $gestor->generar(new Evento($rutaPadre, Al::Agregar));
     }
 
 }
